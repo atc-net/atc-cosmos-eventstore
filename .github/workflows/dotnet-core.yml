@@ -32,7 +32,7 @@ jobs:
         # The name of the SonarQube project
         sonarProjectName: atc-cosmos-eventstore
         # The name of the SonarQube organization in SonarCloud. For hosted SonarQube, skip this setting.
-        sonarOrganization: atc.net
+        sonarOrganization: atc-net
         # Optional command arguments to 'dotnet build'
         dotnetBuildArguments: --configuration Release --no-restore
         # Optional command arguments to dotnet test
