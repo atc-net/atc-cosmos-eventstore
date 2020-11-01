@@ -1,25 +1,102 @@
-name: .NET Core
+name: CI/CD
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
+    types: [opened, synchronize, reopened]
     branches: [ master ]
+    
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/**'
+      - 'test/**'
 
+  release:
+    types:
+      - published
+  
 jobs:
-  build:
 
+  dotnet-build:
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+    
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build
+        shell: bash
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          dotnet sonarscanner begin /k:${{ secrets.SONAR_PRODUCT_KEY }} /o:"atc-net" /n:"atc-cosmos-eventstore" /v:"$NBGV_NuGetPackageVersion" /d:sonar.login="$SONAR_TOKEN" /d:sonar.host.url=https://sonarcloud.io /d:sonar.branch.name="$BRANCH" /d:sonar.verbose="true" /d:sonar.cs.opencover.reportsPaths="tests/**/coverage/*.opencover.xml"
+          dotnet build --configuration Release --no-restore
+          dotnet test tests/Atc.Cosmos.EventStore.Tests/ /p:CollectCoverage=true /p:CoverletOutput=./coverage/ /p:CoverletOutputFormat=opencover /p:ExcludeByAttribute=\"Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute\"
+          dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
+          
+  publish-nuget-package:
+    #if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'release'
+    if: (github.event_name == 'dont-run'
+    needs: [dotnet-build]
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ''
+      BRANCH: ''
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.301
-    - name: Install dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal --collect "Code coverage"
+    
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
+
+      - uses: dotnet/nbgv@master
+        with:
+          setAllVars: true
+
+      - name: Setting VERSION and BRANCH env
+        run: |
+          echo "::set-env name=VERSION::$NBGV_NuGetPackageVersion"
+          echo "::set-env name=BRANCH::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')"
+          
+      - name: Update tokens in project files
+        uses: cschleiden/replace-tokens@v1
+        with:
+          files: '["*.csproj", "**/*.csproj"]'
+
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'
+
+      - name: Creating library package for pre-release
+        if: github.event_name != 'release'
+        run: |
+          dotnet pack -c Release -o ${GITHUB_WORKSPACE}/packages -p:RepositoryBranch=$BRANCH -p:ContinuousIntegrationBuild=true
+
+      - name: Creating library package for release
+        if: github.event_name == 'release'
+        run: |
+          dotnet pack -c Release -o ${GITHUB_WORKSPACE}/packages -p:RepositoryBranch=main -p:ContinuousIntegrationBuild=true /p:PublicRelease=true
+
+      - name: Push packages to GitHub Package Registry
+        shell: bash
+        run: |
+           for f in ${GITHUB_WORKSPACE}/packages/*.nupkg
+           do
+             curl -vX PUT -u "egil:${{ secrets.GITHUB_TOKEN }}" -F package=@$f https://nuget.pkg.github.com/atc-net/
+           done
+
+      - name: Push packages to NuGet
+        if: github.event_name == 'release'
+        run: dotnet nuget push ${GITHUB_WORKSPACE}/packages/'*.nupkg' -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols true
