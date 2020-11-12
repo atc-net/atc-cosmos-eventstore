@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Cosmos.EventStore", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Cosmos.EventStore.Tests", "test\Atc.Cosmos.EventStore.Tests\Atc.Cosmos.EventStore.Tests.csproj", "{2A182C87-5FD5-4318-9339-94F36ED800FB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Cosmos.EventStore.IntegrationTests", "test\Atc.Cosmos.EventStore.IntegrationTests\Atc.Cosmos.EventStore.IntegrationTests.csproj", "{C7E0C59D-277E-4567-BD0A-9556FF30E310}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Cosmos.EventStore.Xunit", "test\Atc.Cosmos.EventStore.Xunit\Atc.Cosmos.EventStore.Xunit.csproj", "{5258A59B-3018-48E1-A7BE-A0BC7736A77B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{0A4F8A9A-3074-4080-A48A-633DC7A06BC5}"
@@ -16,8 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{0A4F
 		build\code-analysis-test.ruleset = build\code-analysis-test.ruleset
 		build\code-analysis.props = build\code-analysis.props
 		build\code-analysis.ruleset = build\code-analysis.ruleset
-		build\common.props = build\common.props
 		build\custom-dictionary.xml = build\custom-dictionary.xml
+		build\sonar.cloud.ruleset = build\sonar.cloud.ruleset
 		build\stylecop.json = build\stylecop.json
 	EndProjectSection
 EndProject
@@ -40,10 +38,6 @@ Global
 		{2A182C87-5FD5-4318-9339-94F36ED800FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A182C87-5FD5-4318-9339-94F36ED800FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A182C87-5FD5-4318-9339-94F36ED800FB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C7E0C59D-277E-4567-BD0A-9556FF30E310}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C7E0C59D-277E-4567-BD0A-9556FF30E310}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C7E0C59D-277E-4567-BD0A-9556FF30E310}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C7E0C59D-277E-4567-BD0A-9556FF30E310}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5258A59B-3018-48E1-A7BE-A0BC7736A77B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5258A59B-3018-48E1-A7BE-A0BC7736A77B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5258A59B-3018-48E1-A7BE-A0BC7736A77B}.Release|Any CPU.ActiveCfg = Release|Any CPU

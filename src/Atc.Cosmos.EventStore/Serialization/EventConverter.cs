@@ -35,10 +35,10 @@ namespace BigBang.Cosmos.EventStore.Serialization
                 throw new JsonException();
             }
 
-            var type = mapper.GetEventType(name.GetString());
+            var type = mapper.GetEventType(name.GetString() ?? string.Empty);
 
             var jsonObject = jsonDocument.RootElement.GetRawText();
-            var result = (Event)JsonSerializer.Deserialize(jsonObject, type, options);
+            var result = (Event)JsonSerializer.Deserialize(jsonObject, type, options)!;
 
             return result;
         }
