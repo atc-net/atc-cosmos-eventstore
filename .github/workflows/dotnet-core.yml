@@ -40,6 +40,9 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
 
+      - name: Install dotnet-sonarscanner
+        run: dotnet tool install --global dotnet-sonarscanner
+
       - name: Build
         shell: bash
         env:
