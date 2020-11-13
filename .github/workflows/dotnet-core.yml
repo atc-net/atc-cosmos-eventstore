@@ -2,16 +2,20 @@ name: CI/CD
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
-    branches: [ master ]
+    branches:
+    - master
+    types:
+    - opened
+    - synchronize
+    - reopened
     
   push:
     branches:
-      - master
+    - master
 
   release:
     types:
-      - published
+    - published
   
 jobs:
 
