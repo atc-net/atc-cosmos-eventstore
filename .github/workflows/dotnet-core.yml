@@ -30,6 +30,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setting VERSION and BRANCH env
+        run: |
+          echo "::set-env name=VERSION::$NBGV_NuGetPackageVersion"
+          echo "::set-env name=BRANCH::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')"
+        
+      - uses: dotnet/nbgv@master
+        with:
+          setAllVars: true
+
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
