@@ -21,6 +21,7 @@ on:
 jobs:
 
   dotnet-build:
+    if: github.event_name != 'release'
     name: Build
     runs-on: ubuntu-latest
     
@@ -40,9 +41,6 @@ jobs:
           setAllVars: true
 
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 3.1.x
       - uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'    
@@ -88,14 +86,12 @@ jobs:
           echo "::set-env name=VERSION::$NBGV_NuGetPackageVersion"
           echo "::set-env name=BRANCH::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')"
           
-      - name: Update tokens in project files
-        uses: cschleiden/replace-tokens@v1
-        with:
-          files: '["*.csproj", "**/*.csproj"]'
-
+      - name: Setup .NET Core
       - uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '3.1.x'
+          dotnet-version: '5.0.x'    
+      - name: Install dependencies
+        run: dotnet restore
 
       - name: Creating library package for pre-release
         if: github.event_name != 'release'
