@@ -41,7 +41,7 @@ jobs:
           setAllVars: true
 
       - name: Setup .NET Core
-      - uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
 
@@ -87,10 +87,10 @@ jobs:
           echo "::set-env name=BRANCH::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')"
           
       - name: Setup .NET Core
-      - uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
-          key:  
+
       - name: Install dependencies
         run: dotnet restore
 
