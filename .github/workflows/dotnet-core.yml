@@ -102,6 +102,10 @@ jobs:
       - uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
+          # Authenticates packages to push to GPR
+          source-url: https://nuget.pkg.github.com/atc-net/index.json
+        env:
+          NUGET_AUTH_TOKEN: '%NUGET_AUTH_TOKEN%'
 
       - name: Install dependencies
         run: dotnet restore
@@ -111,7 +115,7 @@ jobs:
           dotnet pack -c Release -o ${GITHUB_WORKSPACE}/packages -p:RepositoryBranch=$BRANCH -p:ContinuousIntegrationBuild=true
 
       - name: Push package to Github registry
-        run: nuget.exe push "**/*.nupkg" -NoSymbols -SkipDuplicate
+        run: dotnet nuget push "${GITHUB_WORKSPACE}/packages/*.nupkg" --no-symbols --skip-duplicate
         env:
           NUGET_AUTH_TOKEN: ${{ github.token }}
 
