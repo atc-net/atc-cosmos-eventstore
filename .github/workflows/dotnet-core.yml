@@ -111,7 +111,7 @@ jobs:
           dotnet pack -c Release -o ${GITHUB_WORKSPACE}/packages -p:RepositoryBranch=$BRANCH -p:ContinuousIntegrationBuild=true
 
       - name: Push package to Github registry
-        run: dotnet nuget push ${GITHUB_WORKSPACE}/packages/'*.nupkg' --no-symbols --skip-duplicate
+        run: dotnet nuget push "**/*.nupkg" --no-symbols --skip-duplicate -s https://nuget.pkg.github.com/atc-net/
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
