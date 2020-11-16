@@ -102,16 +102,21 @@ jobs:
       - uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
+      - uses: actions/setup-dotnet@v1
+        with:
+          source-url: https://nuget.pkg.github.com/atc-net/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Install dependencies
         run: dotnet restore
 
       - name: Creating library package for pre-release
         run: |
-          dotnet pack -c Release -o ${GITHUB_WORKSPACE}/packages -p:RepositoryBranch=$BRANCH -p:ContinuousIntegrationBuild=true
+          dotnet pack -c Release -o packages -p:RepositoryBranch=$BRANCH -p:ContinuousIntegrationBuild=true
 
       - name: Push package to Github registry
-        run: dotnet nuget push "**/*.nupkg" --no-symbols --skip-duplicate -s https://nuget.pkg.github.com/atc-net/
+        run: dotnet nuget push packages/*.nupkg --no-symbols --skip-duplicate -s https://nuget.pkg.github.com/atc-net/
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
