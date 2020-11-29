@@ -124,7 +124,7 @@ jobs:
         run: |
            for f in ${GITHUB_WORKSPACE}/packages/*.nupkg
            do
-             curl -vX PUT -u "${{ secrets.GITHUB_TOKEN }}" -F package=@$f https://nuget.pkg.github.com/atc-net/
+             curl -vX PUT -u "atc-net:${{ secrets.GITHUB_TOKEN }}" -F package=@$f https://nuget.pkg.github.com/atc-net/
            done
 
 #      - name: Push packages to GitHub Package Registry
