@@ -13,6 +13,7 @@ on:
   push:
     branches:
     - master
+    - dev
 
   release:
     types:
@@ -30,15 +31,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-#      - name: Setting VERSION and BRANCH env
-#        run: |
-#          echo "VERSION=$NBGV_NuGetPackageVersion" >> $GITHUB_ENV
-#          echo "BRANCH=$BRANCH_NAME" >> $GITHUB_ENV
-        
-#      - uses: dotnet/nbgv@master
-#        with:
-#          setAllVars: true
 
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -127,14 +119,6 @@ jobs:
              curl -vX PUT -u "atc-net:${{ secrets.GITHUB_TOKEN }}" -F package=@$f https://nuget.pkg.github.com/atc-net/
            done
 
-#      - name: Push packages to GitHub Package Registry
-#        shell: bash
-#        run: |
-#           for f in ${GITHUB_WORKSPACE}/packages/*.nupkg
-#           do
-#             curl -vX PUT -u "${{ secrets.GITHUB_TOKEN }}" -F package=@$f https://nuget.pkg.github.com/atc-net/
-#           done
-          
 #  publish-nuget-package-release:
 #    if: github.event_name == 'release'
 #    runs-on: ubuntu-latest
