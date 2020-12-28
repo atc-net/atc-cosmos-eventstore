@@ -1,12 +1,14 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace BigBang.Cosmos.EventStore
 {
     public class Event<T> : Event
         where T : class, new()
     {
-        public Event() : this (new T(), new EventProperties())
-        { }
+        public Event()
+            : this(new T(), new EventProperties())
+        {
+        }
 
         public Event(T data, EventProperties properties)
             : base()
@@ -16,7 +18,7 @@ namespace BigBang.Cosmos.EventStore
         }
 
         /// <summary>
-        /// Event data object.
+        /// Gets or sets event data object.
         /// </summary>
         [JsonPropertyName(EventPropertyNames.Data)]
         public T TypedData { get; set; }

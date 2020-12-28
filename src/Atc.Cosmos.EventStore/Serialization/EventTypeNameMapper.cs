@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,7 +9,7 @@ namespace BigBang.Cosmos.EventStore.Serialization
         private readonly IReadOnlyDictionary<string, Type> nameToType;
         private readonly IReadOnlyDictionary<Type, string> typeToName;
 
-        public EventTypeNameMapper(Dictionary<Type, string> typeToName)
+        public EventTypeNameMapper(IReadOnlyDictionary<Type, string> typeToName)
         {
             this.typeToName = typeToName;
             nameToType = GetNameToTypeMappings(typeToName);
@@ -25,10 +25,10 @@ namespace BigBang.Cosmos.EventStore.Serialization
                 ? nameToType[name]
                 : typeof(Event<object>);
 
-        private Dictionary<string, Type> GetNameToTypeMappings(Dictionary<Type, string> typeToName)
-            => typeToName.ToDictionary(pair => pair.Value, pair => MakeEventType(pair.Key));
-
-        private Type MakeEventType(Type type)
+        private static Type MakeEventType(Type type)
             => typeof(Event<>).MakeGenericType(type);
+
+        private IReadOnlyDictionary<string, Type> GetNameToTypeMappings(IReadOnlyDictionary<Type, string> typeToName)
+            => typeToName.ToDictionary(pair => pair.Value, pair => MakeEventType(pair.Key), StringComparer.Ordinal);
     }
 }

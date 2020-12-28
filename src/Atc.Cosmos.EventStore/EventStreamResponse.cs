@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 
 namespace BigBang.Cosmos.EventStore
 {
@@ -13,20 +13,24 @@ namespace BigBang.Cosmos.EventStore
         }
 
         public EventStreamResponse(string message, HttpStatusCode statusCode)
-            : this (message, statusCode, string.Empty, string.Empty)
-        { }
+            : this(message, statusCode, string.Empty, string.Empty)
+        {
+        }
 
         public EventStreamResponse(string streamId, string etag)
-            : this (string.Empty, HttpStatusCode.OK, streamId, etag)
-        { }
+            : this(string.Empty, HttpStatusCode.OK, streamId, etag)
+        {
+        }
 
         public EventStreamResponse(string streamId, string etag, HttpStatusCode statusCode)
             : this(string.Empty, statusCode, streamId, etag)
-        { }
+        {
+        }
 
         public EventStreamResponse()
-            : this (string.Empty, HttpStatusCode.OK)
-        { }
+            : this(string.Empty, HttpStatusCode.OK)
+        {
+        }
 
         public string StreamId { get; }
 

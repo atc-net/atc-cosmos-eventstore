@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using BigBang.Cosmos.EventStore.Readers;
@@ -35,12 +34,45 @@ namespace BigBang.Cosmos.EventStore
             this.callback = callback;
         }
 
-        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "ByDesign")]
+        public Task ResumeAsync()
+            => StartAsync(true);
+
+        /// <summary>
+        /// Starts the subscription from the beginning.
+        /// </summary>
+        /// <remarks>This will delete all existing subscriptions with the same name for all instances.</remarks>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task StartFromBeginningAsync()
+            => StartAsync(resume: false);
+
+        public async Task StopAsync()
+        {
+            if (processor != null)
+            {
+                await processor
+                    .StopAsync()
+                    .ConfigureAwait(false);
+            }
+        }
+
+        public async Task DeleteAsync()
+        {
+            if (processor != null)
+            {
+                await StopAsync()
+                    .ConfigureAwait(false);
+            }
+
+            await DeleteRegistrationAsync(name)
+                .ConfigureAwait(false);
+        }
+
         private async Task ProcessChangesAsync(IReadOnlyCollection<Event> changes, CancellationToken cancellationToken)
         {
             try
             {
-                await callback(changes, cancellationToken);
+                await callback(changes, cancellationToken)
+                    .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -58,40 +90,15 @@ namespace BigBang.Cosmos.EventStore
 
             if (!resume)
             {
-                await DeleteRegistrationAsync(name);
+                await DeleteRegistrationAsync(name)
+                    .ConfigureAwait(false);
             }
 
             processor = builder.Build();
 
-            await processor.StartAsync();
-        }
-
-        public Task ResumeAsync()
-            => StartAsync(true);
-
-        /// <summary>
-        /// Starts the subscription from the beginning.
-        /// </summary>
-        /// <remarks>This will delete all existing subscriptions with the same name for all instances.</remarks>
-        public Task StartFromBeginningAsync()
-            => StartAsync(false);
-
-        public async Task StopAsync()
-        {
-            if (processor != null)
-            {
-                await processor.StopAsync();
-            }
-        }
-
-        public async Task DeleteAsync()
-        {
-            if (processor != null)
-            {
-                await StopAsync();
-            }
-
-            await DeleteRegistrationAsync(name);
+            await processor
+                .StartAsync()
+                .ConfigureAwait(false);
         }
 
         private Task DeleteRegistrationAsync(string name)

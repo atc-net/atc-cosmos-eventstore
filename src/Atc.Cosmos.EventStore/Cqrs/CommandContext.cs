@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
@@ -25,7 +25,8 @@ namespace BigBang.Cosmos.EventStore.Cqrs
             events = new List<object>();
         }
 
-        public void ApplyEvent<TEvent>(TEvent @event) where TEvent : class, new()
+        public void ApplyEvent<TEvent>(TEvent @event)
+            where TEvent : class, new()
             => events.Add(@event);
 
         public async Task<CommandResponse> CommitAsync(CancellationToken cancellationToken = default)
@@ -34,7 +35,14 @@ namespace BigBang.Cosmos.EventStore.Cqrs
 
             do
             {
-                var writeResponse = await stream.WriteEventsAsync(streamId, events, etag, cancellationToken: cancellationToken);
+                var writeResponse = await stream
+                    .WriteEventsAsync(
+                        streamId,
+                        events,
+                        etag,
+                        cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+
                 response = CommandResponseFactory.FromEventStreamResponse(writeResponse);
             }
             while (conflictResolver.RetryRequired(response, etag));

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -64,6 +64,17 @@ namespace BigBang.Cosmos.EventStore
         public Event Produce(object eventData, string streamId, string streamName, long fromVersion, string? correlationId = null)
             => CreateEvent(eventData, streamId, streamName, fromVersion, GetCorrelationId(correlationId), DateTimeOffset.UtcNow);
 
+        private static string GetCorrelationId(string? correlationId)
+            => correlationId ?? Guid.NewGuid().ToString();
+
+        private static long GetVersion(long fromVersion)
+            => fromVersion - 1;
+
+        private static string GetETag(EventProperties properties)
+            => Convert.ToBase64String(
+                Encoding.ASCII.GetBytes(
+                    $"{properties.StreamName}/{properties.StreamId}/{properties.Version}"));
+
         private Event CreateEvent(
             object eventData,
             string streamId,
@@ -87,20 +98,9 @@ namespace BigBang.Cosmos.EventStore
             return evt;
         }
 
-        private string GetCorrelationId(string? correlationId)
-            => correlationId ?? Guid.NewGuid().ToString();
-
-        private long GetVersion(long fromVersion)
-            => fromVersion - 1;
-
         private string GetDocumentId(EventProperties properties)
             => streamType == StreamType.Timeseries
                 ? $"{properties.StreamName}_{properties.StreamId}_{Guid.NewGuid()}"
                 : $"{properties.StreamName}_{properties.StreamId}_{properties.Version}";
-
-        private static string GetETag(EventProperties properties)
-            => Convert.ToBase64String(
-                Encoding.ASCII.GetBytes(
-                    $"{properties.StreamName}/{properties.StreamId}/{properties.Version}"));
     }
 }

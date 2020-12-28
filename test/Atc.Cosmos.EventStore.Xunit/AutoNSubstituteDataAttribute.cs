@@ -1,4 +1,4 @@
-﻿using Atc.Cosmos.EventStore.Xunit.Customizations;
+using Atc.Cosmos.EventStore.Xunit.Customizations;
 using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using AutoFixture.Xunit2;
@@ -9,7 +9,8 @@ namespace BigBang.Cosmos.EventStore.Xunit
     {
         public AutoNSubstituteDataAttribute()
             : base(CreateCustomizedFixture)
-        { }
+        {
+        }
 
         private static IFixture CreateCustomizedFixture()
         {

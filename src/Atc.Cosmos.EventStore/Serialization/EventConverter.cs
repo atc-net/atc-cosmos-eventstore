@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -45,9 +45,9 @@ namespace BigBang.Cosmos.EventStore.Serialization
 
         public override void Write(Utf8JsonWriter writer, Event value, JsonSerializerOptions options)
         {
-            if (!(value is Event<object> evt))
+            if (value is not Event<object> evt)
             {
-                throw new ArgumentException("Value to write must be of type Event<object>,");
+                throw new ArgumentException("Value to write must be of type Event<object>.", nameof(value));
             }
 
             evt.Properties.Name = mapper.GetEventName(evt.Data.GetType());

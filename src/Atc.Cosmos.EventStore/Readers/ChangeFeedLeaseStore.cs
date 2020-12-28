@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,12 +8,6 @@ namespace BigBang.Cosmos.EventStore.Readers
 {
     public class ChangeFeedLeaseStore
     {
-        internal class LeaseRegistration
-        {
-            [JsonPropertyName("id")]
-            public string Id { get; set; } = string.Empty;
-        }
-
         private readonly Container leaseContainer;
 
         public ChangeFeedLeaseStore(Container leaseContainer)
@@ -29,17 +23,27 @@ namespace BigBang.Cosmos.EventStore.Readers
 
             while (resultSet.HasMoreResults)
             {
-                var registrations = await resultSet.ReadNextAsync(cancellationToken);
+                var registrations = await resultSet
+                    .ReadNextAsync(cancellationToken)
+                    .ConfigureAwait(false);
                 foreach (var registration in registrations)
                 {
-                    await leaseContainer.DeleteItemAsync<object>(
-                        registration.Id,
-                        new PartitionKey(registration.Id),
-                        cancellationToken: cancellationToken);
+                    await leaseContainer
+                        .DeleteItemAsync<object>(
+                            registration.Id,
+                            new PartitionKey(registration.Id),
+                            cancellationToken: cancellationToken)
+                        .ConfigureAwait(false);
                 }
             }
 
             return ExpectedVersion.Empty;
+        }
+
+        internal class LeaseRegistration
+        {
+            [JsonPropertyName("id")]
+            public string Id { get; set; } = string.Empty;
         }
     }
 }

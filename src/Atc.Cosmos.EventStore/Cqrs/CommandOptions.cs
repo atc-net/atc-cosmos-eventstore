@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace BigBang.Cosmos.EventStore.Cqrs
 {
@@ -12,7 +12,9 @@ namespace BigBang.Cosmos.EventStore.Cqrs
         }
 
         public string CommandName { get; }
+
         public IReadOnlyCollection<ICommandProjection> Projections => projections;
+
         public IConflictResolver ConflictResolution { get; set; } = new FailConflictResolver();
 
         public void AddProjection<TModel, TProjection>()

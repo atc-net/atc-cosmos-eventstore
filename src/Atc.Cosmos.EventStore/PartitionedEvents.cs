@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace BigBang.Cosmos.EventStore
 {
@@ -11,6 +11,7 @@ namespace BigBang.Cosmos.EventStore
         }
 
         public string StreamId { get; }
+
         public IReadOnlyCollection<Event> Events { get; }
     }
 }

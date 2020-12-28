@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -14,18 +14,6 @@ namespace BigBang.Cosmos.EventStore.Readers
     {
         private readonly CosmosSerializer serializer;
         private readonly Container container;
-
-        internal class StreamMetadataResponse
-        {
-            [JsonPropertyName("Documents")]
-            public List<StreamVersion> Documents { get; set; } = new List<StreamVersion>();
-        }
-
-        internal class StreamVersion
-        {
-            [JsonPropertyName("version")]
-            public long Version { get; set; }
-        }
 
         public MetadataReader(Container container, CosmosSerializer serializer)
         {
@@ -45,7 +33,9 @@ namespace BigBang.Cosmos.EventStore.Readers
                 return ExpectedVersion.Empty;
             }
 
-            using var responseMessage = await resultSet.ReadNextAsync(cancellationToken);
+            using var responseMessage = await resultSet
+                .ReadNextAsync(cancellationToken)
+                .ConfigureAwait(false);
             if (!responseMessage.IsSuccessStatusCode)
             {
                 return ExpectedVersion.Empty;
@@ -72,5 +62,17 @@ namespace BigBang.Cosmos.EventStore.Readers
             => new QueryDefinition(
                 "SELECT TOP 1 e.properties.version FROM events e WHERE e.pk = @id ORDER BY e.properties.version DESC")
                 .WithParameter("@id", partitionKey);
+
+        internal class StreamMetadataResponse
+        {
+            [JsonPropertyName("Documents")]
+            public List<StreamVersion> Documents { get; set; } = new List<StreamVersion>();
+        }
+
+        internal class StreamVersion
+        {
+            [JsonPropertyName("version")]
+            public long Version { get; set; }
+        }
     }
 }
