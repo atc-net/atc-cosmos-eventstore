@@ -1,6 +1,6 @@
-﻿using AutoFixture.Kernel;
 using System.Reflection;
 using System.Threading;
+using AutoFixture.Kernel;
 
 namespace Atc.Cosmos.EventStore.Xunit.Customizations
 {

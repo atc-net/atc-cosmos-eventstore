@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -9,7 +10,7 @@ namespace BigBang.Cosmos.EventStore.Serialization
         public override TimeSpan Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var timespan = reader.GetString();
-            return TimeSpan.TryParse(timespan, out var ts)
+            return TimeSpan.TryParse(timespan, CultureInfo.InvariantCulture, out var ts)
                 ? ts
                 : throw new JsonException("Value is not a valid timespan format");
         }

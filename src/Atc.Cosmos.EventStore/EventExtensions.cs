@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,7 +8,7 @@ namespace BigBang.Cosmos.EventStore
     {
         public static IReadOnlyCollection<PartitionedEvents> GroupByStreamId(this IReadOnlyCollection<Event> events)
             => events
-                .GroupBy(e => e.Properties.StreamId)
+                .GroupBy(e => e.Properties.StreamId, StringComparer.Ordinal)
                 .Select(g => new PartitionedEvents(g.Key, g.ToList()))
                 .ToList();
 

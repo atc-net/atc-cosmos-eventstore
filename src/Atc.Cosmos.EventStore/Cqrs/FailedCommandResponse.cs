@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 
 namespace BigBang.Cosmos.EventStore.Cqrs
 {
@@ -12,6 +12,7 @@ namespace BigBang.Cosmos.EventStore.Cqrs
         }
 
         public HttpStatusCode StatusCode { get; }
+
         public string Message { get; }
     }
 }

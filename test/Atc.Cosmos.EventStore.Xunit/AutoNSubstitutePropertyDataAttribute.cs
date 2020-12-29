@@ -1,4 +1,4 @@
-﻿using AutoFixture.Xunit2;
+using AutoFixture.Xunit2;
 using Xunit;
 using Xunit.Sdk;
 
@@ -13,6 +13,7 @@ namespace BigBang.Cosmos.EventStore.Xunit
                       new MemberDataAttribute(propertyName),
                       new AutoNSubstituteDataAttribute(),
                   })
-        { }
+        {
+        }
     }
 }

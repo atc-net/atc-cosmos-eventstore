@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,14 +19,15 @@ namespace BigBang.Cosmos.EventStore
         private readonly int throughput;
 
         public EventStoreClient(EventStoreClientOptions options)
-            : this (options.CosmosBuilder, options.StoreName, options.Throughput, options.TypeToNameMapper)
-        { }
+            : this(options.CosmosBuilder, options.StoreName, options.Throughput, options.TypeToNameMapper)
+        {
+        }
 
         public EventStoreClient(
             CosmosClientBuilder? builder,
             string storeName,
             int throughput,
-            Dictionary<Type, string> typeToName)
+            IReadOnlyDictionary<Type, string> typeToName)
         {
             if (builder is null)
             {
@@ -49,16 +50,27 @@ namespace BigBang.Cosmos.EventStore
             int throughput,
             Dictionary<Type, string> typeToName)
             : this(new CosmosClientBuilder(accountEndpoint, authKey), storeName, throughput, typeToName)
-        { }
+        {
+        }
 
         protected CosmosClient Client { get; set; }
+
         protected CosmosSerializer Serializer => serializer;
 
         public virtual async Task InitializeStoreAsync(CancellationToken cancellationToken = default)
         {
-            await GetOrCreateStreamContainerAsync(VersionedStreamContainerName, cancellationToken);
-            await GetOrCreateStreamContainerAsync(TimeSeriesStreamContainerName, cancellationToken);
-            await GetOrCreateStreamProcessorContainerAsync(ProcessorLeasesContainerName, cancellationToken);
+            await GetOrCreateStreamContainerAsync(
+                    VersionedStreamContainerName,
+                    cancellationToken)
+                .ConfigureAwait(false);
+            await GetOrCreateStreamContainerAsync(
+                    TimeSeriesStreamContainerName,
+                    cancellationToken)
+                .ConfigureAwait(false);
+            await GetOrCreateStreamProcessorContainerAsync(
+                    ProcessorLeasesContainerName,
+                    cancellationToken)
+                .ConfigureAwait(false);
         }
 
         public virtual IEventStream GetTimeseriesStream(string streamName)
@@ -79,15 +91,13 @@ namespace BigBang.Cosmos.EventStore
 
         private async Task<Container> GetOrCreateStreamContainerAsync(string name, CancellationToken cancellationToken)
         {
-            var database = await GetOrCreateDatabaseAsync(cancellationToken);
+            var database = await GetOrCreateDatabaseAsync(cancellationToken)
+                .ConfigureAwait(false);
 
-            return await database.DefineContainer(name, "/pk")
-                    ////.WithUniqueKey()
-                    ////    .Path("/properties/streamId")
-                    ////    .Path("/properties/version")
-                    ////    .Attach()
+            return await database
+                .DefineContainer(name, "/pk")
                     .WithIndexingPolicy()
-                        .WithAutomaticIndexing(true)
+                        .WithAutomaticIndexing(enabled: true)
                         .WithIndexingMode(IndexingMode.Consistent)
                         .WithExcludedPaths()
                             .Path("/data/*")
@@ -96,25 +106,31 @@ namespace BigBang.Cosmos.EventStore
                             .Path("/")
                             .Attach()
                         .Attach()
-                    .CreateIfNotExistsAsync(cancellationToken: cancellationToken);
+                    .CreateIfNotExistsAsync(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
         }
 
         private async Task<Container> GetOrCreateStreamProcessorContainerAsync(string name, CancellationToken cancellationToken)
         {
-            var database = await GetOrCreateDatabaseAsync(cancellationToken);
+            var database = await GetOrCreateDatabaseAsync(cancellationToken)
+                .ConfigureAwait(false);
 
-            return await database.CreateContainerIfNotExistsAsync(
-                name,
-                "/id",
-                cancellationToken: cancellationToken);
+            return await database
+                .CreateContainerIfNotExistsAsync(
+                    name,
+                    "/id",
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
         }
 
         private async Task<Database> GetOrCreateDatabaseAsync(CancellationToken cancellationToken)
         {
-            var response = await Client.CreateDatabaseIfNotExistsAsync(
+            var response = await Client
+                .CreateDatabaseIfNotExistsAsync(
                     storeName,
                     throughput,
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
 
             return response.Database;
         }

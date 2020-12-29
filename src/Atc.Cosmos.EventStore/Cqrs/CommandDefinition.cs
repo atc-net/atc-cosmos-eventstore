@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,7 +22,7 @@ namespace BigBang.Cosmos.EventStore.Cqrs
             CancellationToken cancellationToken = default)
         {
             var models = options.Projections.ToDictionary(p => p.ModelType, p => p.CreateModel());
-            await foreach (var events in stream.ReadStreamAsync(streamId, cancellationToken: cancellationToken))
+            await foreach (var events in stream.ReadStreamAsync(streamId, cancellationToken: cancellationToken).ConfigureAwait(false))
             {
                 foreach (var projection in options.Projections)
                 {

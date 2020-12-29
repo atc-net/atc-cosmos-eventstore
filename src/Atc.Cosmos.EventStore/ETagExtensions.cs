@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Globalization;
 using System.Text;
 
 namespace BigBang.Cosmos.EventStore
@@ -45,7 +46,7 @@ namespace BigBang.Cosmos.EventStore
                 throw new ArgumentException("Invalid etag", nameof(etag));
             }
 
-            if (!long.TryParse(parts[1], out var version))
+            if (!long.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var version))
             {
                 throw new ArgumentException("Invalid etag", nameof(etag));
             }

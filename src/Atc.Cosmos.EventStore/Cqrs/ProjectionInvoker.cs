@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +11,7 @@ namespace BigBang.Cosmos.EventStore.Cqrs
     /// </summary>
     public static class ProjectionInvoker
     {
-        private static readonly ConcurrentDictionary<string, MethodInfo> methods
-            = new ConcurrentDictionary<string, MethodInfo>();
+        private static readonly ConcurrentDictionary<string, MethodInfo> Methods = new (StringComparer.Ordinal);
 
         public static void ApplyProjection(this IReadOnlyCollection<Event> events, object projection, object model)
         {
@@ -25,7 +24,7 @@ namespace BigBang.Cosmos.EventStore.Cqrs
         public static void ApplyProjection(this Event @event, object projection, object model)
         {
             var key = $"{@event.Data.GetType().FullName}-{model.GetType().FullName}";
-            var action = methods.GetOrAdd(
+            var action = Methods.GetOrAdd(
                 key,
                 type => typeof(ProjectionInvoker)
                     .GetRuntimeMethods()

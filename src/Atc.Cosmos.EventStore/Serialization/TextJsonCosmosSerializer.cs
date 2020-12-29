@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.Json;
@@ -14,8 +14,10 @@ namespace BigBang.Cosmos.EventStore.Serialization
     {
         private readonly JsonSerializerOptions jsonSerializerOptions;
 
-        public TextJsonCosmosSerializer() : this(null)
-        { }
+        public TextJsonCosmosSerializer()
+            : this(null)
+        {
+        }
 
         public TextJsonCosmosSerializer(IEventTypeNameMapper? mapper)
         {

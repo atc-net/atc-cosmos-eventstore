@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -43,7 +43,9 @@ namespace BigBang.Cosmos.EventStore.Readers
 
                         try
                         {
-                            await changesProcessedSignal.WaitAsync(cancellationToken);
+                            await changesProcessedSignal
+                                .WaitAsync(cancellationToken)
+                                .ConfigureAwait(false);
                         }
                         catch (OperationCanceledException)
                         {
@@ -64,7 +66,9 @@ namespace BigBang.Cosmos.EventStore.Readers
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    await changesToProcessSignal.WaitAsync(cancellationToken);
+                    await changesToProcessSignal
+                        .WaitAsync(cancellationToken)
+                        .ConfigureAwait(false);
 
                     yield return changesToProcess;
 

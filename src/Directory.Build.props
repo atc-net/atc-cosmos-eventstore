@@ -7,9 +7,6 @@
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/atc-net/atc-cosmos-eventstore</PackageProjectUrl>
     <PackageTags>event store; cqrs; events; cosmos</PackageTags>
-    <Authors>ATC.Net</Authors>
-    <Company>ATC.Net</Company>
-    <Copyright>ATC.Net</Copyright>
     <Product>Cosmos EventStore for dotnet</Product>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
@@ -17,54 +14,43 @@
     <DebugType>embedded</DebugType>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-  
-  <PropertyGroup Label="Language configurations">
+
+  <PropertyGroup Label="Assembly Naming">
+    <Authors>ATC.Net</Authors>
+    <Company>ATC.Net</Company>
+    <Copyright>© $(Company).</Copyright>
+    <NeutralLanguage>en</NeutralLanguage>
+    <DefaultLanguage>en-US</DefaultLanguage>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
     <LangVersion>9.0</LangVersion>
-		<Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1573,1591,1712</NoWarn>
+    <!-- Used by code coverage -->
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
-  <PropertyGroup Label="Code Analysis Configurations">
-    <Deterministic>true</Deterministic>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <AnalysisLevel>latest</AnalysisLevel>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <!--<AnalysisLevel>latest</AnalysisLevel>
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>-->
-   
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>    
-    <NoWarn>$(NoWarn);1591</NoWarn>
-    
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors>true</WarningsAsErrors>
-
-    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)code-analysis.ruleset</CodeAnalysisRuleSet>
-
   </PropertyGroup>
-
-  <ItemGroup Label="Code Analysis Files">
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" Visible="false" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-    <PackageReference Include="System.Text.Json" Version="4.7.2" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-    <PackageReference Include="System.Text.Json" Version="5.0.0" />
-  </ItemGroup>
 
   <ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-		<PackageReference Include="Nerdbank.GitVersioning" Version="3.3.37" PrivateAssets="All" />
-	</ItemGroup>
-
-  <ItemGroup Label="Code Analyzer packages">
-    <PackageReference Include="AsyncFixer" Version="1.3.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.1" PrivateAssets="All" />
-    <PackageReference Include="SecurityCodeScan" Version="3.5.3" PrivateAssets="all" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.14.0.22654" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.3.37" PrivateAssets="All" />
   </ItemGroup>
-  
+
+  <ItemGroup Label="Code Analyzers">
+    <PackageReference Include="AsyncFixer" Version="1.3.0" PrivateAssets="All" />
+    <PackageReference Include="Asyncify" Version="0.9.7" PrivateAssets="All" />
+    <PackageReference Include="Meziantou.Analyzer" Version="1.0.606" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.8.55" PrivateAssets="All" />
+    <PackageReference Include="SecurityCodeScan" Version="3.5.3" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.15.0.24505" PrivateAssets="All" />
+  </ItemGroup>
+
 </Project>

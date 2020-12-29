@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -8,12 +8,6 @@ namespace BigBang.Cosmos.EventStore.Readers
 {
     public class EventStreamReader
     {
-        internal class EventStreamQueryResponse
-        {
-            [JsonPropertyName("Documents")]
-            public List<Event> Events { get; set; } = new List<Event>();
-        }
-
         private readonly CosmosSerializer serializer;
         private readonly StreamType streamType;
         private readonly Container container;
@@ -43,7 +37,9 @@ namespace BigBang.Cosmos.EventStore.Readers
 
             while (resultSet.HasMoreResults && !cancellationToken.IsCancellationRequested)
             {
-                using var responseMessage = await resultSet.ReadNextAsync(cancellationToken);
+                using var responseMessage = await resultSet
+                    .ReadNextAsync(cancellationToken)
+                    .ConfigureAwait(false);
 
                 responseMessage.EnsureSuccessStatusCode();
 
@@ -84,5 +80,11 @@ namespace BigBang.Cosmos.EventStore.Readers
             => new QueryDefinition(
                 "SELECT * FROM events e WHERE e.pk = @partitionKey ORDER BY e._ts")
                 .WithParameter("@partitionKey", partitionKey);
+
+        internal class EventStreamQueryResponse
+        {
+            [JsonPropertyName("Documents")]
+            public List<Event> Events { get; set; } = new List<Event>();
+        }
     }
 }
