@@ -3,6 +3,8 @@
 
   <PropertyGroup>
     <LangVersion>9.0</LangVersion>
+    <NoWarn>1573,1591,1712</NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   
   <ItemGroup Label="Test Analyzers">
