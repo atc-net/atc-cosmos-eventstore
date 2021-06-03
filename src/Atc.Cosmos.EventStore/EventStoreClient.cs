@@ -1,138 +1,86 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using BigBang.Cosmos.EventStore.Serialization;
-using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Fluent;
+using Atc.Cosmos.EventStore.Streams;
 
-namespace BigBang.Cosmos.EventStore
+namespace Atc.Cosmos.EventStore
 {
     public class EventStoreClient : IEventStoreClient
     {
-        public const string VersionedStreamContainerName = "versioned-streams";
-        public const string TimeSeriesStreamContainerName = "timeseries-streams";
-        public const string ProcessorLeasesContainerName = "processor-leases";
-
-        private readonly TextJsonCosmosSerializer serializer;
-        private readonly string storeName;
-        private readonly int throughput;
-
-        public EventStoreClient(EventStoreClientOptions options)
-            : this(options.CosmosBuilder, options.StoreName, options.Throughput, options.TypeToNameMapper)
-        {
-        }
+        private readonly IStreamWriter streamWriter;
+        private readonly IStreamReader streamReader;
+        private readonly IStreamInfoReader infoReader;
+        private readonly IStreamSubscriptionFactory subscriptionFactory;
+        private readonly IStreamSubscriptionRemover subscriptionRemover;
 
         public EventStoreClient(
-            CosmosClientBuilder? builder,
-            string storeName,
-            int throughput,
-            IReadOnlyDictionary<Type, string> typeToName)
+            IStreamWriter streamWriter,
+            IStreamReader streamReader,
+            IStreamInfoReader infoReader,
+            IStreamSubscriptionFactory subscriptionFactory,
+            IStreamSubscriptionRemover subscriptionRemover)
         {
-            if (builder is null)
-            {
-                throw new ArgumentNullException(nameof(builder));
-            }
-
-            this.storeName = storeName;
-            this.throughput = throughput;
-
-            serializer = new TextJsonCosmosSerializer(new EventTypeNameMapper(typeToName));
-            Client = builder
-                .WithCustomSerializer(serializer)
-                .Build();
+            this.streamWriter = streamWriter;
+            this.streamReader = streamReader;
+            this.infoReader = infoReader;
+            this.subscriptionFactory = subscriptionFactory;
+            this.subscriptionRemover = subscriptionRemover;
         }
 
-        public EventStoreClient(
-            string accountEndpoint,
-            string authKey,
-            string storeName,
-            int throughput,
-            Dictionary<Type, string> typeToName)
-            : this(new CosmosClientBuilder(accountEndpoint, authKey), storeName, throughput, typeToName)
+        public ValueTask DeleteSubscribeAsync(ConsumerGroup consumerGroup, CancellationToken cancellationToken = default)
         {
+            Arguments.EnsureNotNull(consumerGroup, nameof(consumerGroup));
+
+            return subscriptionRemover.DeleteAsync(consumerGroup, cancellationToken);
         }
 
-        protected CosmosClient Client { get; set; }
+        public ValueTask<IStreamMetadata> GetStreamInfoAsync(
+            StreamId streamId,
+            CancellationToken cancellationToken = default)
+            => infoReader.ReadAsync(streamId, cancellationToken);
 
-        protected CosmosSerializer Serializer => serializer;
+        public IAsyncEnumerable<IEvent> ReadFromStreamAsync(
+            StreamId streamId,
+            StreamVersion? fromVersion = null,
+            CancellationToken cancellationToken = default)
+            => streamReader.ReadAsync(
+                streamId,
+                Arguments.EnsureValueRange(fromVersion ?? StreamVersion.Any, nameof(fromVersion)),
+                cancellationToken);
 
-        public virtual async Task InitializeStoreAsync(CancellationToken cancellationToken = default)
+        public IStreamSubscription SubscribeToStreams(
+            ConsumerGroup consumerGroup,
+            SubscriptionStartOptions startOptions,
+            ProcessEventsHandler eventsHandler,
+            ProcessExceptionHandler errorHandler)
         {
-            await GetOrCreateStreamContainerAsync(
-                    VersionedStreamContainerName,
-                    cancellationToken)
-                .ConfigureAwait(false);
-            await GetOrCreateStreamContainerAsync(
-                    TimeSeriesStreamContainerName,
-                    cancellationToken)
-                .ConfigureAwait(false);
-            await GetOrCreateStreamProcessorContainerAsync(
-                    ProcessorLeasesContainerName,
-                    cancellationToken)
-                .ConfigureAwait(false);
+            Arguments.EnsureNotNull(consumerGroup, nameof(consumerGroup));
+            Arguments.EnsureNotNull(eventsHandler, nameof(eventsHandler));
+            Arguments.EnsureNotNull(errorHandler, nameof(errorHandler));
+
+            return subscriptionFactory
+                .Create(
+                    consumerGroup,
+                    startOptions,
+                    eventsHandler,
+                    errorHandler);
         }
 
-        public virtual IEventStream GetTimeseriesStream(string streamName)
-            => new EventStream(
-                Client.GetContainer(storeName, TimeSeriesStreamContainerName),
-                Client.GetContainer(storeName, ProcessorLeasesContainerName),
-                serializer,
-                StreamType.Timeseries,
-                streamName.ThrowIfStreamNameIsInvalid());
-
-        public virtual IEventStream GetVersionedStream(string streamName)
-            => new EventStream(
-                Client.GetContainer(storeName, VersionedStreamContainerName),
-                Client.GetContainer(storeName, ProcessorLeasesContainerName),
-                serializer,
-                StreamType.Versioned,
-                streamName.ThrowIfStreamNameIsInvalid());
-
-        private async Task<Container> GetOrCreateStreamContainerAsync(string name, CancellationToken cancellationToken)
+        public ValueTask<StreamResponse> WriteToStreamAsync(
+            StreamId streamId,
+            IReadOnlyCollection<object> events,
+            StreamVersion version,
+            StreamWriteOptions? options = null,
+            CancellationToken cancellationToken = default)
         {
-            var database = await GetOrCreateDatabaseAsync(cancellationToken)
-                .ConfigureAwait(false);
+            Arguments.EnsureNoNullValues(events, nameof(events));
 
-            return await database
-                .DefineContainer(name, "/pk")
-                    .WithIndexingPolicy()
-                        .WithAutomaticIndexing(enabled: true)
-                        .WithIndexingMode(IndexingMode.Consistent)
-                        .WithExcludedPaths()
-                            .Path("/data/*")
-                            .Attach()
-                        .WithIncludedPaths()
-                            .Path("/")
-                            .Attach()
-                        .Attach()
-                    .CreateIfNotExistsAsync(cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-        }
-
-        private async Task<Container> GetOrCreateStreamProcessorContainerAsync(string name, CancellationToken cancellationToken)
-        {
-            var database = await GetOrCreateDatabaseAsync(cancellationToken)
-                .ConfigureAwait(false);
-
-            return await database
-                .CreateContainerIfNotExistsAsync(
-                    name,
-                    "/id",
-                    cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-        }
-
-        private async Task<Database> GetOrCreateDatabaseAsync(CancellationToken cancellationToken)
-        {
-            var response = await Client
-                .CreateDatabaseIfNotExistsAsync(
-                    storeName,
-                    throughput,
-                    cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-
-            return response.Database;
+            return streamWriter.WriteAsync(
+                streamId,
+                events,
+                version,
+                options,
+                cancellationToken);
         }
     }
 }
