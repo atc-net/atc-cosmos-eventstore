@@ -22,7 +22,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.Projections
             endsOnAcceptAll = filter
                 .Split(
                     new[] { EventStreamId.PartSeperator },
-                    StringSplitOptions.RemoveEmptyEntries)[^0] == "**";
+                    StringSplitOptions.RemoveEmptyEntries)[^1] == "**";
         }
 
         public bool Evaluate(StreamId streamId)
