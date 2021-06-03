@@ -7,22 +7,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Cosmos.EventStore", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Cosmos.EventStore.Tests", "test\Atc.Cosmos.EventStore.Tests\Atc.Cosmos.EventStore.Tests.csproj", "{2A182C87-5FD5-4318-9339-94F36ED800FB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Cosmos.EventStore.Xunit", "test\Atc.Cosmos.EventStore.Xunit\Atc.Cosmos.EventStore.Xunit.csproj", "{5258A59B-3018-48E1-A7BE-A0BC7736A77B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{0A4F8A9A-3074-4080-A48A-633DC7A06BC5}"
-	ProjectSection(SolutionItems) = preProject
-		build\code-analysis-test.ruleset = build\code-analysis-test.ruleset
-		build\code-analysis.props = build\code-analysis.props
-		build\code-analysis.ruleset = build\code-analysis.ruleset
-		build\custom-dictionary.xml = build\custom-dictionary.xml
-		build\sonar.cloud.ruleset = build\sonar.cloud.ruleset
-		build\stylecop.json = build\stylecop.json
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{896CBC7A-D026-473B-8AFB-843FACB98624}"
 	ProjectSection(SolutionItems) = preProject
 		docs\Concepts.md = docs\Concepts.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Cosmos.EventStore.Cqrs", "src\Atc.Cosmos.EventStore.Cqrs\Atc.Cosmos.EventStore.Cqrs.csproj", "{B7ABF0D8-940D-4392-B619-ECFBA0A58EE6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Cosmos.EventStore.IntegrationTests", "test\Atc.Cosmos.EventStore.IntegrationTests\Atc.Cosmos.EventStore.IntegrationTests.csproj", "{55C3F01F-5A47-4821-82EB-9F5F3FCC669F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Cosmos.EventStore.Cqrs.Tests", "test\Atc.Cosmos.EventStore.Cqrs.Tests\Atc.Cosmos.EventStore.Cqrs.Tests.csproj", "{04D95696-E998-4BB4-9C97-2B272FB2115B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,10 +32,18 @@ Global
 		{2A182C87-5FD5-4318-9339-94F36ED800FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A182C87-5FD5-4318-9339-94F36ED800FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A182C87-5FD5-4318-9339-94F36ED800FB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5258A59B-3018-48E1-A7BE-A0BC7736A77B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5258A59B-3018-48E1-A7BE-A0BC7736A77B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5258A59B-3018-48E1-A7BE-A0BC7736A77B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5258A59B-3018-48E1-A7BE-A0BC7736A77B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7ABF0D8-940D-4392-B619-ECFBA0A58EE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7ABF0D8-940D-4392-B619-ECFBA0A58EE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7ABF0D8-940D-4392-B619-ECFBA0A58EE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7ABF0D8-940D-4392-B619-ECFBA0A58EE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55C3F01F-5A47-4821-82EB-9F5F3FCC669F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55C3F01F-5A47-4821-82EB-9F5F3FCC669F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55C3F01F-5A47-4821-82EB-9F5F3FCC669F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55C3F01F-5A47-4821-82EB-9F5F3FCC669F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04D95696-E998-4BB4-9C97-2B272FB2115B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04D95696-E998-4BB4-9C97-2B272FB2115B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04D95696-E998-4BB4-9C97-2B272FB2115B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04D95696-E998-4BB4-9C97-2B272FB2115B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
