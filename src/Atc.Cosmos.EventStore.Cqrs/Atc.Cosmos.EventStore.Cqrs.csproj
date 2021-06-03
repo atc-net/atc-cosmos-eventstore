@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Atc.Cosmos.EventStore.Cqrs</PackageId>
+    <PackageTags>event store; cqrs; events; cosmos</PackageTags>
+    <Description>CQRS implementation for Atc.Cosmos.EventStore</Description>
+  </PropertyGroup>
+
+  <!--<ItemGroup Condition="$(TargetFramework) == 'net5.0'">
+    <ProjectReference Include="..\Atc.Cosmos.EventStore\Atc.Cosmos.EventStore.csproj" />
+  </ItemGroup>-->
+
+  <ItemGroup>
+    <ProjectReference Include="..\Atc.Cosmos.EventStore\Atc.Cosmos.EventStore.csproj" />
+  </ItemGroup>
+
+</Project>
