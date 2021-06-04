@@ -2,6 +2,9 @@ using System;
 
 namespace Atc.Cosmos.EventStore
 {
+    /// <summary>
+    /// Represents group of consumers for a subscription.
+    /// </summary>
     public class ConsumerGroup
     {
         private const string DefaultInstance = ".default";
