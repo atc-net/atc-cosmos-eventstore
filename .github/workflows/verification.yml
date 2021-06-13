@@ -38,11 +38,11 @@ jobs:
 
       - name: 🧪 Run unit tests
         run: |
-          dotnet test ./test/atc.cosmos.eventstore.tests/atc.cosmos.eventstore.tests.csproj -c release --logger GitHubActions
-          dotnet test ./test/atc.cosmos.eventstore.cqrs.tests/atc.cosmos.eventstore.cqrs.tests.csproj -c release --logger GitHubActions
+          dotnet test ./test/Atc.Cosmos.EventStore.Tests/Atc.Cosmos.EventStore.Tests.csproj -c release --logger GitHubActions
+          dotnet test ./test/Atc.Cosmos.EventStore.Cqrs.Tests/Atc.Cosmos.EventStore.Cqrs.Tests.csproj -c release --logger GitHubActions
 
       - name: 🗳️ Pack libraries
         run: |
           dotnet pack -c release -o ${GITHUB_WORKSPACE}/packages -p:ContinuousIntegrationBuild=true
-          dotnet pack src/atc.cosmos.eventstore/ -c release -o ${GITHUB_WORKSPACE}/packages -p:ContinuousIntegrationBuild=true
-          dotnet pack src/atc.cosmos.eventstore.cqrs/ -c release -o ${GITHUB_WORKSPACE}/packages -p:ContinuousIntegrationBuild=true
+          dotnet pack src/Atc.Cosmos.EventStore/ -c release -o ${GITHUB_WORKSPACE}/packages -p:ContinuousIntegrationBuild=true
+          dotnet pack src/Atc.Cosmos.EventStore.Cqrs/ -c release -o ${GITHUB_WORKSPACE}/packages -p:ContinuousIntegrationBuild=true
