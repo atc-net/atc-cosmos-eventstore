@@ -20,7 +20,7 @@ namespace Atc.Cosmos.EventStore.Cosmos
             this.timeProvider = timeProvider;
         }
 
-        public async ValueTask<IStreamMetadata> GetAsync(
+        public async Task<IStreamMetadata> GetAsync(
             StreamId streamId,
             CancellationToken cancellationToken)
         {

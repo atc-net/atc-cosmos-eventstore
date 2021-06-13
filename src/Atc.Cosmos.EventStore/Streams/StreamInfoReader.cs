@@ -13,7 +13,7 @@ namespace Atc.Cosmos.EventStore.Streams
             this.metadataReader = metadataReader;
         }
 
-        public ValueTask<IStreamMetadata> ReadAsync(
+        public Task<IStreamMetadata> ReadAsync(
             StreamId streamId,
             CancellationToken cancellationToken = default)
             => metadataReader.GetAsync(streamId, cancellationToken);

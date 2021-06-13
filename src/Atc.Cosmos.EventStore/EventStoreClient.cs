@@ -33,8 +33,10 @@ namespace Atc.Cosmos.EventStore
 
             return subscriptionRemover.DeleteAsync(consumerGroup, cancellationToken);
         }
+        public Task DeleteSubscribeAsync(ConsumerGroup consumerGroup, CancellationToken cancellationToken = default)
 
         public ValueTask<IStreamMetadata> GetStreamInfoAsync(
+        public Task<IStreamMetadata> GetStreamInfoAsync(
             StreamId streamId,
             CancellationToken cancellationToken = default)
             => infoReader.ReadAsync(streamId, cancellationToken);
@@ -67,6 +69,7 @@ namespace Atc.Cosmos.EventStore
         }
 
         public ValueTask<StreamResponse> WriteToStreamAsync(
+        public Task<StreamResponse> WriteToStreamAsync(
             StreamId streamId,
             IReadOnlyCollection<object> events,
             StreamVersion version,

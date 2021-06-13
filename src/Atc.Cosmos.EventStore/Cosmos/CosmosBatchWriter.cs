@@ -14,7 +14,7 @@ namespace Atc.Cosmos.EventStore.Cosmos
             this.containerProvider = containerProvider;
         }
 
-        public async ValueTask<IStreamMetadata> WriteAsync(
+        public async Task<IStreamMetadata> WriteAsync(
             StreamBatch batch,
             CancellationToken cancellationToken)
         {
