@@ -8,7 +8,7 @@ namespace Atc.Cosmos.EventStore
     [DebuggerStepThrough]
     internal static class Arguments
     {
-        internal static void EnsureNoNullValues(IReadOnlyCollection<object> events, string argumentName)
+        internal static IReadOnlyCollection<object> EnsureNoNullValues(IReadOnlyCollection<object> events, string argumentName)
         {
             if (events is null)
             {
@@ -19,14 +19,18 @@ namespace Atc.Cosmos.EventStore
             {
                 throw new ArgumentException("Null values not allowed", argumentName);
             }
+
+            return events;
         }
 
-        internal static void EnsureNotNull(object argumentValue, string argumentName)
+        internal static object EnsureNotNull(object argumentValue, string argumentName)
         {
             if (argumentValue is null)
             {
                 throw new ArgumentNullException(argumentName);
             }
+
+            return argumentValue;
         }
 
         internal static T EnsureNotNull<T>(T? argumentValue, string argumentName)
