@@ -5,8 +5,6 @@
 
 ## Versioned
 
-## Time-series
-
 # Projections
 
 # Processors
