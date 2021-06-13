@@ -1,0 +1,44 @@
+name: release-preview
+concurrency: 'release-preview'
+
+on:
+  workflow_run:
+    branches: [ main ]
+    workflows: [ 'verification' ]
+    types: [ completed ]
+
+  workflow_dispatch:
+    inputs:
+      nugetRelease:
+        description: 'Release to NuGet? Set to "true" to release to NuGet.org as well as GPR.'     
+        required: true
+        default: 'false'
+
+jobs:
+  release-preview:
+    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' && ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: 🛒 Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: ⚙️ Setup GIT versioning
+        uses: dotnet/nbgv@v0.4.0
+
+      - name: ⚙️ Setup dotnet 5.0.x
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+
+      - name: 🛠️ Building library in release mode
+        run: dotnet pack -c Release -o ${GITHUB_WORKSPACE}/packages -p:ContinuousIntegrationBuild=true -p:publicrelease=true
+
+      - name: 🛠️ Upload library to GitHub Package Repository
+        run: dotnet nuget push ${GITHUB_WORKSPACE}/packages/*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/atc-net/index.json --skip-duplicate --no-symbols true
+
+      - name: 🛠️ Upload library to NuGet.org repository
+        if: github.event.inputs.nugetRelease == 'true'
+        run: dotnet nuget push ${GITHUB_WORKSPACE}/packages/*.nupkg -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols true
