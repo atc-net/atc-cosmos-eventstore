@@ -15,7 +15,7 @@ namespace Atc.Cosmos.EventStore.Cosmos
             this.containerProvider = containerProvider;
         }
 
-        public async ValueTask DeleteAsync(ConsumerGroup consumerGroup, CancellationToken cancellationToken)
+        public async Task DeleteAsync(ConsumerGroup consumerGroup, CancellationToken cancellationToken)
         {
             var resultSet = containerProvider
                 .GetSubscriptionContainer()

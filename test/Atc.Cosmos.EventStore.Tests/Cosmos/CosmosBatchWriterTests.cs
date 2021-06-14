@@ -116,7 +116,7 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
                 .IsSuccessStatusCode
                 .Returns(returnThis: false);
 
-            ValueTaskExtensions
+            FluentActions
                 .Awaiting(() => sut.WriteAsync(streamBatch, cancellationToken))
                 .Should()
                 .Throw<StreamWriteConflictException>();

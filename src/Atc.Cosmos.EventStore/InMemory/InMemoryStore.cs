@@ -20,12 +20,12 @@ namespace Atc.Cosmos.EventStore.InMemory
             Func<IReadOnlyCollection<EventDocument>, CancellationToken, Task> changes)
             => throw new NotSupportedException();
 
-        public ValueTask DeleteAsync(
+        public Task DeleteAsync(
             ConsumerGroup consumerGroup,
             CancellationToken cancellationToken)
             => throw new NotSupportedException();
 
-        public ValueTask<IStreamMetadata> GetAsync(
+        public Task<IStreamMetadata> GetAsync(
             StreamId streamId,
             CancellationToken cancellationToken)
             => throw new NotSupportedException();
@@ -36,7 +36,7 @@ namespace Atc.Cosmos.EventStore.InMemory
             CancellationToken cancellationToken)
             => throw new NotSupportedException();
 
-        public ValueTask<IStreamMetadata> WriteAsync(
+        public Task<IStreamMetadata> WriteAsync(
             StreamBatch batch,
             CancellationToken cancellationToken)
             => throw new NotSupportedException();

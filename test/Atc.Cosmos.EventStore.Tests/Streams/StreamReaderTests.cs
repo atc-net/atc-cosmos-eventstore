@@ -52,7 +52,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         {
             metadataReader
                 .GetAsync(default, default)
-                .ReturnsForAnyArgs(new ValueTask<IStreamMetadata>(streamMetadata));
+                .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(streamMetadata));
 
             streamIterator
                 .ReadAsync(default, default, default)
@@ -86,7 +86,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         {
             metadataReader
                 .GetAsync(default, default)
-                .ReturnsForAnyArgs(new ValueTask<IStreamMetadata>(streamMetadata));
+                .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(streamMetadata));
 
             streamIterator
                 .ReadAsync(default, default, default)

@@ -26,7 +26,7 @@ namespace Atc.Cosmos.EventStore.Tests
         {
             writer
                 .WriteAsync(default, default, default, default, default)
-                .ReturnsForAnyArgs(new ValueTask<StreamResponse>(expected));
+                .ReturnsForAnyArgs(Task.FromResult<StreamResponse>(expected));
 
             var result = await sut.WriteToStreamAsync(
                 streamId,
@@ -48,7 +48,8 @@ namespace Atc.Cosmos.EventStore.Tests
         {
             events.Add(null);
 
-            ValueTaskExtensions.Awaiting(() => sut.WriteToStreamAsync(
+            FluentActions
+                .Awaiting(() => sut.WriteToStreamAsync(
                     streamId,
                     events,
                     StreamVersion.StartOfStream,

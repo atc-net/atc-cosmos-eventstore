@@ -16,7 +16,7 @@ namespace Atc.Cosmos.EventStore
         /// <param name="options">(Optional) The options for writing events.</param>
         /// <param name="cancellationToken">(Optional) <seealso cref="CancellationToken"/> representing request cancellation.</param>
         /// <returns>Response of the write operation.</returns>
-        ValueTask<StreamResponse> WriteToStreamAsync(
+        Task<StreamResponse> WriteToStreamAsync(
             StreamId streamId,
             IReadOnlyCollection<object> events,
             StreamVersion version,
@@ -41,7 +41,7 @@ namespace Atc.Cosmos.EventStore
         /// <param name="streamId">Event stream to read from.</param>
         /// <param name="cancellationToken">(Optional) <seealso cref="CancellationToken"/> representing request cancellation.</param>
         /// <returns>Stream information.</returns>
-        ValueTask<IStreamMetadata> GetStreamInfoAsync(
+        Task<IStreamMetadata> GetStreamInfoAsync(
             StreamId streamId,
             CancellationToken cancellationToken = default);
 
@@ -65,7 +65,7 @@ namespace Atc.Cosmos.EventStore
         /// <param name="consumerGroup">Consumer group to remove subscription from.</param>
         /// <param name="cancellationToken">(Optional) <seealso cref="CancellationToken"/> representing request cancellation.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        ValueTask DeleteSubscribeAsync(
+        Task DeleteSubscribeAsync(
             ConsumerGroup consumerGroup,
             CancellationToken cancellationToken = default);
     }

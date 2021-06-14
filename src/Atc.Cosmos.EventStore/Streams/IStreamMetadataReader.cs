@@ -5,6 +5,6 @@ namespace Atc.Cosmos.EventStore.Streams
 {
     public interface IStreamMetadataReader
     {
-        ValueTask<IStreamMetadata> GetAsync(StreamId streamId, CancellationToken cancellationToken);
+        Task<IStreamMetadata> GetAsync(StreamId streamId, CancellationToken cancellationToken);
     }
 }

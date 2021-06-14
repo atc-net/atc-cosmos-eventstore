@@ -27,14 +27,12 @@ namespace Atc.Cosmos.EventStore
             this.subscriptionRemover = subscriptionRemover;
         }
 
-        public ValueTask DeleteSubscribeAsync(ConsumerGroup consumerGroup, CancellationToken cancellationToken = default)
-        {
-            Arguments.EnsureNotNull(consumerGroup, nameof(consumerGroup));
+        public Task DeleteSubscribeAsync(ConsumerGroup consumerGroup, CancellationToken cancellationToken = default)
+            => subscriptionRemover.DeleteAsync(
+                Arguments.EnsureNotNull(consumerGroup, nameof(consumerGroup)),
+                cancellationToken);
 
-            return subscriptionRemover.DeleteAsync(consumerGroup, cancellationToken);
-        }
-
-        public ValueTask<IStreamMetadata> GetStreamInfoAsync(
+        public Task<IStreamMetadata> GetStreamInfoAsync(
             StreamId streamId,
             CancellationToken cancellationToken = default)
             => infoReader.ReadAsync(streamId, cancellationToken);
@@ -53,34 +51,24 @@ namespace Atc.Cosmos.EventStore
             SubscriptionStartOptions startOptions,
             ProcessEventsHandler eventsHandler,
             ProcessExceptionHandler errorHandler)
-        {
-            Arguments.EnsureNotNull(consumerGroup, nameof(consumerGroup));
-            Arguments.EnsureNotNull(eventsHandler, nameof(eventsHandler));
-            Arguments.EnsureNotNull(errorHandler, nameof(errorHandler));
-
-            return subscriptionFactory
+            => subscriptionFactory
                 .Create(
-                    consumerGroup,
+                    Arguments.EnsureNotNull(consumerGroup, nameof(consumerGroup)),
                     startOptions,
-                    eventsHandler,
-                    errorHandler);
-        }
+                    Arguments.EnsureNotNull(eventsHandler, nameof(eventsHandler)),
+                    Arguments.EnsureNotNull(errorHandler, nameof(errorHandler)));
 
-        public ValueTask<StreamResponse> WriteToStreamAsync(
+        public Task<StreamResponse> WriteToStreamAsync(
             StreamId streamId,
             IReadOnlyCollection<object> events,
             StreamVersion version,
             StreamWriteOptions? options = null,
             CancellationToken cancellationToken = default)
-        {
-            Arguments.EnsureNoNullValues(events, nameof(events));
-
-            return streamWriter.WriteAsync(
+            => streamWriter.WriteAsync(
                 streamId,
-                events,
+                Arguments.EnsureNoNullValues(events, nameof(events)),
                 version,
                 options,
                 cancellationToken);
-        }
     }
 }

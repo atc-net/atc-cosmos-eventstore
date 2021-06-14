@@ -44,17 +44,12 @@ namespace Atc.Cosmos.EventStore.Converters
                 throw new JsonException();
             }
 
-            var type = typeProvider
-                .GetEventType(name.GetString() ?? string.Empty);
-
-            var jsonObject = jsonDocument
-                .RootElement
-                .GetRawText();
-
             var result = (EventDocument)JsonSerializer
                 .Deserialize(
-                    jsonObject,
-                    MakeGenericEventDocumentType(type),
+                    jsonDocument.RootElement.GetRawText(),
+                    MakeGenericEventDocumentType(
+                        typeProvider.GetEventType(
+                            name.GetString() ?? string.Empty)),
                     options)!;
 
             return result;

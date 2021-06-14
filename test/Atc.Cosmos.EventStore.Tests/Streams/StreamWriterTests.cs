@@ -25,7 +25,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         {
             eventWriter
                 .WriteAsync(default, default)
-                .ReturnsForAnyArgs(new ValueTask<IStreamMetadata>(expected));
+                .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(expected));
 
             await sut.WriteAsync(
                 streamId,
@@ -53,7 +53,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         {
             eventWriter
                 .WriteAsync(default, default)
-                .ReturnsForAnyArgs(new ValueTask<IStreamMetadata>(expected));
+                .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(expected));
 
             await sut.WriteAsync(
                 streamId,
@@ -81,7 +81,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         {
             eventWriter
                 .WriteAsync(default, default)
-                .ReturnsForAnyArgs(new ValueTask<IStreamMetadata>(expected));
+                .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(expected));
 
             await sut.WriteAsync(
                 streamId,
@@ -109,7 +109,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         {
             eventWriter
                 .WriteAsync(default, default)
-                .ReturnsForAnyArgs(new ValueTask<IStreamMetadata>(expected));
+                .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(expected));
 
             var result = await sut.WriteAsync(
                 streamId,

@@ -23,7 +23,7 @@ namespace Atc.Cosmos.EventStore.Streams
             this.batchWriter = batchWriter;
         }
 
-        public async ValueTask<StreamResponse> WriteAsync(
+        public async Task<StreamResponse> WriteAsync(
             StreamId streamId,
             IReadOnlyCollection<object> events,
             StreamVersion version,
