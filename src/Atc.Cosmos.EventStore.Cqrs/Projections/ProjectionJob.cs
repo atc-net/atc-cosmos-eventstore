@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Projections
 {
-    public class ProjectionJob<TProjection> :
+    internal class ProjectionJob<TProjection> :
         IHostedService,
         IProjectionJob<TProjection>
         where TProjection : IProjection
@@ -29,8 +28,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.Projections
             subscription = client.SubscribeToStreams(
                 ConsumerGroup.GetAsAutoScalingInstance(options.Name),
                 SubscriptionStartOptions.FromBegining,
-                OnProcessEventsAsync,
-                OnProcessExceptionAsync);
+                OnProcessEventsAsync);
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -47,12 +45,12 @@ namespace Atc.Cosmos.EventStore.Cqrs.Projections
         public Task StopAsync(CancellationToken cancellationToken)
             => subscription.StopAsync();
 
-        private ValueTask OnProcessExceptionAsync(Exception exception, CancellationToken cancellationToken)
-            => new(Task.CompletedTask);
-
-        private ValueTask OnProcessEventsAsync(IEnumerable<IEvent> events, CancellationToken cancellationToken)
-            => processor.ProcessBatchAsync(
-                events,
-                cancellationToken);
+        private Task OnProcessEventsAsync(
+            IEnumerable<IEvent> events,
+            CancellationToken cancellationToken)
+            => processor
+                .ProcessBatchAsync(
+                    events,
+                    cancellationToken);
     }
 }

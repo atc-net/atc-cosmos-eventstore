@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace Atc.Cosmos.EventStore.Streams
 {
-    public interface IStreamIterator
+    internal interface IStreamIterator
     {
         IAsyncEnumerable<IEvent> ReadAsync(
             StreamId streamId,
             StreamVersion fromVersion,
+            StreamReadFilter? filter,
             CancellationToken cancellationToken);
     }
 }

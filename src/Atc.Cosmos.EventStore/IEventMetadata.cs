@@ -5,7 +5,7 @@ namespace Atc.Cosmos.EventStore
     /// <summary>
     /// Represents meta-data of an event in a stream.
     /// </summary>
-    public interface IEventProperties
+    public interface IEventMetadata
     {
         /// <summary>
         /// Gets the unique id of the event.

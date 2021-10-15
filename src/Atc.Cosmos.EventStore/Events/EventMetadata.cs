@@ -6,12 +6,12 @@ namespace Atc.Cosmos.EventStore.Events
     /// <summary>
     /// Represents a set of properties related to an events.
     /// </summary>
-    public class EventProperties : IEventProperties
+    internal class EventMetadata : IEventMetadata
     {
         [JsonIgnore]
         public string EventId { get; set; } = string.Empty;
 
-        [JsonPropertyName(EventPropertyNames.EventName)]
+        [JsonPropertyName(EventMetadataNames.EventName)]
         public string Name { get; set; } = string.Empty;
 
         public StreamId StreamId { get; set; } = string.Empty;
@@ -23,11 +23,5 @@ namespace Atc.Cosmos.EventStore.Events
         public string? CorrelationId { get; set; }
 
         public string? CausationId { get; set; }
-
-        ////[JsonIgnore]
-        ////StreamId IEventProperties.StreamId => StreamId;
-
-        ////[JsonIgnore]
-        ////StreamVersion IEventProperties.Version => Version;
     }
 }

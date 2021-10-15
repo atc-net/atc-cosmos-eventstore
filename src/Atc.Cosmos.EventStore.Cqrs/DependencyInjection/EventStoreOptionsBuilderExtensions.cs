@@ -2,8 +2,10 @@ using System;
 using Atc.Cosmos.EventStore.Cqrs;
 using Atc.Cosmos.EventStore.Cqrs.Commands;
 using Atc.Cosmos.EventStore.Cqrs.DependencyInjection.Internal;
+using Atc.Cosmos.EventStore.Cqrs.Diagnostics;
 using Atc.Cosmos.EventStore.Cqrs.Projections;
-using Atc.Cosmos.EventStore.DependencyInjection.Internal;
+using Atc.Cosmos.EventStore.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -25,6 +27,9 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddSingleton<IProjectionFactory, ProjectionFactory>();
 
             builder.Services.AddSingleton(typeof(ProjectionMetadata<>));
+
+            builder.Services.TryAddSingleton<IProjectionDiagnostics, ProjectionDiagnostics>();
+            builder.Services.TryAddSingleton<IProjectionProcessOperation, ProjectionProcessOperation>();
 
             return builder;
         }

@@ -2,7 +2,7 @@ using Microsoft.Extensions.Options;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Projections
 {
-    public class ProjectionOptionsFactory : IProjectionOptionsFactory
+    internal class ProjectionOptionsFactory : IProjectionOptionsFactory
     {
         private readonly IOptionsMonitor<ProjectionOptions> namedOptions;
 

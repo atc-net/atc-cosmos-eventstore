@@ -9,7 +9,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams.Validators
     public class StreamClosedValidatorTests
     {
         [Theory, AutoNSubstituteData]
-        public void Should_Validate_When_Stream_IsNew(
+        internal void Should_Validate_When_Stream_IsNew(
             IStreamMetadata metadata,
             StreamVersion version,
             StreamClosedValidator sut)
@@ -25,7 +25,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams.Validators
         }
 
         [Theory, AutoNSubstituteData]
-        public void Should_Validate_When_Stream_IsActive(
+        internal void Should_Validate_When_Stream_IsActive(
             IStreamMetadata metadata,
             StreamVersion version,
             StreamClosedValidator sut)
@@ -41,7 +41,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams.Validators
         }
 
         [Theory, AutoNSubstituteData]
-        public void Should_Throw_When_Stream_IsClosed(
+        internal void Should_Throw_When_Stream_IsClosed(
             IStreamMetadata metadata,
             StreamVersion version,
             StreamClosedValidator sut)

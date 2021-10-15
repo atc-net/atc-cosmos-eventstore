@@ -1,6 +1,6 @@
 namespace Atc.Cosmos.EventStore.Streams.Validators
 {
-    public class StreamClosedValidator : IStreamValidator
+    internal class StreamClosedValidator : IStreamValidator
     {
         public void Validate(IStreamMetadata metadata, StreamVersion version)
         {

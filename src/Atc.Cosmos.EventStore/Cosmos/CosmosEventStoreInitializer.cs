@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace Atc.Cosmos.EventStore.Cosmos
 {
-    public class CosmosEventStoreInitializer : IEventStoreInitializer
+    internal class CosmosEventStoreInitializer : IEventStoreInitializer
     {
         private readonly EventStoreClientOptions options;
         private readonly ICosmosClientFactory clientFactory;
@@ -41,6 +41,8 @@ namespace Atc.Cosmos.EventStore.Cosmos
                  .ConfigureAwait(continueOnCapturedContext: false);
             await CreateSubscriptionContainerAsync(cancellationToken)
                  .ConfigureAwait(continueOnCapturedContext: false);
+            await CreateIndexContainerAsync(cancellationToken)
+                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
         private Task CreateEventStoreContainerAsync(CancellationToken cancellationToken)
@@ -56,7 +58,7 @@ namespace Atc.Cosmos.EventStore.Cosmos
                 PartitionKeyPath = "/pk",
             };
 
-            containerOptions.IndexingPolicy.IncludedPaths.Add(new IncludedPath { Path = "/" });
+            containerOptions.IndexingPolicy.IncludedPaths.Add(new IncludedPath { Path = "/*" });
 
             // Exclude event data from indexing.
             containerOptions.IndexingPolicy.ExcludedPaths.Add(new ExcludedPath { Path = "/data/*" });
@@ -81,6 +83,32 @@ namespace Atc.Cosmos.EventStore.Cosmos
                 Id = options.SubscriptionContainerId,
                 PartitionKeyPath = "/id",
             };
+
+            return clientFactory
+                .GetClient()
+                .GetDatabase(options.EventStoreDatabaseId)
+                .CreateContainerIfNotExistsAsync(
+                    containerOptions,
+                    cancellationToken: cancellationToken);
+        }
+
+        private Task CreateIndexContainerAsync(CancellationToken cancellationToken)
+        {
+            var containerOptions = new ContainerProperties
+            {
+                IndexingPolicy = new IndexingPolicy
+                {
+                    Automatic = true,
+                    IndexingMode = IndexingMode.Consistent,
+                },
+                Id = options.IndexContainerId,
+                PartitionKeyPath = "/pk",
+            };
+
+            containerOptions.IndexingPolicy.IncludedPaths.Add(new IncludedPath { Path = "/*" });
+
+            // Exclude snapshot data from indexing.
+            containerOptions.IndexingPolicy.ExcludedPaths.Add(new ExcludedPath { Path = "/data/*" });
 
             return clientFactory
                 .GetClient()

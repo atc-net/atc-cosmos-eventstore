@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Atc.Cosmos.EventStore.Streams
 {
-    public class StreamMetadata : IStreamMetadata
+    internal class StreamMetadata : IStreamMetadata
     {
         public const string StreamMetadataId = "meta-data";
 

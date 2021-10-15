@@ -2,7 +2,7 @@ using System;
 
 namespace Atc.Cosmos.EventStore.Diagnostics
 {
-    public interface ISubscriptionTelemetry
+    internal interface ISubscriptionTelemetry
     {
         void ProcessExceptionHandlerFailed(Exception exception, ConsumerGroup consumerGroup);
 

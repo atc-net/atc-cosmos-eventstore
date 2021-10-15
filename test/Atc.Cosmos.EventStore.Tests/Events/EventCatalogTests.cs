@@ -13,7 +13,7 @@ namespace Atc.Cosmos.EventStore.Tests.Events
     public class EventCatalogTests
     {
         [Theory, AutoNSubstituteData]
-        public void Should_Resolve_Type_From_Name(
+        internal void Should_Resolve_Type_From_Name(
             [Frozen] IReadOnlyDictionary<EventName, Type> mappings,
             EventCatalog sut)
             => sut.GetEventType(mappings.Keys.First())
@@ -21,7 +21,7 @@ namespace Atc.Cosmos.EventStore.Tests.Events
                 .Be(mappings[mappings.Keys.First()]);
 
         [Theory, AutoNSubstituteData]
-        public void ShouldThrow_When_Name_IsNotFound(
+        internal void ShouldThrow_When_Name_IsNotFound(
             EventCatalog sut)
             => FluentActions
                 .Invoking(() => sut.GetEventType("non-existing-name"))
@@ -43,7 +43,7 @@ namespace Atc.Cosmos.EventStore.Tests.Events
                 .Be(evt1Name);
 
         [Theory, AutoNSubstituteData]
-        public void ShouldThrow_When_Objects_Type_IsNotFound(
+        internal void ShouldThrow_When_Objects_Type_IsNotFound(
             EventOne evt,
             EventCatalog sut)
             => FluentActions

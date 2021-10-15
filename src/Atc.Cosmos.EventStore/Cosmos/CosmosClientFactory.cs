@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace Atc.Cosmos.EventStore.Cosmos
 {
-    public sealed class CosmosClientFactory : ICosmosClientFactory, IDisposable
+    internal sealed class CosmosClientFactory : ICosmosClientFactory, IDisposable
     {
         private readonly CosmosClient cosmosClient;
         private bool disposedValue;

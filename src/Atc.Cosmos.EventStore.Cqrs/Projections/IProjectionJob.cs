@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Projections
 {
-    public interface IProjectionJob<TProjection>
+    internal interface IProjectionJob<TProjection>
         where TProjection : IProjection
     {
         Task StartAsync(CancellationToken cancellationToken);

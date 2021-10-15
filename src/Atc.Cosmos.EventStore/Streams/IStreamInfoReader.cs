@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Atc.Cosmos.EventStore.Streams
 {
-    public interface IStreamInfoReader
+    internal interface IStreamInfoReader
     {
         Task<IStreamMetadata> ReadAsync(
             StreamId streamId,

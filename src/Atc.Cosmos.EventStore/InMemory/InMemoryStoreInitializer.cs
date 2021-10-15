@@ -5,7 +5,7 @@ using Microsoft.Azure.Cosmos;
 
 namespace Atc.Cosmos.EventStore.InMemory
 {
-    public class InMemoryStoreInitializer : IEventStoreInitializer
+    internal class InMemoryStoreInitializer : IEventStoreInitializer
     {
         public void CreateEventStore(ThroughputProperties throughputProperties)
         {

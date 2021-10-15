@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using Atc.Cosmos.EventStore.Cqrs.Testing;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Commands
 {
-    public class CommandContext : ICommandContext
+    internal class CommandContext : ICommandContext, ICommandContextInspector
     {
         private readonly List<object> appliedEvents = new();
 

@@ -5,7 +5,7 @@ using Atc.Cosmos.EventStore.Streams;
 
 namespace Atc.Cosmos.EventStore.Events
 {
-    public class EventBatchProducer : IEventBatchProducer
+    internal class EventBatchProducer : IEventBatchProducer
     {
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly IEventIdProvider eventIdProvider;
@@ -70,7 +70,7 @@ namespace Atc.Cosmos.EventStore.Events
                 Id = eventId,
                 PartitionKey = streamId,
                 Data = evt,
-                Properties = new EventProperties
+                Properties = new EventMetadata
                 {
                     CausationId = causationId,
                     CorrelationId = correlationId,

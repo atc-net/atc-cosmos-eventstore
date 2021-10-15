@@ -7,7 +7,7 @@ using Microsoft.Azure.Cosmos;
 
 namespace Atc.Cosmos.EventStore.Cosmos
 {
-    public class CosmosMetadataReader : IStreamMetadataReader
+    internal class CosmosMetadataReader : IStreamMetadataReader
     {
         private readonly IEventStoreContainerProvider containerProvider;
         private readonly IDateTimeProvider timeProvider;

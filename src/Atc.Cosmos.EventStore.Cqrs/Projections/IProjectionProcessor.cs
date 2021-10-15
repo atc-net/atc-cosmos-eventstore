@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Projections
 {
-    public interface IProjectionProcessor<TProjection>
+    internal interface IProjectionProcessor<TProjection>
         where TProjection : IProjection
     {
-        ValueTask ProcessBatchAsync(
+        Task ProcessBatchAsync(
             IEnumerable<IEvent> batch,
             CancellationToken cancellationToken);
     }

@@ -9,7 +9,7 @@ namespace Atc.Cosmos.EventStore.Events
     /// and from an event name to an object type.
     /// </summary>
     /// <remarks>The name is whats stored in the persisted event.</remarks>
-    public class EventCatalog : IEventCatalog
+    internal class EventCatalog : IEventCatalog
     {
         private readonly IReadOnlyDictionary<EventName, Type> mappings;
 

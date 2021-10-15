@@ -1,6 +1,6 @@
-﻿namespace Atc.Cosmos.EventStore.Diagnostics
+namespace Atc.Cosmos.EventStore.Diagnostics
 {
-    public interface ISubscriptionActivity
+    internal interface ISubscriptionActivity
     {
         void SubscriptionStopped();
     }

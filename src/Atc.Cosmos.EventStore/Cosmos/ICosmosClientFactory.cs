@@ -2,7 +2,7 @@ using Microsoft.Azure.Cosmos;
 
 namespace Atc.Cosmos.EventStore.Cosmos
 {
-    public interface ICosmosClientFactory
+    internal interface ICosmosClientFactory
     {
         CosmosClient GetClient();
     }

@@ -18,7 +18,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams.Validators
         [InlineAutoNSubstituteData(1, StreamState.New)]
         [InlineAutoNSubstituteData(10, StreamState.New)]
         [InlineAutoNSubstituteData(StreamVersion.AnyValue, StreamState.New)]
-        public void Should_Validate(
+        internal void Should_Validate(
             long version,
             StreamState state,
             IStreamMetadata metadata,
@@ -41,7 +41,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams.Validators
         [InlineAutoNSubstituteData(StreamVersion.StartOfStreamValue, StreamState.Active)]
         [InlineAutoNSubstituteData(StreamVersion.StartOfStreamValue, StreamState.Closed)]
         [InlineAutoNSubstituteData(StreamVersion.StartOfStreamValue, StreamState.New)]
-        public void Should_Throw_When_StreamVersion_Is_Not_StartOfStream(
+        internal void Should_Throw_When_StreamVersion_Is_Not_StartOfStream(
             long version,
             StreamState state,
             IStreamMetadata metadata,

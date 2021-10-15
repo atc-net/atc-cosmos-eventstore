@@ -12,7 +12,7 @@ namespace Atc.Cosmos.EventStore.Cosmos
     /// <summary>
     /// EventStore cosmos JSON serializer implementation for System.Text.Json.
     /// </summary>
-    public class CosmosEventSerializer : CosmosSerializer
+    internal class CosmosEventSerializer : CosmosSerializer
     {
         private readonly JsonSerializerOptions jsonSerializerOptions;
 
