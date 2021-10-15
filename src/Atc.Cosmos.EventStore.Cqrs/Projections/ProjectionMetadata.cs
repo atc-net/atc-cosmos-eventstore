@@ -27,10 +27,10 @@ namespace Atc.Cosmos.EventStore.Cqrs.Projections
             foreach (var evt in events)
             {
                 await ConsumeAsync(
-                        evt,
-                        projection,
-                        cancellationToken)
-                   .ConfigureAwait(false);
+                    evt,
+                    projection,
+                    cancellationToken)
+                .ConfigureAwait(false);
             }
         }
     }

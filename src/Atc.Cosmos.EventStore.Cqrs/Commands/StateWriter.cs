@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Commands
 {
-    public class StateWriter<TCommand> : IStateWriter<TCommand>
+    internal class StateWriter<TCommand> : IStateWriter<TCommand>
         where TCommand : ICommand
     {
         private readonly IEventStoreClient eventStore;

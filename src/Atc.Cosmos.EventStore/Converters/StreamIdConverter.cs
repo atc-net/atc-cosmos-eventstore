@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Atc.Cosmos.EventStore.Converters
 {
-    public class StreamIdConverter : JsonConverter<StreamId>
+    internal class StreamIdConverter : JsonConverter<StreamId>
     {
         public override StreamId Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {

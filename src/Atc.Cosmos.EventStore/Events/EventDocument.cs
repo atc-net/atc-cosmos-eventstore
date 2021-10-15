@@ -2,21 +2,21 @@ using System.Text.Json.Serialization;
 
 namespace Atc.Cosmos.EventStore.Events
 {
-    public abstract class EventDocument : IEvent
+    internal abstract class EventDocument : IEvent
     {
-        [JsonPropertyName(EventPropertyNames.Id)]
+        [JsonPropertyName(EventMetadataNames.Id)]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName(EventPropertyNames.PartitionKey)]
+        [JsonPropertyName(EventMetadataNames.PartitionKey)]
         public string PartitionKey { get; set; } = string.Empty;
 
-        [JsonPropertyName(EventPropertyNames.Properties)]
-        public EventProperties Properties { get; set; } = new EventProperties();
+        [JsonPropertyName(EventMetadataNames.Properties)]
+        public EventMetadata Properties { get; set; } = new EventMetadata();
 
         [JsonIgnore]
         public virtual object Data { get; set; } = new object();
 
         [JsonIgnore]
-        IEventProperties IEvent.Properties => Properties;
+        IEventMetadata IEvent.Metadata => Properties;
     }
 }

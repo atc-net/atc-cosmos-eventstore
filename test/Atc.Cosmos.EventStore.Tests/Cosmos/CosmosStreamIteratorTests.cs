@@ -21,8 +21,8 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
         private readonly IEnumerable<EventDocument<TestEvent>> expectedEvents;
         private readonly CosmosStreamIterator sut;
 
-        private QueryDefinition query = new QueryDefinition("SELECT * FROM c");
-        private QueryRequestOptions options = new QueryRequestOptions();
+        private QueryDefinition query = new("SELECT * FROM c");
+        private QueryRequestOptions options = new();
 
         public class TestEvent
         {
@@ -35,13 +35,13 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
             {
                 new EventDocument<TestEvent>(
                     new TestEvent { Name = "test1" },
-                    new EventProperties()),
+                    new EventMetadata()),
                 new EventDocument<TestEvent>(
                     new TestEvent { Name = "test2" },
-                    new EventProperties()),
+                    new EventMetadata()),
                 new EventDocument<TestEvent>(
                     new TestEvent { Name = "test3" },
-                    new EventProperties()),
+                    new EventMetadata()),
             };
             feedResponse = Substitute.For<FeedResponse<EventDocument>>();
             feedResponse
@@ -77,7 +77,7 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
             StreamId streamId,
             CancellationToken cancellationToken)
         {
-            var received = await ReadStream(streamId, StreamVersion.Any, cancellationToken);
+            var received = await ReadStream(streamId, StreamVersion.Any, null, cancellationToken);
 
             received
                 .Should()
@@ -89,7 +89,7 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
             StreamId streamId,
             CancellationToken cancellationToken)
         {
-            await ReadStream(streamId, StreamVersion.Any, cancellationToken);
+            await ReadStream(streamId, StreamVersion.Any, null, cancellationToken);
 
             options
                 .PartitionKey
@@ -102,7 +102,7 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
             StreamId streamId,
             CancellationToken cancellationToken)
         {
-            await ReadStream(streamId, StreamVersion.Any, cancellationToken);
+            await ReadStream(streamId, StreamVersion.Any, null, cancellationToken);
 
             query
                 .QueryText
@@ -123,7 +123,7 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
             StreamId streamId,
             CancellationToken cancellationToken)
         {
-            await ReadStream(streamId, 10, cancellationToken);
+            await ReadStream(streamId, 10, null, cancellationToken);
 
             query
                 .QueryText
@@ -143,10 +143,88 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
                 .Contain((Name: "@fromVersion", 10L));
         }
 
-        private async Task<List<IEvent>> ReadStream(StreamId streamId, StreamVersion streamVersion, CancellationToken cancellationToken)
+        [Theory, AutoNSubstituteData]
+        public async Task Should_Include_EventName(
+            StreamId streamId,
+            CancellationToken cancellationToken)
+        {
+            await ReadStream(
+                streamId,
+                10,
+                new StreamReadFilter { IncludeEvents = new EventName[] { "evt1" } },
+                cancellationToken);
+
+            query
+                .QueryText
+                .Should()
+                .Be("SELECT * FROM events e WHERE e.pk = @partitionKey AND e.properties.version >= @fromVersion AND (e.properties.name = @name1) ORDER BY e.properties.version");
+            query
+                .GetQueryParameters()
+                .Should()
+                .HaveCount(3);
+            query
+                .GetQueryParameters()
+                .Should()
+                .Contain((Name: "@partitionKey", streamId.Value));
+            query
+                .GetQueryParameters()
+                .Should()
+                .Contain((Name: "@fromVersion", 10L));
+            query
+                .GetQueryParameters()
+                .Should()
+                .Contain((Name: "@name1", (EventName)"evt1"));
+        }
+
+        [Theory, AutoNSubstituteData]
+        public async Task Should_Include_Multiple_EventNames(
+            StreamId streamId,
+            CancellationToken cancellationToken)
+        {
+            await ReadStream(
+                streamId,
+                10,
+                new StreamReadFilter { IncludeEvents = new EventName[] { "evt1", "evt2", "evt3" } },
+                cancellationToken);
+
+            query
+                .QueryText
+                .Should()
+                .Be("SELECT * FROM events e WHERE e.pk = @partitionKey AND e.properties.version >= @fromVersion AND (e.properties.name = @name1 OR e.properties.name = @name2 OR e.properties.name = @name3) ORDER BY e.properties.version");
+            query
+                .GetQueryParameters()
+                .Should()
+                .HaveCount(5);
+            query
+                .GetQueryParameters()
+                .Should()
+                .Contain((Name: "@partitionKey", streamId.Value));
+            query
+                .GetQueryParameters()
+                .Should()
+                .Contain((Name: "@fromVersion", 10L));
+            query
+                .GetQueryParameters()
+                .Should()
+                .Contain((Name: "@name1", (EventName)"evt1"));
+            query
+                .GetQueryParameters()
+                .Should()
+                .Contain((Name: "@name2", (EventName)"evt2"));
+            query
+                .GetQueryParameters()
+                .Should()
+                .Contain((Name: "@name3", (EventName)"evt3"));
+        }
+
+        private async Task<List<IEvent>> ReadStream(
+            StreamId streamId,
+            StreamVersion streamVersion,
+            StreamReadFilter filter,
+            CancellationToken cancellationToken)
         {
             var received = new List<IEvent>();
-            await foreach (var item in sut.ReadAsync(streamId, streamVersion, cancellationToken).ConfigureAwait(false))
+            await foreach (var item in sut.ReadAsync(streamId, streamVersion, filter, cancellationToken).ConfigureAwait(false))
             {
                 received.Add(item);
             }

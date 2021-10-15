@@ -87,7 +87,7 @@ namespace Atc.Cosmos.EventStore.Tests.Events
         }
 
         [Theory, AutoNSubstituteData]
-        public void Can_Convert_Multiple_Events(
+        internal void Can_Convert_Multiple_Events(
             TestEvent event1,
             TestEvent event2,
             TestEvent event3,
@@ -165,7 +165,7 @@ namespace Atc.Cosmos.EventStore.Tests.Events
                 .Be(options.CausationId);
 
         [Theory, AutoNSubstituteData]
-        public void Should_Allow_Null_CausationId(
+        internal void Should_Allow_Null_CausationId(
             EventBatchProducer sut)
         {
             var batch = sut.FromEvents(
@@ -191,7 +191,7 @@ namespace Atc.Cosmos.EventStore.Tests.Events
                 .Be(options.CorrelationId);
 
         [Theory, AutoNSubstituteData]
-        public void Should_Allow_Null_CorrelationId(
+        internal void Should_Allow_Null_CorrelationId(
             EventBatchProducer sut)
         {
             var batch = sut.FromEvents(

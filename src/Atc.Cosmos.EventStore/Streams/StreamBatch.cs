@@ -3,7 +3,7 @@ using Atc.Cosmos.EventStore.Events;
 
 namespace Atc.Cosmos.EventStore.Streams
 {
-    public class StreamBatch
+    internal class StreamBatch
     {
         public StreamBatch(
             StreamMetadata metadata,

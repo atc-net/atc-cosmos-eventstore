@@ -9,7 +9,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams.Validators
     public class StreamExpectedVersionValidatorTests
     {
         [Theory, AutoNSubstituteData]
-        public void Should_Validate_When_ExpectedVersion_IsAny(
+        internal void Should_Validate_When_ExpectedVersion_IsAny(
             IStreamMetadata metadata,
             StreamExpectedVersionValidator sut)
         {
@@ -24,7 +24,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams.Validators
         }
 
         [Theory, AutoNSubstituteData]
-        public void Should_Throw_When_Stream_Exceeds_ExpectedVersion(
+        internal void Should_Throw_When_Stream_Exceeds_ExpectedVersion(
             IStreamMetadata metadata,
             StreamExpectedVersionValidator sut)
         {
@@ -42,7 +42,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams.Validators
         }
 
         [Theory, AutoNSubstituteData]
-        public void Should_Validate_When_StreamVersion_Is_ExpectedVersion(
+        internal void Should_Validate_When_StreamVersion_Is_ExpectedVersion(
             IStreamMetadata metadata,
             StreamExpectedVersionValidator sut)
         {

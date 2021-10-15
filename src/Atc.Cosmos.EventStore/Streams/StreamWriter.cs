@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Atc.Cosmos.EventStore.Streams
 {
-    public class StreamWriter : IStreamWriter
+    internal class StreamWriter : IStreamWriter
     {
         private readonly IStreamMetadataReader metadataReader;
         private readonly IStreamWriteValidator validator;

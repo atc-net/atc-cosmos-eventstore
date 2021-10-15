@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Atc.Cosmos.EventStore.Cqrs.DependencyInjection.Internal
 {
-    public class ProjectionBuilder : IProjectionBuilder
+    internal class ProjectionBuilder : IProjectionBuilder
     {
         private readonly List<StreamFilter> filters;
         private ProcessExceptionHandler exceptionHandler;

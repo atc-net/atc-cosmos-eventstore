@@ -6,14 +6,12 @@ using Atc.Cosmos.EventStore.Streams;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Atc.Cosmos.EventStore.DependencyInjection.Internal
+namespace Atc.Cosmos.EventStore.DependencyInjection
 {
-    public class EventStoreOptionsBuilder
+    public sealed class EventStoreOptionsBuilder
     {
-        public EventStoreOptionsBuilder(IServiceCollection services)
-        {
-            Services = services;
-        }
+        internal EventStoreOptionsBuilder(IServiceCollection services)
+            => Services = services;
 
         public IServiceCollection Services { get; }
 
@@ -36,22 +34,13 @@ namespace Atc.Cosmos.EventStore.DependencyInjection.Internal
             Services.TryAddSingleton<IStreamMetadataReader, CosmosMetadataReader>();
             Services.TryAddSingleton<IStreamIterator, CosmosStreamIterator>();
             Services.TryAddSingleton<IStreamBatchWriter, CosmosBatchWriter>();
-            Services.TryAddSingleton<IStreamSubscriptionProvider, CosmosSubscriptionProvider>();
+            Services.TryAddSingleton<IStreamSubscriptionFactory, CosmosSubscriptionFactory>();
+
             Services.TryAddSingleton<IStreamSubscriptionRemover, CosmosSubscriptionRemover>();
+            Services.TryAddSingleton<IStreamIndexReader, CosmosStreamIndexReader>();
 
-            return this;
-        }
-
-        public EventStoreOptionsBuilder UseInMemoryDb()
-        {
-            Services.TryAddSingleton<IEventStoreInitializer, InMemoryStoreInitializer>();
-
-            Services.TryAddSingleton<InMemoryStore>();
-            Services.TryAddSingleton<IStreamMetadataReader>(s => s.GetRequiredService<InMemoryStore>());
-            Services.TryAddSingleton<IStreamIterator>(s => s.GetRequiredService<InMemoryStore>());
-            Services.TryAddSingleton<IStreamBatchWriter>(s => s.GetRequiredService<InMemoryStore>());
-            Services.TryAddSingleton<IStreamSubscriptionProvider>(s => s.GetRequiredService<InMemoryStore>());
-            Services.TryAddSingleton<IStreamSubscriptionRemover>(s => s.GetRequiredService<InMemoryStore>());
+            Services.TryAddSingleton<IStreamCheckpointReader, CosmosCheckpointReader>();
+            Services.TryAddSingleton<IStreamCheckpointWriter, CosmosCheckpointWriter>();
 
             return this;
         }
@@ -82,6 +71,23 @@ namespace Atc.Cosmos.EventStore.DependencyInjection.Internal
 
             Services.TryAddSingleton<IEventNameProvider>(catalog);
             Services.TryAddSingleton<IEventTypeProvider>(catalog);
+
+            return this;
+        }
+
+        internal EventStoreOptionsBuilder UseInMemoryDb()
+        {
+            Services.TryAddSingleton<IEventStoreInitializer, InMemoryStoreInitializer>();
+
+            Services.TryAddSingleton<InMemoryStore>();
+            Services.TryAddSingleton<IStreamMetadataReader>(s => s.GetRequiredService<InMemoryStore>());
+            Services.TryAddSingleton<IStreamIterator>(s => s.GetRequiredService<InMemoryStore>());
+            Services.TryAddSingleton<IStreamBatchWriter>(s => s.GetRequiredService<InMemoryStore>());
+            Services.TryAddSingleton<IStreamSubscriptionFactory>(s => s.GetRequiredService<InMemoryStore>());
+            Services.TryAddSingleton<IStreamSubscriptionRemover>(s => s.GetRequiredService<InMemoryStore>());
+            Services.TryAddSingleton<IStreamIndexReader>(s => s.GetRequiredService<InMemoryStore>());
+            Services.TryAddSingleton<IStreamCheckpointReader>(s => s.GetRequiredService<InMemoryStore>());
+            Services.TryAddSingleton<IStreamCheckpointWriter>(s => s.GetRequiredService<InMemoryStore>());
 
             return this;
         }

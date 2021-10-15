@@ -3,7 +3,7 @@ namespace Atc.Cosmos.EventStore.Streams.Validators
     /// <summary>
     /// Responsible for validating if a stream is at an expected version and throw if not.
     /// </summary>
-    public class StreamExpectedVersionValidator : IStreamValidator
+    internal class StreamExpectedVersionValidator : IStreamValidator
     {
         public void Validate(IStreamMetadata metadata, StreamVersion version)
         {

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Commands
 {
-    public interface ICommandHandlerMetadata<out TCommand>
+    internal interface ICommandHandlerMetadata<out TCommand>
         where TCommand : ICommand
     {
         bool CanConsumeEvent(IEvent evt);

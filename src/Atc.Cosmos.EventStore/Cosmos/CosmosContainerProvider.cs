@@ -3,11 +3,12 @@ using Microsoft.Extensions.Options;
 
 namespace Atc.Cosmos.EventStore.Cosmos
 {
-    public class CosmosContainerProvider : IEventStoreContainerProvider
+    internal class CosmosContainerProvider : IEventStoreContainerProvider
     {
         private readonly ICosmosClientFactory factory;
         private readonly string databaseId;
         private readonly string containerId;
+        private readonly string indexId;
         private readonly string subscriptionId;
 
         public CosmosContainerProvider(
@@ -17,6 +18,7 @@ namespace Atc.Cosmos.EventStore.Cosmos
             factory = cosmosClientFactory;
             databaseId = options.Value.EventStoreDatabaseId;
             containerId = options.Value.EventStoreContainerId;
+            indexId = options.Value.IndexContainerId;
             subscriptionId = options.Value.SubscriptionContainerId;
         }
 
@@ -26,6 +28,13 @@ namespace Atc.Cosmos.EventStore.Cosmos
                 .GetContainer(
                     databaseId,
                     containerId);
+
+        public Container GetIndexContainer()
+            => factory
+                .GetClient()
+                .GetContainer(
+                    databaseId,
+                    indexId);
 
         public Container GetSubscriptionContainer()
             => factory

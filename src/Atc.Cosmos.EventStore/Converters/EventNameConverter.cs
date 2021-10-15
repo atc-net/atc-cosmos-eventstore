@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Atc.Cosmos.EventStore.Converters
 {
-    public class EventNameConverter : JsonConverter<EventName>
+    internal class EventNameConverter : JsonConverter<EventName>
     {
         public override EventName Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {

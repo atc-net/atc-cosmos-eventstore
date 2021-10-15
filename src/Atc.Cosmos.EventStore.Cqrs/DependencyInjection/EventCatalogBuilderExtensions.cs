@@ -7,6 +7,13 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class EventCatalogBuilderExtensions
     {
+        /// <summary>
+        /// Search assembly for events and register them in catalog.
+        /// </summary>
+        /// <remarks>Only classes marked with <seealso cref="StreamEventAttribute"/> will be added to the catalog.</remarks>
+        /// <typeparam name="T">Use this type to identify the assembly to scan.</typeparam>
+        /// <param name="builder">Catalog build to add events to.</param>
+        /// <returns>Builder.</returns>
         public static IEventCatalogBuilder FromAssembly<T>(this IEventCatalogBuilder builder)
         {
             var types = typeof(T)
@@ -24,6 +31,13 @@ namespace Microsoft.Extensions.DependencyInjection
             return builder;
         }
 
+        /// <summary>
+        /// Search namespace for events and register them in catalog.
+        /// </summary>
+        /// <remarks>Only classes marked with <seealso cref="StreamEventAttribute"/> will be added to the catalog.</remarks>
+        /// <typeparam name="T">Use this types namespace.</typeparam>
+        /// <param name="builder">Catalog build to add events to.</param>
+        /// <returns>Builder.</returns>
         public static IEventCatalogBuilder FromNamespace<T>(this IEventCatalogBuilder builder)
         {
             var ns = typeof(T)
@@ -49,6 +63,13 @@ namespace Microsoft.Extensions.DependencyInjection
             return builder;
         }
 
+        /// <summary>
+        /// Add event to catalog.
+        /// </summary>
+        /// <typeparam name="T">Type to add.</typeparam>
+        /// <param name="builder">Catalog to add type to.</param>
+        /// <returns>Builder.</returns>
+        /// <exception cref="ArgumentException">If type is not decorated with <see cref="StreamEventAttribute"/>.</exception>
         public static IEventCatalogBuilder FromType<T>(this IEventCatalogBuilder builder)
         {
             var name = typeof(T)

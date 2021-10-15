@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Atc.Cosmos.EventStore.Streams
 {
-    public class StreamReader : IStreamReader
+    internal class StreamReader : IStreamReader
     {
         private readonly IStreamMetadataReader metadataReader;
         private readonly IStreamReadValidator readValidator;
@@ -24,6 +24,7 @@ namespace Atc.Cosmos.EventStore.Streams
         public async IAsyncEnumerable<IEvent> ReadAsync(
             StreamId streamId,
             StreamVersion fromVersion,
+            StreamReadFilter? filter,
             [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             var metadata = await metadataReader
@@ -32,7 +33,7 @@ namespace Atc.Cosmos.EventStore.Streams
 
             readValidator.Validate(
                 metadata,
-                fromVersion);
+                filter?.RequiredVersion ?? StreamVersion.Any);
 
             // If we don't have any events in the stream, then skip reading from stream.
             if (metadata.Version == 0)
@@ -41,7 +42,7 @@ namespace Atc.Cosmos.EventStore.Streams
             }
 
             await foreach (var evt in streamIterator
-                .ReadAsync(streamId, fromVersion, cancellationToken)
+                .ReadAsync(streamId, fromVersion, filter, cancellationToken)
                 .ConfigureAwait(false))
             {
                 yield return evt;

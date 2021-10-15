@@ -4,7 +4,7 @@ using Microsoft.Azure.Cosmos;
 
 namespace Atc.Cosmos.EventStore.Cosmos
 {
-    public interface IEventStoreInitializer
+    internal interface IEventStoreInitializer
     {
         Task CreateEventStoreAsync(ThroughputProperties throughputProperties, CancellationToken cancellationToken);
 

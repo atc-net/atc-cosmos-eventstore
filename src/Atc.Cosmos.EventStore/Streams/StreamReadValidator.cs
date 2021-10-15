@@ -3,7 +3,7 @@ using Atc.Cosmos.EventStore.Streams.Validators;
 
 namespace Atc.Cosmos.EventStore.Streams
 {
-    public class StreamReadValidator : IStreamReadValidator
+    internal class StreamReadValidator : IStreamReadValidator
     {
         private static readonly IStreamValidator[] Validators = new IStreamValidator[]
         {

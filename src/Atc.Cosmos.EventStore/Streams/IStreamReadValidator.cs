@@ -1,4 +1,4 @@
-﻿namespace Atc.Cosmos.EventStore.Streams
+namespace Atc.Cosmos.EventStore.Streams
 {
     public interface IStreamReadValidator
     {

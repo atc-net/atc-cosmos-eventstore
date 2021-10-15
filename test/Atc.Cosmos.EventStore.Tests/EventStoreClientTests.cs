@@ -16,7 +16,55 @@ namespace Atc.Cosmos.EventStore.Tests
     public class EventStoreClientTests
     {
         [Theory, AutoNSubstituteData]
-        public async ValueTask Should_WriteToStream(
+        internal async Task Should_DeleteSubscription(
+            [Frozen] IStreamSubscriptionRemover remover,
+            EventStoreClient sut,
+            ConsumerGroup consumerGroup,
+            CancellationToken cancellationToken)
+        {
+            await sut.DeleteSubscriptionAsync(
+                consumerGroup,
+                cancellationToken: cancellationToken);
+
+            _ = remover
+                    .Received(1)
+                    .DeleteAsync(
+                        consumerGroup,
+                        cancellationToken);
+        }
+
+        [Theory, AutoNSubstituteData]
+        internal void Should_Throw_On_DeleteSubscription_When_ConsumerGroup_IsNull(
+            EventStoreClient sut,
+            CancellationToken cancellationToken)
+            => FluentActions
+                .Awaiting(() => sut.DeleteSubscriptionAsync(null, cancellationToken))
+                .Should()
+                .Throw<ArgumentNullException>();
+
+        [Theory, AutoNSubstituteData]
+        internal async Task Should_Return_Info_On_GetStreamInfo(
+            [Frozen] IStreamInfoReader reader,
+            EventStoreClient sut,
+            StreamId streamId,
+            IStreamMetadata expectedResult,
+            CancellationToken cancellationToken)
+        {
+            reader
+                .ReadAsync(default, default)
+                .ReturnsForAnyArgs(expectedResult);
+
+            var info = await sut.GetStreamInfoAsync(
+                streamId,
+                cancellationToken: cancellationToken);
+
+            info
+                .Should()
+                .Be(expectedResult);
+        }
+
+        [Theory, AutoNSubstituteData]
+        internal async ValueTask Should_WriteToStream(
             [Frozen, Substitute] IStreamWriter writer,
             EventStoreClient sut,
             StreamId streamId,
@@ -40,7 +88,7 @@ namespace Atc.Cosmos.EventStore.Tests
         }
 
         [Theory, AutoNSubstituteData]
-        public void Should_Throw_When_EventsList_Containes_NullObject(
+        internal void Should_Throw_When_EventsList_Containes_NullObject(
             EventStoreClient sut,
             StreamId streamId,
             Collection<object> events,
@@ -57,5 +105,116 @@ namespace Atc.Cosmos.EventStore.Tests
                 .Should()
                 .Throw<ArgumentException>();
         }
+
+        [Theory, AutoNSubstituteData]
+        internal async Task Should_SetStreamCheckpoint(
+            [Frozen] IStreamCheckpointWriter writer,
+            EventStoreClient sut,
+            string name,
+            StreamId streamId,
+            StreamVersion streamVersion,
+            object state,
+            CancellationToken cancellationToken)
+        {
+            await sut.SetStreamCheckpointAsync(
+                name,
+                streamId,
+                streamVersion,
+                state,
+                cancellationToken);
+
+            _ = writer
+                    .Received(1)
+                    .WriteAsync(
+                        name,
+                        streamId,
+                        streamVersion,
+                        state,
+                        cancellationToken);
+        }
+
+        [Theory, AutoNSubstituteData]
+        internal void Should_Throw_On_SetStreamCheckpoint_When_Name_IsNull(
+            EventStoreClient sut,
+            StreamId streamId,
+            StreamVersion streamVersion,
+            CancellationToken cancellationToken)
+            => FluentActions
+                .Awaiting(() => sut.SetStreamCheckpointAsync(null, streamId, streamVersion, null, cancellationToken))
+                .Should()
+                .Throw<ArgumentNullException>();
+
+        [Theory, AutoNSubstituteData]
+        internal async Task Should_GetStreamCheckpoint_With_State(
+            [Frozen] IStreamCheckpointReader reader,
+            EventStoreClient sut,
+            string name,
+            StreamId streamId,
+            Checkpoint<string> expectedCheckpoint,
+            CancellationToken cancellationToken)
+        {
+            reader
+                .ReadAsync<string>(default, default, default)
+                .ReturnsForAnyArgs(expectedCheckpoint);
+
+            var checkpoint = await sut.GetStreamCheckpointAsync<string>(
+                name,
+                streamId,
+                cancellationToken);
+
+            _ = reader
+                    .Received(1)
+                    .ReadAsync<string>(
+                        name,
+                        streamId,
+                        cancellationToken);
+
+            checkpoint
+                .Should()
+                .Be(expectedCheckpoint);
+        }
+
+        [Theory, AutoNSubstituteData]
+        internal void Should_Throw_On_GetStreamCheckpoint_With_State_When_Name_IsNull(
+            EventStoreClient sut,
+            StreamId streamId,
+            CancellationToken cancellationToken)
+            => FluentActions
+                .Awaiting(() => sut.GetStreamCheckpointAsync<string>(null, streamId, cancellationToken))
+                .Should()
+                .Throw<ArgumentNullException>();
+
+        [Theory, AutoNSubstituteData]
+        internal async Task Should_GetStreamCheckpoint_Without_State(
+            [Frozen] IStreamCheckpointReader reader,
+            EventStoreClient sut,
+            string name,
+            StreamId streamId,
+            Checkpoint<object> expectedCheckpoint,
+            CancellationToken cancellationToken)
+        {
+            reader
+                .ReadAsync<object>(default, default, default)
+                .ReturnsForAnyArgs(expectedCheckpoint);
+
+            var checkpoint = await sut.GetStreamCheckpointAsync(
+                name,
+                streamId,
+                cancellationToken);
+
+            checkpoint
+                .Should()
+                .Be((Checkpoint)expectedCheckpoint);
+        }
+
+        [Theory, AutoNSubstituteData]
+        internal void Should_Throw_On_GetStreamCheckpoint_Without_State_When_Name_IsNull(
+            EventStoreClient sut,
+            StreamId streamId,
+            CancellationToken cancellationToken)
+            => FluentActions
+                .Awaiting(() => sut.GetStreamCheckpointAsync(null, streamId, cancellationToken))
+                .Should()
+                .Throw<ArgumentNullException>();
     }
 }

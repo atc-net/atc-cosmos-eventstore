@@ -1,33 +1,50 @@
 using System;
-using System.Linq;
-using System.Reflection;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Atc.Cosmos.EventStore.Cqrs.Commands;
+using Atc.Cosmos.EventStore.Cqrs.Internal;
+using Atc.Cosmos.EventStore.Events;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Testing
 {
-    public class CommandHandlerTester<TCommand> :
+    internal class CommandHandlerTester<TCommand> :
         ICommandGiven<TCommand>,
         ICommandWhen<TCommand>,
         ICommandThen
         where TCommand : ICommand
     {
+        private class TestMetadata :
+            ConsumeEventMetadata
+        {
+            public TestMetadata(object handler)
+                : base(handler.GetType())
+            {
+            }
+
+            public ValueTask ApplyEventAsync(
+                IEvent evt,
+                object handler,
+                CancellationToken cancellationToken)
+                => ConsumeAsync(evt, handler, cancellationToken);
+        }
+
         private readonly ICommandHandler<TCommand> handler;
+        private readonly TestMetadata handlerMetadata;
+        private readonly List<object> events;
         private TCommand? command;
 
-        public CommandHandlerTester(ICommandHandler<TCommand> handler)
+        public CommandHandlerTester(
+            ICommandHandler<TCommand> handler)
         {
             this.handler = handler;
+            this.handlerMetadata = new TestMetadata(handler);
+            this.events = new List<object>();
         }
 
         public ICommandWhen<TCommand> GivenEvents(params object[] events)
         {
-            var ver = 1;
-            foreach (var evt in events)
-            {
-                ApplyEvent(evt, CreateMetadata(ver++));
-            }
+            this.events.AddRange(events);
 
             return this;
         }
@@ -40,7 +57,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.Testing
         }
 
         public async Task ThenExpectEvents(
-            Action<CommandContext> assert,
+            Action<ICommandContextInspector> assert,
             CancellationToken cancellationToken = default)
             => assert.Invoke(
                 await ExecuteAsync(
@@ -83,21 +100,32 @@ namespace Atc.Cosmos.EventStore.Cqrs.Testing
             throw new InvalidOperationException($"{typeof(TException).Name} not thrown");
         }
 
-        private static EventMetadata CreateMetadata(long version)
-            => new(
-                Guid.NewGuid().ToString(),
-                new EventStreamId("test"),
-                DateTimeOffset.UtcNow,
-                version,
-                CorrelationId: null,
-                CausationId: null);
-
-        private static void ProjectTypedEvent<TEvent>(object projection, TEvent evt, EventMetadata metadata)
-            where TEvent : class
-            => (projection as IConsumeEvent<TEvent>)?.Consume(evt, metadata);
-
         private async Task<CommandContext> ExecuteAsync(CancellationToken cancellationToken)
         {
+            var version = 1;
+            foreach (var evt in events)
+            {
+                await handlerMetadata
+                    .ApplyEventAsync(
+                        new EventDocument<object>
+                        {
+                            Data = evt,
+                            Properties = new Events.EventMetadata
+                            {
+                                CausationId = Guid.NewGuid().ToString(),
+                                CorrelationId = Guid.NewGuid().ToString(),
+                                EventId = Guid.NewGuid().ToString(),
+                                Name = "test",
+                                Version = version++,
+                                Timestamp = DateTimeOffset.UtcNow,
+                                StreamId = "test-stream",
+                            },
+                        },
+                        handler,
+                        cancellationToken)
+                    .ConfigureAwait(false);
+            }
+
             var context = new CommandContext();
 
             await handler
@@ -105,17 +133,6 @@ namespace Atc.Cosmos.EventStore.Cqrs.Testing
                 .ConfigureAwait(false);
 
             return context;
-        }
-
-        private void ApplyEvent(object evt, EventMetadata metadata)
-        {
-            var action = GetType()
-                .GetRuntimeMethods()
-                .First(m => m.Name == nameof(ProjectTypedEvent))
-                .MakeGenericMethod(evt.GetType());
-
-            // Project event as a strongly type event on projection.
-            action.Invoke(null, new object[] { handler, evt, metadata });
         }
     }
 }

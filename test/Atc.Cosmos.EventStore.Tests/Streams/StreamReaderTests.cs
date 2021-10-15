@@ -14,7 +14,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
     public class StreamReaderTests
     {
         [Theory, AutoNSubstituteData]
-        public async ValueTask Should_Read_Metadata_From_StreamId(
+        internal async ValueTask Should_Read_Metadata_From_StreamId(
             [Frozen, Substitute] IStreamMetadataReader metadataReader,
             [Frozen, Substitute] IStreamIterator streamIterator,
             [Substitute] IAsyncEnumerable<IEvent> enumerable,
@@ -23,13 +23,14 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
             CancellationToken cancellationToken)
         {
             streamIterator
-                .ReadAsync(default, default, default)
+                .ReadAsync(default, default, default, default)
                 .ReturnsForAnyArgs(enumerable);
 
             await ReadStream(
                 sut,
                 streamId,
                 StreamVersion.Any,
+                filter: null,
                 cancellationToken: cancellationToken);
 
             await metadataReader
@@ -40,7 +41,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         }
 
         [Theory, AutoNSubstituteData]
-        public async ValueTask Should_Validate_Metadata_With_From_Version(
+        internal async ValueTask Should_Validate_Metadata_With_From_Version(
             [Frozen, Substitute] IStreamMetadataReader metadataReader,
             [Frozen, Substitute] IStreamWriteValidator validator,
             [Frozen, Substitute] IStreamIterator streamIterator,
@@ -55,13 +56,14 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
                 .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(streamMetadata));
 
             streamIterator
-                .ReadAsync(default, default, default)
+                .ReadAsync(default, default, default, default)
                 .ReturnsForAnyArgs(enumerable);
 
             await ReadStream(
                 sut,
                 streamId,
                 StreamVersion.Any,
+                filter: null,
                 cancellationToken: cancellationToken);
 
             validator
@@ -72,7 +74,42 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         }
 
         [Theory, AutoNSubstituteData]
-        public async ValueTask Should_Yield_Events_From_StreamIterator(
+        internal async ValueTask Should_Read_From_Iterator(
+            [Frozen, Substitute] IStreamMetadataReader metadataReader,
+            [Frozen, Substitute] IStreamIterator streamIterator,
+            [Substitute] IAsyncEnumerable<IEvent> enumerable,
+            StreamReader sut,
+            StreamId streamId,
+            StreamReadFilter filter,
+            StreamMetadata streamMetadata,
+            CancellationToken cancellationToken)
+        {
+            metadataReader
+                .GetAsync(default, default)
+                .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(streamMetadata));
+
+            streamIterator
+                .ReadAsync(default, default, default, default)
+                .ReturnsForAnyArgs(enumerable);
+
+            await ReadStream(
+                sut,
+                streamId,
+                StreamVersion.Any,
+                filter: filter,
+                cancellationToken: cancellationToken);
+
+            streamIterator
+                .Received(1)
+                .ReadAsync(
+                    streamId,
+                    StreamVersion.Any,
+                    filter,
+                    cancellationToken);
+        }
+
+        [Theory, AutoNSubstituteData]
+        internal async ValueTask Should_Yield_Events_From_StreamIterator(
             [Frozen, Substitute] IStreamMetadataReader metadataReader,
             [Frozen, Substitute] IStreamIterator streamIterator,
             [Substitute] IAsyncEnumerable<IEvent> enumerable,
@@ -89,7 +126,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
                 .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(streamMetadata));
 
             streamIterator
-                .ReadAsync(default, default, default)
+                .ReadAsync(default, default, default, default)
                 .ReturnsForAnyArgs(enumerable);
 
             enumerable
@@ -100,8 +137,10 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
                 .Current
                 .ReturnsForAnyArgs(firstEvent, secondEvent);
 
+#pragma warning disable CA2012 // Use ValueTasks correctly
             enumerator
                 .MoveNextAsync()
+#pragma warning restore CA2012 // Use ValueTasks correctly
                 .ReturnsForAnyArgs(new ValueTask<bool>(true), new ValueTask<bool>(true), new ValueTask<bool>(false));
 
             // Act
@@ -109,6 +148,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
                 sut,
                 streamId,
                 StreamVersion.Any,
+                filter: null,
                 cancellationToken: cancellationToken);
 
             // Assert
@@ -120,10 +160,15 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
                 .Contain(secondEvent);
         }
 
-        private static async Task<List<IEvent>> ReadStream(StreamReader sut, StreamId streamId, StreamVersion streamVersion, CancellationToken cancellationToken)
+        private static async Task<List<IEvent>> ReadStream(
+            StreamReader sut,
+            StreamId streamId,
+            StreamVersion streamVersion,
+            StreamReadFilter filter,
+            CancellationToken cancellationToken)
         {
             var received = new List<IEvent>();
-            await foreach (var item in sut.ReadAsync(streamId, streamVersion, cancellationToken).ConfigureAwait(false))
+            await foreach (var item in sut.ReadAsync(streamId, streamVersion, filter, cancellationToken).ConfigureAwait(false))
             {
                 received.Add(item);
             }

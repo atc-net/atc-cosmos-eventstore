@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Commands
 {
-    public class CommandProcessorFactory : ICommandProcessorFactory
+    internal class CommandProcessorFactory : ICommandProcessorFactory
     {
         private readonly IServiceProvider provider;
 

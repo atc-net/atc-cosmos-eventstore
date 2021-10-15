@@ -27,10 +27,10 @@ namespace Atc.Cosmos.EventStore.Converters
 
             using var jsonDocument = JsonDocument.ParseValue(ref reader);
 
-            if (!jsonDocument.RootElement.TryGetProperty(EventPropertyNames.Properties, out var properties))
+            if (!jsonDocument.RootElement.TryGetProperty(EventMetadataNames.Properties, out var properties))
             {
                 // If we are reading the meta-data document, then skip it.
-                if (jsonDocument.RootElement.TryGetProperty(EventPropertyNames.Id, out var id)
+                if (jsonDocument.RootElement.TryGetProperty(EventMetadataNames.Id, out var id)
                     && id.GetString() == StreamMetadata.StreamMetadataId)
                 {
                     return default!;
@@ -39,7 +39,7 @@ namespace Atc.Cosmos.EventStore.Converters
                 throw new JsonException();
             }
 
-            if (!properties.TryGetProperty(EventPropertyNames.EventName, out var name))
+            if (!properties.TryGetProperty(EventMetadataNames.EventName, out var name))
             {
                 throw new JsonException();
             }

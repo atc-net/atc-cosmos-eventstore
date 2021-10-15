@@ -6,7 +6,7 @@ using Microsoft.Azure.Cosmos;
 
 namespace Atc.Cosmos.EventStore.Cosmos
 {
-    public class CosmosSubscriptionRemover : IStreamSubscriptionRemover
+    internal class CosmosSubscriptionRemover : IStreamSubscriptionRemover
     {
         private readonly IEventStoreContainerProvider containerProvider;
 

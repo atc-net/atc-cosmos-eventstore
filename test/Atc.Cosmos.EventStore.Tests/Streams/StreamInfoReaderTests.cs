@@ -13,7 +13,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
     public class StreamInfoReaderTests
     {
         [Theory, AutoNSubstituteData]
-        public async Task Should_Convert_Into_StreamResponse(
+        internal async Task Should_Convert_Into_StreamResponse(
             [Frozen, Substitute] IStreamMetadataReader metadataReader,
             StreamInfoReader sut,
             StreamId streamId,
@@ -47,7 +47,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         }
 
         [Theory, AutoNSubstituteData]
-        public async Task Should_Read_Metadata_From_Stream(
+        internal async Task Should_Read_Metadata_From_Stream(
             [Frozen, Substitute] IStreamMetadataReader metadataReader,
             StreamInfoReader sut,
             StreamId streamId,

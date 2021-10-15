@@ -1,10 +1,10 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Internal
 {
-    public class DependencyInitializerJob : IHostedService
+    internal class DependencyInitializerJob : IHostedService
     {
         private readonly IDependencyInitializer initializer;
 

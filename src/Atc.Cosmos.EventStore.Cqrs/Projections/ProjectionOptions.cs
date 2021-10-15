@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Projections
 {
-    public class ProjectionOptions : IProjectionOptions
+    internal class ProjectionOptions : IProjectionOptions
     {
         public static readonly ProcessExceptionHandler EmptyExceptionHandler = (e, ct)
             => new ValueTask(Task.CompletedTask);

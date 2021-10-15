@@ -17,7 +17,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         [InlineAutoNSubstituteData(StreamState.New, 0, 10)]
         [InlineAutoNSubstituteData(StreamState.Active, 1, 2)]
         [InlineAutoNSubstituteData(StreamState.Active, 10, 2)]
-        public void Should_Throw_On_Validate(
+        internal void Should_Throw_On_Validate(
             StreamState streamState,
             long streamVersion,
             long expectedVersion,
@@ -43,7 +43,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         [InlineAutoNSubstituteData(StreamState.Active, 1, 1)]
         [InlineAutoNSubstituteData(StreamState.Active, 10, 10)]
         [InlineAutoNSubstituteData(StreamState.Active, 10, StreamVersion.AnyValue)]
-        public void Should_Validate(
+        internal void Should_Validate(
             StreamState streamState,
             long streamVersion,
             long expectedVersion,
