@@ -16,7 +16,7 @@
 
   <PropertyGroup Label="Compile settings">
     <Nullable>enable</Nullable>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>10.0</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>1573,1591,1712,CA1014</NoWarn>
 
@@ -39,11 +39,9 @@
 
   <!-- Shared code analyzers used for all projects in the solution -->
   <ItemGroup Label="Code Analyzers">
-    <PackageReference Include="AsyncFixer" Version="1.5.1" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3" PrivateAssets="All" />
-    <PackageReference Include="SecurityCodeScan.VS2019" Version="5.1.0" PrivateAssets="all" />
+    <PackageReference Include="SecurityCodeScan.VS2019" Version="5.2.1" PrivateAssets="all" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.321" PrivateAssets="All" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.23.0.32424" PrivateAssets="all" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.32.0.39516" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

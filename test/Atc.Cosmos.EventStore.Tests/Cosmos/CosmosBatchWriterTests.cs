@@ -121,7 +121,7 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
         }
 
         [Theory, AutoNSubstituteData]
-        internal void Should_Throw_When_ExecutionFails(
+        internal async Task Should_Throw_When_ExecutionFails(
             StreamBatch streamBatch,
             CancellationToken cancellationToken)
         {
@@ -129,10 +129,10 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
                 .IsSuccessStatusCode
                 .Returns(returnThis: false);
 
-            FluentActions
+            await FluentActions
                 .Awaiting(() => sut.WriteAsync(streamBatch, cancellationToken))
                 .Should()
-                .Throw<StreamWriteConflictException>();
+                .ThrowAsync<StreamWriteConflictException>();
         }
 
         [Theory, AutoNSubstituteData]

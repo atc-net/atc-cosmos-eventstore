@@ -112,7 +112,7 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
         }
 
         [Theory, AutoNSubstituteData]
-        public void Should_Propergate_CosmosException_When_StatusCode_IsNot_NotFound(
+        public async Task Should_Propergate_CosmosException_When_StatusCode_IsNot_NotFound(
             string name,
             StreamId streamId,
             CancellationToken cancellationToken)
@@ -121,10 +121,10 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
                 .ReadItemAsync<CheckpointDocument<string>>(default, default, default, default)
                 .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.TooManyRequests, 0, "a", 1));
 
-            FluentActions
+            await FluentActions
                 .Awaiting(() => sut.ReadAsync<string>(name, streamId, cancellationToken))
                 .Should()
-                .Throw<CosmosException>();
+                .ThrowAsync<CosmosException>();
         }
 
         [Theory, AutoNSubstituteData]
