@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.3] - 2021-11-16
+
 ### Added
 
 -   Test
+
+[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.1.3...HEAD
+
+[1.1.3]: https://github.com/atc-net/atc-cosmos-eventstore/compare/1d853dcb043e906a8b92c4b74f113dc676419233...1.1.3
