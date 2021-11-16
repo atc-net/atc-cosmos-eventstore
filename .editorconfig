@@ -462,10 +462,10 @@ dotnet_diagnostic.SA1602.severity = none            # https://github.com/atc-net
 dotnet_diagnostic.SA1604.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/StyleCop/SA1604.md
 dotnet_diagnostic.SA1633.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/StyleCop/SA1633.md
 
-
 # SonarAnalyzer.CSharp
 # https://rules.sonarsource.com/csharp
 dotnet_diagnostic.S1135.severity = suggestion       # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/SonarAnalyzerCSharp/S1135.md
+dotnet_diagnostic.S3267.severity = none             # https://rules.sonarsource.com/csharp/RSPEC-3267 -> pointless rule.
 
 
 ##########################################
