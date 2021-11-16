@@ -1,14 +1,13 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Atc.Cosmos.EventStore.Cqrs.Commands;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Testing
 {
     public interface ICommandThen
     {
         Task ThenExpectEvents(
-            Action<CommandContext> assert,
+            Action<ICommandContextInspector> assert,
             CancellationToken cancellationToken = default);
 
         Task ThenExpectException<TException>(

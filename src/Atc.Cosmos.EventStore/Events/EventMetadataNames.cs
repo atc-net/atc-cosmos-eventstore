@@ -1,6 +1,6 @@
 namespace Atc.Cosmos.EventStore.Events
 {
-    public static class EventPropertyNames
+    internal static class EventMetadataNames
     {
         public const string Id = "id";
         public const string PartitionKey = "pk";

@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Atc.Cosmos.EventStore.Streams
 {
-    public interface IStreamSubscriptionRemover
+    internal interface IStreamSubscriptionRemover
     {
-        ValueTask DeleteAsync(
+        Task DeleteAsync(
             ConsumerGroup consumerGroup,
             CancellationToken cancellationToken);
     }

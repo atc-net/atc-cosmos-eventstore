@@ -3,7 +3,7 @@ namespace Atc.Cosmos.EventStore.Streams.Validators
     /// <summary>
     /// Responsible for validating if the stream is required to be empty and if not then throw <see cref="StreamVersionConflictException"/>.
     /// </summary>
-    public class StreamEmptyValidator : IStreamValidator
+    internal class StreamEmptyValidator : IStreamValidator
     {
         public void Validate(IStreamMetadata metadata, StreamVersion version)
         {

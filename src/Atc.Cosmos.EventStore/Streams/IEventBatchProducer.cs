@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Atc.Cosmos.EventStore.Streams
 {
-    public interface IEventBatchProducer
+    internal interface IEventBatchProducer
     {
         StreamBatch FromEvents(
             IReadOnlyCollection<object> events,

@@ -12,6 +12,8 @@ namespace Atc.Cosmos.EventStore
 
         public string EventStoreContainerId { get; set; } = "event-store";
 
+        public string IndexContainerId { get; set; } = "stream-index";
+
         public string SubscriptionContainerId { get; set; } = "subscriptions";
 
         public CosmosClientOptions CosmosClientOptions { get; set; } = new CosmosClientOptions();

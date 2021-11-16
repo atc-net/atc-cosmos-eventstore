@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Atc.Cosmos.EventStore.Streams
 {
-    public interface IStreamBatchWriter
+    internal interface IStreamBatchWriter
     {
-        ValueTask<IStreamMetadata> WriteAsync(
+        Task<IStreamMetadata> WriteAsync(
             StreamBatch batch,
             CancellationToken cancellationToken);
     }

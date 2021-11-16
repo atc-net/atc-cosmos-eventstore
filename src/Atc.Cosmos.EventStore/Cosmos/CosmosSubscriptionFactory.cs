@@ -1,20 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Atc.Cosmos.EventStore.Diagnostics;
 using Atc.Cosmos.EventStore.Events;
 using Atc.Cosmos.EventStore.Streams;
 
 namespace Atc.Cosmos.EventStore.Cosmos
 {
-    public class CosmosSubscriptionProvider : IStreamSubscriptionProvider
+    internal class CosmosSubscriptionFactory : IStreamSubscriptionFactory
     {
         private readonly IEventStoreContainerProvider containerProvider;
         private readonly ISubscriptionTelemetry telemetry;
 
-        public CosmosSubscriptionProvider(
+        public CosmosSubscriptionFactory(
             IEventStoreContainerProvider containerProvider,
             ISubscriptionTelemetry telemetry)
         {
@@ -25,13 +22,13 @@ namespace Atc.Cosmos.EventStore.Cosmos
         public IStreamSubscription Create(
             ConsumerGroup consumerGroup,
             SubscriptionStartOptions startOptions,
-            Func<IReadOnlyCollection<EventDocument>, CancellationToken, Task> changes)
+            ProcessEventsHandler eventsHandler)
         {
             var builder = containerProvider
                 .GetStreamContainer()
                 .GetChangeFeedProcessorBuilder<EventDocument>(
                     GetProcessorName(consumerGroup),
-                    (c, ct) => changes(c.Where(ExcludeMetaDataChanges).ToArray(), ct))
+                    (c, ct) => eventsHandler(c.Where(ExcludeMetaDataChanges).ToArray(), ct))
                 .WithLeaseContainer(containerProvider.GetSubscriptionContainer())
                 .WithMaxItems(100)
                 .WithPollInterval(TimeSpan.FromMilliseconds(1000));

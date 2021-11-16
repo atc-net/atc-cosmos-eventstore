@@ -1,0 +1,53 @@
+name: verification
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'test/**'
+      - 'sample/**'
+
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: 👌 Verify libraries
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛒 Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: ⚙️ Setup GIT versioning
+        uses: dotnet/nbgv@v0.4.0
+        with:
+          setAllVars: true
+
+      - name: ⚙️ Setup dotnet 6.0.x
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: 🛠️ Building libraries in release mode
+        run: dotnet build -c release -p:ContinuousIntegrationBuild=true
+
+      - name: 🧪 Run unit tests
+        run: |
+          dotnet test ./test/Atc.Cosmos.EventStore.Tests/Atc.Cosmos.EventStore.Tests.csproj -c release --logger GitHubActions
+          dotnet test ./test/Atc.Cosmos.EventStore.Cqrs.Tests/Atc.Cosmos.EventStore.Cqrs.Tests.csproj -c release --logger GitHubActions
+
+      - name: 🗳️ Pack libraries
+        run: |
+          dotnet pack -c release -o ${GITHUB_WORKSPACE}/packages -p:ContinuousIntegrationBuild=true
+          dotnet pack src/Atc.Cosmos.EventStore/ -c release -o ${GITHUB_WORKSPACE}/packages -p:ContinuousIntegrationBuild=true
+          dotnet pack src/Atc.Cosmos.EventStore.Cqrs/ -c release -o ${GITHUB_WORKSPACE}/packages -p:ContinuousIntegrationBuild=true

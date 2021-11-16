@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Projections
 {
-    public class StreamFilter
+    internal class StreamFilter
     {
         private readonly IReadOnlyList<Func<string, bool>> validators;
         private readonly bool endsOnAcceptAll;

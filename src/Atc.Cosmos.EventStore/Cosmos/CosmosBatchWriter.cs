@@ -1,20 +1,26 @@
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Atc.Cosmos.EventStore.Events;
 using Atc.Cosmos.EventStore.Streams;
 using Microsoft.Azure.Cosmos;
 
 namespace Atc.Cosmos.EventStore.Cosmos
 {
-    public class CosmosBatchWriter : IStreamBatchWriter
+    internal class CosmosBatchWriter : IStreamBatchWriter
     {
         private readonly IEventStoreContainerProvider containerProvider;
+        private readonly IDateTimeProvider dateTimeProvider;
 
-        public CosmosBatchWriter(IEventStoreContainerProvider containerProvider)
+        public CosmosBatchWriter(
+            IEventStoreContainerProvider containerProvider,
+            IDateTimeProvider dateTimeProvider)
         {
             this.containerProvider = containerProvider;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
-        public async ValueTask<IStreamMetadata> WriteAsync(
+        public async Task<IStreamMetadata> WriteAsync(
             StreamBatch batch,
             CancellationToken cancellationToken)
         {
@@ -34,6 +40,23 @@ namespace Atc.Cosmos.EventStore.Cosmos
                     new TransactionalBatchItemRequestOptions { EnableContentResponseOnWrite = false });
             }
 
+            if (IsEmptyStream(batch.Metadata))
+            {
+                await containerProvider
+                    .GetIndexContainer()
+                    .UpsertItemAsync(
+                        new StreamIndex
+                        {
+                            StreamId = batch.Metadata.StreamId.Value,
+                            Timestamp = dateTimeProvider.GetDateTime(),
+                            IsActive = true,
+                        },
+                        new PartitionKey(nameof(StreamIndex)),
+                        new ItemRequestOptions { EnableContentResponseOnWrite = false },
+                        cancellationToken)
+                    .ConfigureAwait(false);
+            }
+
             using var batchResponse = await tx
                 .ExecuteAsync(cancellationToken)
                 .ConfigureAwait(false);
@@ -42,6 +65,9 @@ namespace Atc.Cosmos.EventStore.Cosmos
 
             return GetMetadataFromResponse(batchResponse);
         }
+
+        private static bool IsEmptyStream(StreamMetadata metadata)
+            => string.IsNullOrWhiteSpace(metadata.ETag); // As metadata has already been updated we can only use ETag to see if its a new stream.
 
         private static IStreamMetadata GetMetadataFromResponse(TransactionalBatchResponse response)
         {
@@ -57,6 +83,16 @@ namespace Atc.Cosmos.EventStore.Cosmos
         {
             if (!response.IsSuccessStatusCode)
             {
+                if (response.StatusCode == HttpStatusCode.TooManyRequests)
+                {
+                    throw new CosmosException(
+                        response.ErrorMessage,
+                        response.StatusCode,
+                        0,
+                        response.ActivityId,
+                        response.RequestCharge);
+                }
+
                 throw new StreamWriteConflictException(
                     metadata.StreamId,
                     metadata.Version);

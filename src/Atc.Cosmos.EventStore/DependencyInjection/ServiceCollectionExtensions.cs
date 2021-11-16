@@ -1,7 +1,7 @@
 using System;
 using Atc.Cosmos.EventStore;
 using Atc.Cosmos.EventStore.Cosmos;
-using Atc.Cosmos.EventStore.DependencyInjection.Internal;
+using Atc.Cosmos.EventStore.DependencyInjection;
 using Atc.Cosmos.EventStore.Diagnostics;
 using Atc.Cosmos.EventStore.Events;
 using Atc.Cosmos.EventStore.Streams;
@@ -15,9 +15,9 @@ namespace Microsoft.Extensions.DependencyInjection
             this IServiceCollection services,
             Action<EventStoreOptionsBuilder> configure)
         {
-            services.TryAddSingleton<EventStoreCosmosBuilder>();
             services.TryAddSingleton<CosmosEventSerializer>();
             services.TryAddSingleton<IEventStoreClient, EventStoreClient>();
+            services.TryAddSingleton<IEventStoreManagementClient, EventStoreManagementClient>();
 
             var configureOptions = new EventStoreOptionsBuilder(services);
             configure?.Invoke(configureOptions);
@@ -29,7 +29,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddSingleton<IStreamReadValidator, StreamReadValidator>();
             services.TryAddSingleton<IEventBatchProducer, EventBatchProducer>();
 
-            services.TryAddSingleton<IStreamSubscriptionFactory, StreamSubscriptionFactory>();
             services.TryAddSingleton<IStreamInfoReader, StreamInfoReader>();
             services.TryAddSingleton<IStreamReader, StreamReader>();
             services.TryAddSingleton<IStreamWriter, StreamWriter>();

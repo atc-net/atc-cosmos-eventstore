@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Commands
 {
-    public class CommandProcessor<TCommand> : ICommandProcessor<TCommand>
+    internal class CommandProcessor<TCommand> : ICommandProcessor<TCommand>
         where TCommand : ICommand
     {
         private readonly IStateWriter<TCommand> stateWriter;

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Commands
 {
-    public interface IStateProjector<TCommand>
+    internal interface IStateProjector<TCommand>
         where TCommand : ICommand
     {
         ValueTask<IStreamState> ProjectAsync(

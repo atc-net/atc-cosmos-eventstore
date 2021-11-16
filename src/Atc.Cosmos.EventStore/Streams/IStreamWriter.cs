@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace Atc.Cosmos.EventStore.Streams
 {
-    public interface IStreamWriter
+    internal interface IStreamWriter
     {
-        ValueTask<StreamResponse> WriteAsync(
+        Task<StreamResponse> WriteAsync(
             StreamId streamId,
             IReadOnlyCollection<object> events,
             StreamVersion version,

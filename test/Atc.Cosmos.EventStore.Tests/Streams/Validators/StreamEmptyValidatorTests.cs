@@ -9,7 +9,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams.Validators
     public class StreamEmptyValidatorTests
     {
         [Theory, AutoNSubstituteData]
-        public void Should_Validate_When_Expected_Version_IsNot_StartOfStream(
+        internal void Should_Validate_When_Expected_Version_IsNot_StartOfStream(
             IStreamMetadata metadata,
             StreamEmptyValidator sut)
         {
@@ -24,7 +24,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams.Validators
         }
 
         [Theory, AutoNSubstituteData]
-        public void Should_Throw_When_Stream_IsRequired_ToBe_StartOfStream_But_Stream_IsNot_StartOfStream(
+        internal void Should_Throw_When_Stream_IsRequired_ToBe_StartOfStream_But_Stream_IsNot_StartOfStream(
             IStreamMetadata metadata,
             StreamEmptyValidator sut)
         {
@@ -42,7 +42,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams.Validators
         }
 
         [Theory, AutoNSubstituteData]
-        public void Should_Validate_When_Stream_Is_StartOfStream(
+        internal void Should_Validate_When_Stream_Is_StartOfStream(
             IStreamMetadata metadata,
             StreamEmptyValidator sut)
         {

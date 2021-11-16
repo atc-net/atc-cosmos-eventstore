@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Atc.Test;
 using AutoFixture.Xunit2;
 using FluentAssertions;
@@ -156,7 +157,7 @@ namespace Atc.Cosmos.EventStore.Tests
             => sut
                 .CompareTo(version + 1)
                 .Should()
-                .Be(1);
+                .Be(-1);
 
         [Theory, AutoNSubstituteData]
         public void Should_Be_LessThan_Using_CompareTo(
@@ -165,6 +166,17 @@ namespace Atc.Cosmos.EventStore.Tests
             => sut
                 .CompareTo(version - 1)
                 .Should()
-                .Be(-1);
+                .Be(1);
+
+        [Theory, AutoNSubstituteData]
+        public void Should_Able_To_Sort_By_StreamVersion(
+            StreamVersion[] sut)
+            => sut
+                .OrderBy(s => s)
+                .Should()
+                .ContainInOrder(
+                    sut
+                        .OrderBy(s => s.Value)
+                        .ToArray());
     }
 }

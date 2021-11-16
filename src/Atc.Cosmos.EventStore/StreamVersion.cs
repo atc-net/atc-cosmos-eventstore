@@ -80,19 +80,13 @@ namespace Atc.Cosmos.EventStore
         /// </summary>
         /// <param name="other">A StreamVersion to compare.</param>
         /// <returns>
-        ///   A value that indicates the relative order of the objects being compared.The
+        ///   A value that indicates the relative order of the objects being compared. The
         ///   return value has these meanings: Value Meaning Less than zero This instance precedes
         ///   other in the sort order. Zero This instance occurs in the same position in the
         ///   sort order as other. Greater than zero This instance follows other in the sort order.
         /// </returns>
         public int CompareTo(StreamVersion other)
-            => other switch
-            {
-                StreamVersion v when v.Value < Value => -1,
-                StreamVersion v when v.Value > Value => 1,
-                StreamVersion v when v.Value == Value => 0,
-                _ => throw new ArgumentNullException(nameof(other)),
-            };
+            => Value.CompareTo(other.Value);
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object? obj)

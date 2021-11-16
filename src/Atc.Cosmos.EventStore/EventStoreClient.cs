@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -5,11 +6,14 @@ using Atc.Cosmos.EventStore.Streams;
 
 namespace Atc.Cosmos.EventStore
 {
-    public class EventStoreClient : IEventStoreClient
+    internal class EventStoreClient : IEventStoreClient
     {
         private readonly IStreamWriter streamWriter;
         private readonly IStreamReader streamReader;
         private readonly IStreamInfoReader infoReader;
+        private readonly IStreamIndexReader indexReader;
+        private readonly IStreamCheckpointWriter checkpointWriter;
+        private readonly IStreamCheckpointReader checkpointReader;
         private readonly IStreamSubscriptionFactory subscriptionFactory;
         private readonly IStreamSubscriptionRemover subscriptionRemover;
 
@@ -17,70 +21,117 @@ namespace Atc.Cosmos.EventStore
             IStreamWriter streamWriter,
             IStreamReader streamReader,
             IStreamInfoReader infoReader,
+            IStreamIndexReader indexReader,
+            IStreamCheckpointWriter checkpointWriter,
+            IStreamCheckpointReader checkpointReader,
             IStreamSubscriptionFactory subscriptionFactory,
             IStreamSubscriptionRemover subscriptionRemover)
         {
             this.streamWriter = streamWriter;
             this.streamReader = streamReader;
             this.infoReader = infoReader;
+            this.indexReader = indexReader;
+            this.checkpointWriter = checkpointWriter;
+            this.checkpointReader = checkpointReader;
             this.subscriptionFactory = subscriptionFactory;
             this.subscriptionRemover = subscriptionRemover;
         }
 
-        public ValueTask DeleteSubscribeAsync(ConsumerGroup consumerGroup, CancellationToken cancellationToken = default)
-        {
-            Arguments.EnsureNotNull(consumerGroup, nameof(consumerGroup));
+        public Task DeleteSubscriptionAsync(
+            ConsumerGroup consumerGroup,
+            CancellationToken cancellationToken = default)
+            => subscriptionRemover
+                .DeleteAsync(
+                    Arguments.EnsureNotNull(consumerGroup, nameof(consumerGroup)),
+                    cancellationToken);
 
-            return subscriptionRemover.DeleteAsync(consumerGroup, cancellationToken);
-        }
-
-        public ValueTask<IStreamMetadata> GetStreamInfoAsync(
+        public Task<IStreamMetadata> GetStreamInfoAsync(
             StreamId streamId,
             CancellationToken cancellationToken = default)
-            => infoReader.ReadAsync(streamId, cancellationToken);
+            => infoReader
+                .ReadAsync(
+                    streamId,
+                    cancellationToken);
+
+        public IAsyncEnumerable<IStreamIndex> QueryStreamsAsync(
+            string? filter = default,
+            DateTimeOffset? createdAfter = default,
+            CancellationToken cancellationToken = default)
+            => indexReader
+                .ReadAsync(
+                    filter,
+                    createdAfter,
+                    cancellationToken);
 
         public IAsyncEnumerable<IEvent> ReadFromStreamAsync(
             StreamId streamId,
-            StreamVersion? fromVersion = null,
+            StreamVersion? fromVersion = default,
+            StreamReadFilter? filter = default,
             CancellationToken cancellationToken = default)
-            => streamReader.ReadAsync(
-                streamId,
-                Arguments.EnsureValueRange(fromVersion ?? StreamVersion.Any, nameof(fromVersion)),
-                cancellationToken);
+            => streamReader
+                .ReadAsync(
+                    streamId,
+                    Arguments.EnsureValueRange(fromVersion ?? StreamVersion.Any, nameof(fromVersion)),
+                    filter,
+                    cancellationToken);
 
         public IStreamSubscription SubscribeToStreams(
             ConsumerGroup consumerGroup,
             SubscriptionStartOptions startOptions,
-            ProcessEventsHandler eventsHandler,
-            ProcessExceptionHandler errorHandler)
-        {
-            Arguments.EnsureNotNull(consumerGroup, nameof(consumerGroup));
-            Arguments.EnsureNotNull(eventsHandler, nameof(eventsHandler));
-            Arguments.EnsureNotNull(errorHandler, nameof(errorHandler));
-
-            return subscriptionFactory
+            ProcessEventsHandler eventsHandler)
+            => subscriptionFactory
                 .Create(
-                    consumerGroup,
+                    Arguments.EnsureNotNull(consumerGroup, nameof(consumerGroup)),
                     startOptions,
-                    eventsHandler,
-                    errorHandler);
-        }
+                    Arguments.EnsureNotNull(eventsHandler, nameof(eventsHandler)));
 
-        public ValueTask<StreamResponse> WriteToStreamAsync(
+        public Task<StreamResponse> WriteToStreamAsync(
             StreamId streamId,
             IReadOnlyCollection<object> events,
-            StreamVersion version,
-            StreamWriteOptions? options = null,
+            StreamVersion? version = default,
+            StreamWriteOptions? options = default,
             CancellationToken cancellationToken = default)
-        {
-            Arguments.EnsureNoNullValues(events, nameof(events));
+            => streamWriter
+                .WriteAsync(
+                    streamId,
+                    Arguments.EnsureNoNullValues(events, nameof(events)),
+                    version ?? StreamVersion.Any,
+                    options,
+                    cancellationToken);
 
-            return streamWriter.WriteAsync(
-                streamId,
-                events,
-                version,
-                options,
-                cancellationToken);
-        }
+        public Task SetStreamCheckpointAsync(
+            string name,
+            StreamId streamId,
+            StreamVersion version,
+            object? state = null,
+            CancellationToken cancellationToken = default)
+            => checkpointWriter
+                .WriteAsync(
+                    Arguments.EnsureNotNull(name, nameof(name)),
+                    streamId,
+                    version,
+                    state,
+                    cancellationToken);
+
+        public Task<Checkpoint<T>?> GetStreamCheckpointAsync<T>(
+            string name,
+            StreamId streamId,
+            CancellationToken cancellationToken = default)
+            => checkpointReader
+                .ReadAsync<T>(
+                    Arguments.EnsureNotNull(name, nameof(name)),
+                    streamId,
+                    cancellationToken);
+
+        public async Task<Checkpoint?> GetStreamCheckpointAsync(
+            string name,
+            StreamId streamId,
+            CancellationToken cancellationToken = default)
+            => await checkpointReader
+                .ReadAsync<object>(
+                    Arguments.EnsureNotNull(name, nameof(name)),
+                    streamId,
+                    cancellationToken)
+                .ConfigureAwait(false);
     }
 }

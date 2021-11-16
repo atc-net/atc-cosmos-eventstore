@@ -7,13 +7,13 @@ using Atc.Cosmos.EventStore.Cosmos;
 using Atc.Cosmos.EventStore.Cqrs.Commands;
 using Atc.Cosmos.EventStore.Cqrs.Internal;
 using Atc.Cosmos.EventStore.Cqrs.Projections;
-using Atc.Cosmos.EventStore.DependencyInjection.Internal;
+using Atc.Cosmos.EventStore.DependencyInjection;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Atc.Cosmos.EventStore.Cqrs.DependencyInjection.Internal
 {
-    public class EventStoreCqrsBuilder : IEventStoreCqrsBuilder
+    internal class EventStoreCqrsBuilder : IEventStoreCqrsBuilder
     {
         private readonly EventStoreOptionsBuilder builder;
 

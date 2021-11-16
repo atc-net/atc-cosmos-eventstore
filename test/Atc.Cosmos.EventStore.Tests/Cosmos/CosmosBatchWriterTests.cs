@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Atc.Cosmos.EventStore.Cosmos;
@@ -21,6 +22,8 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
         private readonly TransactionalBatchResponse expectedTransactionResponse;
         private readonly string expectedETag;
         private readonly IEventStoreContainerProvider containerProvider;
+        private readonly IDateTimeProvider dateTimeProvider;
+        private readonly DateTimeOffset expectedDateTime;
         private readonly CosmosBatchWriter sut;
 
         public CosmosBatchWriterTests()
@@ -63,11 +66,21 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
             containerProvider
                 .GetStreamContainer()
                 .Returns(container, returnThese: null);
-            sut = new CosmosBatchWriter(containerProvider);
+            containerProvider
+                .GetIndexContainer()
+                .Returns(container, returnThese: null);
+
+            expectedDateTime = DateTimeOffset.UtcNow;
+            dateTimeProvider = Substitute.For<IDateTimeProvider>();
+            dateTimeProvider
+                .GetDateTime()
+                .Returns(expectedDateTime);
+
+            sut = new CosmosBatchWriter(containerProvider, dateTimeProvider);
         }
 
         [Theory, AutoNSubstituteData]
-        public async Task Should_Create_TransactionBatch_With_StreamId_as_PartitionKey(
+        internal async Task Should_Create_TransactionBatch_With_StreamId_as_PartitionKey(
             StreamBatch streamBatch,
             CancellationToken cancellationToken)
         {
@@ -80,7 +93,7 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
         }
 
         [Theory, AutoNSubstituteData]
-        public async Task Should_Upsert_Metadata_With_ETag(
+        internal async Task Should_Upsert_Metadata_With_ETag(
             StreamBatch streamBatch,
             CancellationToken cancellationToken)
         {
@@ -94,7 +107,7 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
         }
 
         [Theory, AutoNSubstituteData]
-        public async Task Should_Create_Documents(
+        internal async Task Should_Create_Documents(
             StreamBatch streamBatch,
             CancellationToken cancellationToken)
         {
@@ -108,7 +121,7 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
         }
 
         [Theory, AutoNSubstituteData]
-        public void Should_Throw_When_ExecutionFails(
+        internal async Task Should_Throw_When_ExecutionFails(
             StreamBatch streamBatch,
             CancellationToken cancellationToken)
         {
@@ -116,10 +129,28 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
                 .IsSuccessStatusCode
                 .Returns(returnThis: false);
 
-            ValueTaskExtensions
+            await FluentActions
                 .Awaiting(() => sut.WriteAsync(streamBatch, cancellationToken))
                 .Should()
-                .Throw<StreamWriteConflictException>();
+                .ThrowAsync<StreamWriteConflictException>();
+        }
+
+        [Theory, AutoNSubstituteData]
+        internal async Task Should_Create_Index_When_Stream_IsEmpty(
+            StreamBatch streamBatch,
+            CancellationToken cancellationToken)
+        {
+            streamBatch.Metadata.ETag = null;
+
+            await sut.WriteAsync(streamBatch, cancellationToken);
+
+            _ = container
+                .Received()
+                .UpsertItemAsync<StreamIndex>(
+                    Arg.Is<StreamIndex>(arg => arg.PartitionKey == nameof(StreamIndex) && arg.StreamId == streamBatch.Metadata.StreamId),
+                    new PartitionKey(nameof(StreamIndex)),
+                    Arg.Is<ItemRequestOptions>(arg => arg.EnableContentResponseOnWrite == false),
+                    cancellationToken);
         }
     }
 }

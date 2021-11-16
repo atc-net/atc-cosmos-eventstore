@@ -4,7 +4,7 @@ using Atc.Cosmos.EventStore.Streams;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Commands
 {
-    public class StateProjector<TCommand> : IStateProjector<TCommand>
+    internal class StateProjector<TCommand> : IStateProjector<TCommand>
         where TCommand : ICommand
     {
         private readonly IEventStoreClient eventStore;
@@ -63,7 +63,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.Commands
                         cancellationToken)
                     .ConfigureAwait(false);
 
-                state.Version = evt.Properties.Version;
+                state.Version = evt.Metadata.Version;
             }
 
             return state;

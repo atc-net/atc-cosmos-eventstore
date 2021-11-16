@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 namespace Atc.Cosmos.EventStore.Diagnostics
 {
-    public class SubscriptionActivity : ISubscriptionActivity
+    internal class SubscriptionActivity : ISubscriptionActivity
     {
         private readonly DiagnosticSource source;
         private readonly Activity activity;

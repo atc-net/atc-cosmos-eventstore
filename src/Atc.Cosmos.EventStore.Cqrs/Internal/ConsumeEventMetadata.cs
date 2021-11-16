@@ -35,30 +35,31 @@ namespace Atc.Cosmos.EventStore.Cqrs.Internal
         public bool IsNotConsumingEvents()
             => consumeEvents.Keys.Count == 0;
 
-        protected ValueTask ConsumeAsync(
+        protected async ValueTask ConsumeAsync(
             IEvent evt,
             object projection,
             CancellationToken cancellationToken)
         {
             if (!CanConsumeEvent(evt))
             {
-                return new ValueTask(Task.CompletedTask);
+                return;
             }
 
             var metadata = new EventMetadata(
-                evt.Properties.EventId,
-                EventStreamId.FromStreamId(evt.Properties.StreamId),
-                evt.Properties.Timestamp,
-                (long)evt.Properties.Version,
-                CorrelationId: evt.Properties.CorrelationId,
-                CausationId: evt.Properties.CausationId);
+                evt.Metadata.EventId,
+                EventStreamId.FromStreamId(evt.Metadata.StreamId),
+                evt.Metadata.Timestamp,
+                (long)evt.Metadata.Version,
+                CorrelationId: evt.Metadata.CorrelationId,
+                CausationId: evt.Metadata.CausationId);
 
-            return consumeEvents[evt.Data.GetType()]
-                .Invoke(null, new object[] { projection, evt.Data, metadata, cancellationToken }) switch
+            var response = consumeEvents[evt.Data.GetType()]
+                .Invoke(null, new object[] { projection, evt.Data, metadata, cancellationToken });
+
+            if (response is ValueTask v)
             {
-                ValueTask v => v,
-                _ => new ValueTask(Task.CompletedTask),
-            };
+                await v.ConfigureAwait(false);
+            }
         }
 
         private static bool ImplementsConsumeEventInterfaces(Type genericTypeDefinition)

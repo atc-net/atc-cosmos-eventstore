@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Atc.Cosmos.EventStore.Converters
 {
-    public class StreamVersionConverter : JsonConverter<StreamVersion>
+    internal class StreamVersionConverter : JsonConverter<StreamVersion>
     {
         public override StreamVersion Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             => reader.TryGetInt64(out var value)

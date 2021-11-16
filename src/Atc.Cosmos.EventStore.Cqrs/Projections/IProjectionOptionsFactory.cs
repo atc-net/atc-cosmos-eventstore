@@ -1,6 +1,6 @@
 namespace Atc.Cosmos.EventStore.Cqrs.Projections
 {
-    public interface IProjectionOptionsFactory
+    internal interface IProjectionOptionsFactory
     {
         IProjectionOptions GetOptions<TProjection>()
             where TProjection : IProjection;

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Atc.Cosmos.EventStore.Events;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Atc.Cosmos.EventStore.DependencyInjection.Internal
+namespace Atc.Cosmos.EventStore.DependencyInjection
 {
-    public class EventCatalogBuilder : IEventCatalogBuilder
+    internal class EventCatalogBuilder : IEventCatalogBuilder
     {
         private readonly Dictionary<EventName, Type> mappings = new();
 

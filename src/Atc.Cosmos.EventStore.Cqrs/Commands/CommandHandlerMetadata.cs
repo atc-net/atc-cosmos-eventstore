@@ -4,7 +4,7 @@ using Atc.Cosmos.EventStore.Cqrs.Internal;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Commands
 {
-    public class CommandHandlerMetadata<TCommand, THandler> :
+    internal class CommandHandlerMetadata<TCommand, THandler> :
         ConsumeEventMetadata,
         ICommandHandlerMetadata<TCommand>
         where TCommand : ICommand

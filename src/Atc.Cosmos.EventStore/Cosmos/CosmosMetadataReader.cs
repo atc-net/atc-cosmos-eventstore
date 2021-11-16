@@ -7,7 +7,7 @@ using Microsoft.Azure.Cosmos;
 
 namespace Atc.Cosmos.EventStore.Cosmos
 {
-    public class CosmosMetadataReader : IStreamMetadataReader
+    internal class CosmosMetadataReader : IStreamMetadataReader
     {
         private readonly IEventStoreContainerProvider containerProvider;
         private readonly IDateTimeProvider timeProvider;
@@ -20,7 +20,7 @@ namespace Atc.Cosmos.EventStore.Cosmos
             this.timeProvider = timeProvider;
         }
 
-        public async ValueTask<IStreamMetadata> GetAsync(
+        public async Task<IStreamMetadata> GetAsync(
             StreamId streamId,
             CancellationToken cancellationToken)
         {

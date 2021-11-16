@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Atc.Cosmos.EventStore.Streams
 {
-    public class StreamWriter : IStreamWriter
+    internal class StreamWriter : IStreamWriter
     {
         private readonly IStreamMetadataReader metadataReader;
         private readonly IStreamWriteValidator validator;
@@ -23,7 +23,7 @@ namespace Atc.Cosmos.EventStore.Streams
             this.batchWriter = batchWriter;
         }
 
-        public async ValueTask<StreamResponse> WriteAsync(
+        public async Task<StreamResponse> WriteAsync(
             StreamId streamId,
             IReadOnlyCollection<object> events,
             StreamVersion version,

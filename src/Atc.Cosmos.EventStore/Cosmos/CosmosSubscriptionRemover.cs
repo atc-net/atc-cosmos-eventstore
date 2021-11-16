@@ -6,7 +6,7 @@ using Microsoft.Azure.Cosmos;
 
 namespace Atc.Cosmos.EventStore.Cosmos
 {
-    public class CosmosSubscriptionRemover : IStreamSubscriptionRemover
+    internal class CosmosSubscriptionRemover : IStreamSubscriptionRemover
     {
         private readonly IEventStoreContainerProvider containerProvider;
 
@@ -15,7 +15,7 @@ namespace Atc.Cosmos.EventStore.Cosmos
             this.containerProvider = containerProvider;
         }
 
-        public async ValueTask DeleteAsync(ConsumerGroup consumerGroup, CancellationToken cancellationToken)
+        public async Task DeleteAsync(ConsumerGroup consumerGroup, CancellationToken cancellationToken)
         {
             var resultSet = containerProvider
                 .GetSubscriptionContainer()

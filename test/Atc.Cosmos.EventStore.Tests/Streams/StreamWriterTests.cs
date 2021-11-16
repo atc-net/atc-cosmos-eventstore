@@ -14,7 +14,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
     public class StreamWriterTests
     {
         [Theory, AutoNSubstituteData]
-        public async ValueTask Should_Read_Metadata_From_StreamId(
+        internal async ValueTask Should_Read_Metadata_From_StreamId(
             [Frozen, Substitute] IStreamMetadataReader metadataReader,
             [Frozen, Substitute] IStreamBatchWriter eventWriter,
             StreamWriter sut,
@@ -25,7 +25,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         {
             eventWriter
                 .WriteAsync(default, default)
-                .ReturnsForAnyArgs(new ValueTask<IStreamMetadata>(expected));
+                .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(expected));
 
             await sut.WriteAsync(
                 streamId,
@@ -42,7 +42,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         }
 
         [Theory, AutoNSubstituteData]
-        public async ValueTask Should_Validate_Metadata_With_Required_Version(
+        internal async ValueTask Should_Validate_Metadata_With_Required_Version(
             [Frozen, Substitute] IStreamWriteValidator validator,
             [Frozen, Substitute] IStreamBatchWriter eventWriter,
             StreamWriter sut,
@@ -53,7 +53,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         {
             eventWriter
                 .WriteAsync(default, default)
-                .ReturnsForAnyArgs(new ValueTask<IStreamMetadata>(expected));
+                .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(expected));
 
             await sut.WriteAsync(
                 streamId,
@@ -70,7 +70,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         }
 
         [Theory, AutoNSubstituteData]
-        public async ValueTask Should_Convert_Events(
+        internal async ValueTask Should_Convert_Events(
             [Frozen, Substitute] IEventBatchProducer eventConverter,
             [Frozen, Substitute] IStreamBatchWriter eventWriter,
             StreamWriter sut,
@@ -81,7 +81,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         {
             eventWriter
                 .WriteAsync(default, default)
-                .ReturnsForAnyArgs(new ValueTask<IStreamMetadata>(expected));
+                .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(expected));
 
             await sut.WriteAsync(
                 streamId,
@@ -99,7 +99,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         }
 
         [Theory, AutoNSubstituteData]
-        public async ValueTask Should_Return_State_From_EventWriter(
+        internal async ValueTask Should_Return_State_From_EventWriter(
             [Frozen, Substitute] IStreamBatchWriter eventWriter,
             StreamWriter sut,
             StreamId streamId,
@@ -109,7 +109,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
         {
             eventWriter
                 .WriteAsync(default, default)
-                .ReturnsForAnyArgs(new ValueTask<IStreamMetadata>(expected));
+                .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(expected));
 
             var result = await sut.WriteAsync(
                 streamId,

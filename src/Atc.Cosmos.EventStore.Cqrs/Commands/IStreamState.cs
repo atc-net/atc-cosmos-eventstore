@@ -1,6 +1,6 @@
 namespace Atc.Cosmos.EventStore.Cqrs.Commands
 {
-    public interface IStreamState
+    internal interface IStreamState
     {
         StreamId Id { get; }
 

@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Atc.Cosmos.EventStore.Streams
 {
-    public interface IStreamInfoReader
+    internal interface IStreamInfoReader
     {
-        ValueTask<IStreamMetadata> ReadAsync(
+        Task<IStreamMetadata> ReadAsync(
             StreamId streamId,
             CancellationToken cancellationToken = default);
     }

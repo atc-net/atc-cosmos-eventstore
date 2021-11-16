@@ -1,44 +1,93 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Atc.Cosmos.EventStore.Cosmos;
 using Atc.Cosmos.EventStore.Events;
 using Atc.Cosmos.EventStore.Streams;
 
 namespace Atc.Cosmos.EventStore.InMemory
 {
-    public class InMemoryStore :
+    internal class InMemoryStore :
         IStreamMetadataReader,
         IStreamIterator,
         IStreamBatchWriter,
-        IStreamSubscriptionProvider,
-        IStreamSubscriptionRemover
+        IStreamSubscriptionFactory,
+        IStreamSubscriptionRemover,
+        IStreamIndexReader,
+        IStreamCheckpointReader,
+        IStreamCheckpointWriter
     {
-        public IStreamSubscription Create(
+        private readonly IDateTimeProvider dateTimeProvider;
+
+        public InMemoryStore(
+            IDateTimeProvider dateTimeProvider)
+        {
+            this.dateTimeProvider = dateTimeProvider;
+        }
+
+        public ConcurrentDictionary<StreamId, List<IEvent>> EventStore { get; }
+            = new ConcurrentDictionary<StreamId, List<IEvent>>();
+
+        public ConcurrentDictionary<StreamId, ConcurrentDictionary<string, CheckpointDocument>> Checkpoints { get; }
+            = new ConcurrentDictionary<StreamId, ConcurrentDictionary<string, CheckpointDocument>>();
+
+        IStreamSubscription IStreamSubscriptionFactory.Create(
             ConsumerGroup consumerGroup,
             SubscriptionStartOptions startOptions,
-            Func<IReadOnlyCollection<EventDocument>, CancellationToken, Task> changes)
-            => throw new NotSupportedException();
+            ProcessEventsHandler eventsHandler)
+            => throw new NotImplementedException();
 
-        public ValueTask DeleteAsync(
+        Task IStreamSubscriptionRemover.DeleteAsync(
             ConsumerGroup consumerGroup,
             CancellationToken cancellationToken)
-            => throw new NotSupportedException();
+            => throw new NotImplementedException();
 
-        public ValueTask<IStreamMetadata> GetAsync(
+        Task<IStreamMetadata> IStreamMetadataReader.GetAsync(
             StreamId streamId,
             CancellationToken cancellationToken)
-            => throw new NotSupportedException();
+            => throw new NotImplementedException();
 
-        public IAsyncEnumerable<IEvent> ReadAsync(
+        IAsyncEnumerable<IEvent> IStreamIterator.ReadAsync(
             StreamId streamId,
             StreamVersion fromVersion,
+            StreamReadFilter? filter,
             CancellationToken cancellationToken)
-            => throw new NotSupportedException();
+            => throw new NotImplementedException();
 
-        public ValueTask<IStreamMetadata> WriteAsync(
+        IAsyncEnumerable<IStreamIndex> IStreamIndexReader.ReadAsync(
+            string? filter,
+            DateTimeOffset? createdAfter,
+            CancellationToken cancellationToken)
+            => throw new NotImplementedException();
+
+        Task<Checkpoint<TState>?> IStreamCheckpointReader.ReadAsync<TState>(
+            string name,
+            StreamId streamId,
+            CancellationToken cancellationToken)
+            => throw new NotImplementedException();
+
+        Task<IStreamMetadata> IStreamBatchWriter.WriteAsync(
             StreamBatch batch,
             CancellationToken cancellationToken)
-            => throw new NotSupportedException();
+            => throw new NotImplementedException();
+
+        public Task WriteAsync(
+            string name,
+            StreamId streamId,
+            StreamVersion streamVersion,
+            object? state,
+            CancellationToken cancellationToken)
+        {
+            Checkpoints
+                .GetOrAdd(streamId, new ConcurrentDictionary<string, CheckpointDocument>())
+                .AddOrUpdate(
+                    name,
+                    key => new CheckpointDocument(name, streamId, streamVersion, dateTimeProvider.GetDateTime(), state),
+                    (key, doc) => new CheckpointDocument(name, streamId, streamVersion, dateTimeProvider.GetDateTime(), state));
+
+            return Task.CompletedTask;
+        }
     }
 }

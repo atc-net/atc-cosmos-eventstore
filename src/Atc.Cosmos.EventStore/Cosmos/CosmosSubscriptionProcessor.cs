@@ -4,7 +4,7 @@ using Microsoft.Azure.Cosmos;
 
 namespace Atc.Cosmos.EventStore.Cosmos
 {
-    public class CosmosSubscriptionProcessor : IStreamSubscription
+    internal class CosmosSubscriptionProcessor : IStreamSubscription
     {
         private readonly ISubscriptionTelemetry telemetry;
         private readonly ChangeFeedProcessor processor;

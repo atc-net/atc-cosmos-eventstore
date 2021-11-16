@@ -12,7 +12,7 @@ namespace Atc.Cosmos.EventStore.Cosmos
     /// <summary>
     /// EventStore cosmos JSON serializer implementation for System.Text.Json.
     /// </summary>
-    public class CosmosEventSerializer : CosmosSerializer
+    internal class CosmosEventSerializer : CosmosSerializer
     {
         private readonly JsonSerializerOptions jsonSerializerOptions;
 
@@ -20,7 +20,7 @@ namespace Atc.Cosmos.EventStore.Cosmos
         {
             jsonSerializerOptions = new JsonSerializerOptions
             {
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 WriteIndented = true,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             };

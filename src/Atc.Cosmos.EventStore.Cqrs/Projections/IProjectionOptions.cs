@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Projections
 {
-    public interface IProjectionOptions
+    internal interface IProjectionOptions
     {
         string Name { get; }
 
