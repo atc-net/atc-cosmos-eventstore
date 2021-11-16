@@ -14,7 +14,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.Testing
         ICommandThen
         where TCommand : ICommand
     {
-        private class TestMetadata :
+        private sealed class TestMetadata :
             ConsumeEventMetadata
         {
             public TestMetadata(object handler)
