@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Support for Token Credentials with Comos DB using `UseCredentials` methods on options class.
+
+### Deprecated
+
+-   EventStore `ConnectionString` option has been made obsolete, please use `UseCredentials` or `UseCosmosEmulator` instead.
+
 ## [1.1.3] - 2021-11-16
 
 ### Added
