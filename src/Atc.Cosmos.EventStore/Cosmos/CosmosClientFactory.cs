@@ -14,9 +14,21 @@ namespace Atc.Cosmos.EventStore.Cosmos
             CosmosEventSerializer eventSerializer)
         {
             options.Value.CosmosClientOptions.Serializer = eventSerializer;
-            cosmosClient = new CosmosClient(
-                options.Value.ConnectionString,
-                options.Value.CosmosClientOptions);
+#pragma warning disable CS0618 // Type or member is obsolete
+            cosmosClient = options.Value.Credential is null
+                ? options.Value.ConnectionString is not null
+                    ? new CosmosClient(
+                        options.Value.ConnectionString,
+                        options.Value.CosmosClientOptions)
+                    : new CosmosClient(
+                        options.Value.Endpoint,
+                        options.Value.AuthKey,
+                        options.Value.CosmosClientOptions)
+                : new CosmosClient(
+                    options.Value.Endpoint,
+                    options.Value.Credential,
+                    options.Value.CosmosClientOptions);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         public CosmosClient GetClient()
