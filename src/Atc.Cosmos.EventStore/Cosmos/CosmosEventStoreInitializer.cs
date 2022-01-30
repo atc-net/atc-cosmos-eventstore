@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
@@ -62,6 +63,13 @@ namespace Atc.Cosmos.EventStore.Cosmos
 
             // Exclude event data from indexing.
             containerOptions.IndexingPolicy.ExcludedPaths.Add(new ExcludedPath { Path = "/data/*" });
+
+            containerOptions.IndexingPolicy.CompositeIndexes.Add(new(
+                new[]
+                {
+                    new CompositePath { Path = "/pk", Order = CompositePathSortOrder.Ascending },
+                    new CompositePath { Path = "/properties/version", Order = CompositePathSortOrder.Ascending },
+                }.ToList()));
 
             return clientFactory
                 .GetClient()

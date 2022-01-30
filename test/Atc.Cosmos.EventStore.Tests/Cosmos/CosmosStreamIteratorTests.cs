@@ -107,7 +107,7 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
             query
                 .QueryText
                 .Should()
-                .Be("SELECT * FROM events e WHERE e.pk = @partitionKey ORDER BY e.properties.version");
+                .Be("SELECT * FROM e WHERE e.pk = @partitionKey ORDER BY e.properties.version");
             query
                 .GetQueryParameters()
                 .Should()
@@ -128,7 +128,7 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
             query
                 .QueryText
                 .Should()
-                .Be("SELECT * FROM events e WHERE e.pk = @partitionKey AND e.properties.version >= @fromVersion ORDER BY e.properties.version");
+                .Be("SELECT * FROM e WHERE e.pk = @partitionKey AND e.properties.version >= @fromVersion ORDER BY e.properties.version");
             query
                 .GetQueryParameters()
                 .Should()
@@ -157,7 +157,7 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
             query
                 .QueryText
                 .Should()
-                .Be("SELECT * FROM events e WHERE e.pk = @partitionKey AND e.properties.version >= @fromVersion AND (e.properties.name = @name1) ORDER BY e.properties.version");
+                .Be("SELECT * FROM e WHERE e.pk = @partitionKey AND e.properties.version >= @fromVersion AND (e.properties.name = @name1) ORDER BY e.properties.version");
             query
                 .GetQueryParameters()
                 .Should()
@@ -190,7 +190,7 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
             query
                 .QueryText
                 .Should()
-                .Be("SELECT * FROM events e WHERE e.pk = @partitionKey AND e.properties.version >= @fromVersion AND (e.properties.name = @name1 OR e.properties.name = @name2 OR e.properties.name = @name3) ORDER BY e.properties.version");
+                .Be("SELECT * FROM e WHERE e.pk = @partitionKey AND e.properties.version >= @fromVersion AND (e.properties.name = @name1 OR e.properties.name = @name2 OR e.properties.name = @name3) ORDER BY e.properties.version");
             query
                 .GetQueryParameters()
                 .Should()

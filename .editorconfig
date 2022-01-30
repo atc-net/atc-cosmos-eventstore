@@ -466,7 +466,7 @@ dotnet_diagnostic.SA1633.severity = none            # https://github.com/atc-net
 # https://rules.sonarsource.com/csharp
 dotnet_diagnostic.S1135.severity = suggestion       # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/SonarAnalyzerCSharp/S1135.md
 dotnet_diagnostic.S3267.severity = none             # https://rules.sonarsource.com/csharp/RSPEC-3267 -> pointless rule.
-
+dotnet_diagnostic.S3358.severity = none             # https://rules.sonarsource.com/csharp/RSPEC-3358 -> Ternary operators should not be nested
 
 ##########################################
 # Custom - Code Analyzers Rules
