@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Atc.Cosmos.EventStore.Events;
@@ -34,7 +35,7 @@ namespace Atc.Cosmos.EventStore.Cosmos
                     .ReadNextAsync(cancellationToken)
                     .ConfigureAwait(false);
 
-                foreach (var item in items.Resource)
+                foreach (var item in items.Resource.Where(d => d is not null))
                 {
                     yield return item;
                 }

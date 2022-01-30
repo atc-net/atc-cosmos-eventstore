@@ -14,7 +14,7 @@ namespace Atc.Cosmos.EventStore.Cosmos
         {
             var parameters = new Dictionary<string, object>();
             var query = new StringBuilder();
-            query.Append("SELECT * FROM events e WHERE e.pk = @partitionKey ");
+            query.Append("SELECT * FROM e WHERE e.pk = @partitionKey ");
             parameters["@partitionKey"] = streamId.Value;
 
             if (fromVersion != StreamVersion.Any && fromVersion != StreamVersion.NotEmpty)
