@@ -57,7 +57,7 @@ namespace Atc.Cosmos.EventStore
             Endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
             AuthKey = null;
 #pragma warning disable CS0618 // Type or member is obsolete
-            ConnectionString = null;
+            connectionString = null;
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
@@ -69,7 +69,7 @@ namespace Atc.Cosmos.EventStore
             Endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
             AuthKey = authKey ?? throw new ArgumentNullException(nameof(authKey));
 #pragma warning disable CS0618 // Type or member is obsolete
-            ConnectionString = null;
+            connectionString = null;
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
@@ -79,7 +79,7 @@ namespace Atc.Cosmos.EventStore
             Endpoint = EmulatorEndpoint;
             AuthKey = EmulatorAuthKey;
 #pragma warning disable CS0618 // Type or member is obsolete
-            ConnectionString = null;
+            connectionString = null;
 #pragma warning restore CS0618 // Type or member is obsolete
         }
     }

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   Fixed issue where using `UseCredentials` when configuring event store would not work.
+
 ## [1.2.9] - 2022-01-30
 
 ### Added
