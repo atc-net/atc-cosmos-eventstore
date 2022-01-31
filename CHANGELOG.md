@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.3] - 2022-01-31
+
 ### Changed
 
 -   Fixed issue where using `UseCredentials` when configuring event store would not work.
@@ -31,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   EventStore `ConnectionString` option has been made obsolete, please use `UseCredentials` or `UseCosmosEmulator` instead.
 
-[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.2.9...HEAD
+[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.3.3...HEAD
+
+[1.3.3]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.2.9...v1.3.3
 
 [1.2.9]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.1.3...v1.2.9
