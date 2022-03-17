@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29827.131
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32120.378
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Cosmos.EventStore", "src\Atc.Cosmos.EventStore\Atc.Cosmos.EventStore.csproj", "{1313EC2E-D1E1-42EC-8D68-912BB8492B4B}"
 EndProject
@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Cosmos.EventStore.Tests
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{896CBC7A-D026-473B-8AFB-843FACB98624}"
 	ProjectSection(SolutionItems) = preProject
+		CHANGELOG.md = CHANGELOG.md
 		docs\Concepts.md = docs\Concepts.md
 	EndProjectSection
 EndProject
