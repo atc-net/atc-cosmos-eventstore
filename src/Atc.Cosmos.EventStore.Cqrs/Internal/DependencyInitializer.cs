@@ -9,9 +9,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.Internal
 
         public DependencyInitializer(
             Func<Task> task)
-        {
-            initializer = task();
-        }
+            => initializer = task();
 
         public Task EnsureInitializeAsync()
             => initializer;
