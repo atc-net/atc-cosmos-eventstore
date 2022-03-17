@@ -10,6 +10,7 @@ using Atc.Cosmos.EventStore.Cqrs.Projections;
 using Atc.Cosmos.EventStore.DependencyInjection;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Atc.Cosmos.EventStore.Cqrs.DependencyInjection.Internal
 {
@@ -68,6 +69,8 @@ namespace Atc.Cosmos.EventStore.Cqrs.DependencyInjection.Internal
             builder.Services.AddHostedService<ProjectionJob<TProjection>>();
             builder.Services.AddSingleton<IProjectionProcessor<TProjection>, ProjectionProcessor<TProjection>>();
             builder.Services.AddTransient<TProjection>();
+            builder.Services.TryAddSingleton<IDependencyInitializer>(
+                new DependencyInitializer(() => Task.CompletedTask));
 
             var projectionBuilder = new ProjectionBuilder(name);
 
@@ -88,6 +91,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.DependencyInjection.Internal
             int throughput,
             Func<IServiceProvider, Task>? additionInitialization = null)
         {
+            builder.Services.RemoveAll<IDependencyInitializer>();
             builder.Services.AddSingleton<IDependencyInitializer>(s =>
                 new DependencyInitializer(
                     async () =>
