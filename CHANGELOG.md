@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.5] - 2022-03-18
+
 ### Changed
 
 -   Fixed issue where projection will not start do to missing dependency registration.
@@ -40,7 +42,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   EventStore `ConnectionString` option has been made obsolete, please use `UseCredentials` or `UseCosmosEmulator` instead.
 
-[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.3.3...HEAD
+[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.4.5...HEAD
+
+[1.4.5]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.3.3...v1.4.5
 
 [1.3.3]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.2.9...v1.3.3
 
