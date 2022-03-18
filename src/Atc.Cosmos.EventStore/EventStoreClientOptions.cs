@@ -16,7 +16,7 @@ namespace Atc.Cosmos.EventStore
         private string? connectionString = CosmosEmulatorConnectionString;
 #pragma warning restore CS0618 // Type or member is obsolete
 
-        [Obsolete("Call UseCredentals instead.")]
+        [Obsolete("Call UseCredentials instead.")]
         public string? ConnectionString
         {
             get
@@ -49,6 +49,12 @@ namespace Atc.Cosmos.EventStore
 
         public TokenCredential? Credential { get; private set; }
 
+        /// <summary>
+        /// Configure event store to use <seealso cref="TokenCredential"/> instead <see cref="AuthKey"/>.
+        /// </summary>
+        /// <param name="endpoint">Cosmos account endpoint.</param>
+        /// <param name="credentials">Token credentials to use when connecting to cosmos.</param>
+        /// <exception cref="ArgumentNullException">Throws when <paramref name="credentials"/> or <paramref name="endpoint"/> are null.</exception>
         public void UseCredentials(
             string endpoint,
             TokenCredential credentials)
@@ -61,6 +67,12 @@ namespace Atc.Cosmos.EventStore
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
+        /// <summary>
+        /// Configure event storte to use AuthKey when connecting to cosmos db.
+        /// </summary>
+        /// <param name="endpoint">Cosmos account endpoint.</param>
+        /// <param name="authKey">Authorization key to connect with.</param>
+        /// <exception cref="ArgumentNullException">Throws when <paramref name="authKey"/> or <paramref name="endpoint"/> are null.</exception>
         public void UseCredentials(
             string endpoint,
             string authKey)
@@ -73,6 +85,9 @@ namespace Atc.Cosmos.EventStore
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
+        /// <summary>
+        /// Configure event store to use cosmos emulator.
+        /// </summary>
         public void UseCosmosEmulator()
         {
             Credential = null;
