@@ -32,8 +32,8 @@ namespace Atc.Cosmos.EventStore.Cqrs.Internal
             => consumeEvents
                 .ContainsKey(evt.Data.GetType());
 
-        public bool IsNotConsumingEvents()
-            => consumeEvents.Keys.Count == 0;
+        public bool IsConsumingEvents()
+            => consumeEvents.Keys.Count != 0;
 
         protected async ValueTask ConsumeAsync(
             IEvent evt,

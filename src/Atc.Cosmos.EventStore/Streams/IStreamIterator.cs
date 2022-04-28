@@ -8,7 +8,7 @@ namespace Atc.Cosmos.EventStore.Streams
         IAsyncEnumerable<IEvent> ReadAsync(
             StreamId streamId,
             StreamVersion fromVersion,
-            StreamReadFilter? filter,
+            StreamReadOptions? options,
             CancellationToken cancellationToken);
     }
 }

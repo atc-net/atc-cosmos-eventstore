@@ -151,7 +151,7 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
             await ReadStream(
                 streamId,
                 10,
-                new StreamReadFilter { IncludeEvents = new EventName[] { "evt1" } },
+                new StreamReadOptions { IncludeEvents = new EventName[] { "evt1" } },
                 cancellationToken);
 
             query
@@ -184,7 +184,7 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
             await ReadStream(
                 streamId,
                 10,
-                new StreamReadFilter { IncludeEvents = new EventName[] { "evt1", "evt2", "evt3" } },
+                new StreamReadOptions { IncludeEvents = new EventName[] { "evt1", "evt2", "evt3" } },
                 cancellationToken);
 
             query
@@ -220,11 +220,11 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos
         private async Task<List<IEvent>> ReadStream(
             StreamId streamId,
             StreamVersion streamVersion,
-            StreamReadFilter filter,
+            StreamReadOptions options,
             CancellationToken cancellationToken)
         {
             var received = new List<IEvent>();
-            await foreach (var item in sut.ReadAsync(streamId, streamVersion, filter, cancellationToken).ConfigureAwait(false))
+            await foreach (var item in sut.ReadAsync(streamId, streamVersion, options, cancellationToken).ConfigureAwait(false))
             {
                 received.Add(item);
             }

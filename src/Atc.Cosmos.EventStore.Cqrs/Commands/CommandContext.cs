@@ -7,6 +7,10 @@ namespace Atc.Cosmos.EventStore.Cqrs.Commands
     {
         private readonly List<object> appliedEvents = new();
 
+        public CommandContext(
+            IEventStreamState streamState)
+            => StreamState = streamState;
+
         public IReadOnlyCollection<object> Events
             => appliedEvents;
 
@@ -14,5 +18,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.Commands
             => appliedEvents.Add(evt);
 
         public object? ResponseObject { get; set; }
+
+        public IEventStreamState StreamState { get; }
     }
 }

@@ -52,7 +52,7 @@ namespace Atc.Cosmos.EventStore.InMemory
         IAsyncEnumerable<IEvent> IStreamIterator.ReadAsync(
             StreamId streamId,
             StreamVersion fromVersion,
-            StreamReadFilter? filter,
+            StreamReadOptions? options,
             CancellationToken cancellationToken)
             => throw new NotImplementedException();
 

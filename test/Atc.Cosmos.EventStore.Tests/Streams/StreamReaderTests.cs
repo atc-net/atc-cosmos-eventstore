@@ -80,7 +80,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
             [Substitute] IAsyncEnumerable<IEvent> enumerable,
             StreamReader sut,
             StreamId streamId,
-            StreamReadFilter filter,
+            StreamReadOptions filter,
             StreamMetadata streamMetadata,
             CancellationToken cancellationToken)
         {
@@ -164,7 +164,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams
             StreamReader sut,
             StreamId streamId,
             StreamVersion streamVersion,
-            StreamReadFilter filter,
+            StreamReadOptions filter,
             CancellationToken cancellationToken)
         {
             var received = new List<IEvent>();

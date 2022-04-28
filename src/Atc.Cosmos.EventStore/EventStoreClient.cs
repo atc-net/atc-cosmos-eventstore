@@ -66,13 +66,13 @@ namespace Atc.Cosmos.EventStore
         public IAsyncEnumerable<IEvent> ReadFromStreamAsync(
             StreamId streamId,
             StreamVersion? fromVersion = default,
-            StreamReadFilter? filter = default,
+            StreamReadOptions? options = default,
             CancellationToken cancellationToken = default)
             => streamReader
                 .ReadAsync(
                     streamId,
                     Arguments.EnsureValueRange(fromVersion ?? StreamVersion.Any, nameof(fromVersion)),
-                    filter,
+                    options,
                     cancellationToken);
 
         public IStreamSubscription SubscribeToStreams(

@@ -8,7 +8,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.Commands
     {
         bool CanConsumeEvent(IEvent evt);
 
-        bool IsNotConsumingEvents();
+        bool IsConsumingEvents();
 
         ValueTask ConsumeAsync(
             IEvent evt,

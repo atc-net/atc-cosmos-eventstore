@@ -1,9 +1,16 @@
 namespace Atc.Cosmos.EventStore.Cqrs.Commands
 {
-    internal class StreamState : IStreamState
+    internal class StreamState : IEventStreamState
     {
-        public StreamId Id { get; set; }
+        public StreamState(
+            EventStreamId streamId)
+        {
+            Id = streamId;
+            Version = 0L;
+        }
 
-        public StreamVersion Version { get; set; }
+        public EventStreamId Id { get; set; }
+
+        public EventStreamVersion Version { get; set; }
     }
 }

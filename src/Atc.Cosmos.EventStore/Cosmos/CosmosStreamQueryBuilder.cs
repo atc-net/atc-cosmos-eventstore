@@ -10,7 +10,7 @@ namespace Atc.Cosmos.EventStore.Cosmos
         internal static QueryDefinition GetQueryDefinition(
             StreamId streamId,
             StreamVersion fromVersion,
-            StreamReadFilter? filter)
+            StreamReadOptions? options)
         {
             var parameters = new Dictionary<string, object>();
             var query = new StringBuilder();
@@ -23,11 +23,11 @@ namespace Atc.Cosmos.EventStore.Cosmos
                 parameters["@fromVersion"] = fromVersion.Value;
             }
 
-            if (filter?.IncludeEvents is not null && filter.IncludeEvents.Any())
+            if (options?.IncludeEvents is not null && options.IncludeEvents.Any())
             {
                 var index = 1;
                 query.Append("AND (");
-                query.AppendJoin(" OR ", filter.IncludeEvents.Select(name => GetFilterExpression(name, $"@name{index++}", parameters)));
+                query.AppendJoin(" OR ", options.IncludeEvents.Select(name => GetFilterExpression(name, $"@name{index++}", parameters)));
                 query.Append(") ");
             }
 

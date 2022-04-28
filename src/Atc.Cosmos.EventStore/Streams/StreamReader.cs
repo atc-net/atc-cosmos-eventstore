@@ -24,7 +24,7 @@ namespace Atc.Cosmos.EventStore.Streams
         public async IAsyncEnumerable<IEvent> ReadAsync(
             StreamId streamId,
             StreamVersion fromVersion,
-            StreamReadFilter? filter,
+            StreamReadOptions? options,
             [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             var metadata = await metadataReader
@@ -33,16 +33,18 @@ namespace Atc.Cosmos.EventStore.Streams
 
             readValidator.Validate(
                 metadata,
-                filter?.RequiredVersion ?? StreamVersion.Any);
+                options?.RequiredVersion ?? StreamVersion.Any);
 
-            // If we don't have any events in the stream, then skip reading from stream.
-            if (metadata.Version == 0)
+            var shouldContinue = options?.OnMetadataRead?.Invoke(metadata) ?? true;
+
+            // If we don't have any events in the stream or are instructed to stop, then skip reading from stream.
+            if (metadata.Version == 0 || !shouldContinue)
             {
                 yield break;
             }
 
             await foreach (var evt in streamIterator
-                .ReadAsync(streamId, fromVersion, filter, cancellationToken)
+                .ReadAsync(streamId, fromVersion, options, cancellationToken)
                 .ConfigureAwait(false))
             {
                 yield return evt;

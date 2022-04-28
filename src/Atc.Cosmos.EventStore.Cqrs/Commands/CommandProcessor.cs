@@ -35,7 +35,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.Commands
                     .ConfigureAwait(false);
 
                 // Execute command on aggregate.
-                var context = new CommandContext();
+                var context = new CommandContext(state);
                 await handler
                     .ExecuteAsync(command, context, cancellationToken)
                     .ConfigureAwait(false);
@@ -45,7 +45,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.Commands
                     // Command did not yield any events
                     return new CommandResult(
                         state.Id,
-                        state.Version,
+                        state.Version.Value,
                         ResultType.NotModified,
                         context.ResponseObject);
                 }

@@ -12,7 +12,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.Projections
         bool CanConsumeOneOrMoreEvents(
             IEnumerable<IEvent> events);
 
-        bool IsNotConsumingEvents();
+        bool IsConsumingEvents();
 
         ValueTask ConsumeEventsAsync(
             IEnumerable<IEvent> events,

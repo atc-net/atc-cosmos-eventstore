@@ -19,15 +19,15 @@ namespace Atc.Cosmos.EventStore.Cosmos
         public async IAsyncEnumerable<IEvent> ReadAsync(
             StreamId streamId,
             StreamVersion fromVersion,
-            StreamReadFilter? filter,
+            StreamReadOptions? options,
             [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             var pk = new PartitionKey(streamId.Value);
             var resultSet = containerProvider
                 .GetStreamContainer()
                 .GetItemQueryIterator<EventDocument>(
-                    CosmosStreamQueryBuilder.GetQueryDefinition(streamId, fromVersion, filter),
-                    requestOptions: new() { PartitionKey = pk });
+                    CosmosStreamQueryBuilder.GetQueryDefinition(streamId, fromVersion, options),
+                    requestOptions: new() { PartitionKey = pk,  });
 
             while (resultSet.HasMoreResults && !cancellationToken.IsCancellationRequested)
             {
