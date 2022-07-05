@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Azure.Core;
 using Microsoft.Azure.Cosmos;
 
@@ -42,6 +44,11 @@ namespace Atc.Cosmos.EventStore
         public string SubscriptionContainerId { get; set; } = "subscriptions";
 
         public CosmosClientOptions CosmosClientOptions { get; set; } = new CosmosClientOptions();
+
+        /// <summary>
+        /// Gets collections of custom <seealso cref="JsonConverter"/>.
+        /// </summary>
+        public ICollection<JsonConverter> CustomJsonConverter { get; } = new List<JsonConverter>();
 
         public string? Endpoint { get; private set; }
 
