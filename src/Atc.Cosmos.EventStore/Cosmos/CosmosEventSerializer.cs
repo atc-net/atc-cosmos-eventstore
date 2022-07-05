@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using Atc.Cosmos.EventStore.Converters;
 using Atc.Cosmos.EventStore.Events;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Options;
 
 namespace Atc.Cosmos.EventStore.Cosmos
 {
@@ -16,7 +17,9 @@ namespace Atc.Cosmos.EventStore.Cosmos
     {
         private readonly JsonSerializerOptions jsonSerializerOptions;
 
-        public CosmosEventSerializer(IEventTypeProvider typeProvider)
+        public CosmosEventSerializer(
+            IOptions<EventStoreClientOptions> options,
+            IEventTypeProvider typeProvider)
         {
             jsonSerializerOptions = new JsonSerializerOptions
             {
@@ -30,6 +33,11 @@ namespace Atc.Cosmos.EventStore.Cosmos
             jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             jsonSerializerOptions.Converters.Add(new StreamIdConverter());
             jsonSerializerOptions.Converters.Add(new StreamVersionConverter());
+
+            foreach (var converter in options.Value.CustomJsonConverter)
+            {
+                jsonSerializerOptions.Converters.Add(converter);
+            }
         }
 
         [return: MaybeNull]
