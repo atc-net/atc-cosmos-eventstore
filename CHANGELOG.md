@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.3] - 2022-07-05
+
 ### Added
 
-- Introduced configuration of custom json converters (#23)
+-   Introduced configuration of custom json converters (#23)
 
 ## [1.4.5] - 2022-03-18
 
@@ -46,7 +48,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   EventStore `ConnectionString` option has been made obsolete, please use `UseCredentials` or `UseCosmosEmulator` instead.
 
-[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.4.5...HEAD
+[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.5.3...HEAD
+
+[1.5.3]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.4.5...v1.5.3
 
 [1.4.5]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.3.3...v1.4.5
 
