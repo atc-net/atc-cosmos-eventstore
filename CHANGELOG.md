@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Introduced configuration of custom json converters (#23)
+
 ## [1.4.5] - 2022-03-18
 
 ### Changed
