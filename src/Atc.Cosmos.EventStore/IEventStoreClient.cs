@@ -59,11 +59,13 @@ namespace Atc.Cosmos.EventStore
         /// <param name="consumerGroup">The name the subscription is persisted with.</param>
         /// <param name="startOptions">Start options for subscription.</param>
         /// <param name="eventsHandler">Delegate called when events arrives.</param>
+        /// <param name="exceptionHandler">Delegate called when an exception occurred.</param>
         /// <returns>Event subscription.</returns>
         IStreamSubscription SubscribeToStreams(
             ConsumerGroup consumerGroup,
             SubscriptionStartOptions startOptions,
-            ProcessEventsHandler eventsHandler);
+            ProcessEventsHandler eventsHandler,
+            ProcessExceptionHandler exceptionHandler);
 
         /// <summary>
         /// Delete subscription.

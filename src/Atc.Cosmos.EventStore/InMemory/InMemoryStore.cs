@@ -36,7 +36,8 @@ namespace Atc.Cosmos.EventStore.InMemory
         IStreamSubscription IStreamSubscriptionFactory.Create(
             ConsumerGroup consumerGroup,
             SubscriptionStartOptions startOptions,
-            ProcessEventsHandler eventsHandler)
+            ProcessEventsHandler eventsHandler,
+            ProcessExceptionHandler exceptionHandler)
             => throw new NotImplementedException();
 
         Task IStreamSubscriptionRemover.DeleteAsync(

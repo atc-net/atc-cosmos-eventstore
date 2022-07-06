@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{896CBC7A
 	ProjectSection(SolutionItems) = preProject
 		CHANGELOG.md = CHANGELOG.md
 		docs\Concepts.md = docs\Concepts.md
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Cosmos.EventStore.Cqrs", "src\Atc.Cosmos.EventStore.Cqrs\Atc.Cosmos.EventStore.Cqrs.csproj", "{B7ABF0D8-940D-4392-B619-ECFBA0A58EE6}"
@@ -18,6 +19,27 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Cosmos.EventStore.IntegrationTests", "test\Atc.Cosmos.EventStore.IntegrationTests\Atc.Cosmos.EventStore.IntegrationTests.csproj", "{55C3F01F-5A47-4821-82EB-9F5F3FCC669F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Cosmos.EventStore.Cqrs.Tests", "test\Atc.Cosmos.EventStore.Cqrs.Tests\Atc.Cosmos.EventStore.Cqrs.Tests.csproj", "{04D95696-E998-4BB4-9C97-2B272FB2115B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9F8C68FA-328D-4417-9797-A4B43415F4B1}"
+	ProjectSection(SolutionItems) = preProject
+		src\.editorconfig = src\.editorconfig
+		src\Directory.Build.props = src\Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{249A7550-9083-410E-9188-E00F981F8D44}"
+	ProjectSection(SolutionItems) = preProject
+		test\.editorconfig = test\.editorconfig
+		test\Directory.Build.props = test\Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{F6956D27-E4B8-46EE-AA7F-4DB289A18F57}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		global.json = global.json
+		version.json = version.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +70,13 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1313EC2E-D1E1-42EC-8D68-912BB8492B4B} = {9F8C68FA-328D-4417-9797-A4B43415F4B1}
+		{2A182C87-5FD5-4318-9339-94F36ED800FB} = {249A7550-9083-410E-9188-E00F981F8D44}
+		{B7ABF0D8-940D-4392-B619-ECFBA0A58EE6} = {9F8C68FA-328D-4417-9797-A4B43415F4B1}
+		{55C3F01F-5A47-4821-82EB-9F5F3FCC669F} = {249A7550-9083-410E-9188-E00F981F8D44}
+		{04D95696-E998-4BB4-9C97-2B272FB2115B} = {249A7550-9083-410E-9188-E00F981F8D44}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DB70B849-5672-4B7A-9545-EAC03E0484D1}

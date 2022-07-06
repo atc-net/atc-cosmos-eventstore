@@ -78,12 +78,14 @@ namespace Atc.Cosmos.EventStore
         public IStreamSubscription SubscribeToStreams(
             ConsumerGroup consumerGroup,
             SubscriptionStartOptions startOptions,
-            ProcessEventsHandler eventsHandler)
+            ProcessEventsHandler eventsHandler,
+            ProcessExceptionHandler exceptionHandler)
             => subscriptionFactory
                 .Create(
                     Arguments.EnsureNotNull(consumerGroup, nameof(consumerGroup)),
                     startOptions,
-                    Arguments.EnsureNotNull(eventsHandler, nameof(eventsHandler)));
+                    Arguments.EnsureNotNull(eventsHandler, nameof(eventsHandler)),
+                    Arguments.EnsureNotNull(exceptionHandler, nameof(exceptionHandler)));
 
         public Task<StreamResponse> WriteToStreamAsync(
             StreamId streamId,

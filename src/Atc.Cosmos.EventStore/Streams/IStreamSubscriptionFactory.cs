@@ -5,6 +5,7 @@ namespace Atc.Cosmos.EventStore.Streams
         IStreamSubscription Create(
             ConsumerGroup consumerGroup,
             SubscriptionStartOptions startOptions,
-            ProcessEventsHandler eventsHandler);
+            ProcessEventsHandler eventsHandler,
+            ProcessExceptionHandler exceptionHandler);
     }
 }

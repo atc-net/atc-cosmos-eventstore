@@ -22,13 +22,15 @@ namespace Atc.Cosmos.EventStore.Cosmos
         public IStreamSubscription Create(
             ConsumerGroup consumerGroup,
             SubscriptionStartOptions startOptions,
-            ProcessEventsHandler eventsHandler)
+            ProcessEventsHandler eventsHandler,
+            ProcessExceptionHandler exceptionHandler)
         {
             var builder = containerProvider
                 .GetStreamContainer()
                 .GetChangeFeedProcessorBuilder<EventDocument>(
                     GetProcessorName(consumerGroup),
                     (c, ct) => eventsHandler(c.Where(ExcludeMetaDataChanges).ToArray(), ct))
+                .WithErrorNotification((lt, ex) => exceptionHandler(lt, ex))
                 .WithLeaseContainer(containerProvider.GetSubscriptionContainer())
                 .WithMaxItems(100)
                 .WithPollInterval(TimeSpan.FromMilliseconds(1000));

@@ -18,10 +18,9 @@ namespace Atc.Cosmos.EventStore.Cqrs.DependencyInjection.Internal
     {
         private readonly EventStoreOptionsBuilder builder;
 
-        public EventStoreCqrsBuilder(EventStoreOptionsBuilder builder)
-        {
-            this.builder = builder;
-        }
+        public EventStoreCqrsBuilder(
+            EventStoreOptionsBuilder builder)
+            => this.builder = builder;
 
         public IEventStoreCqrsBuilder AddCommandsFromAssembly<TAssembly>()
         {
@@ -33,10 +32,10 @@ namespace Atc.Cosmos.EventStore.Cqrs.DependencyInjection.Internal
                     .GetInterfaces()
                     .Where(i => i.IsGenericType && i.GetGenericTypeDefinition().Equals(typeof(ICommandHandler<>)))
                     .Select(i => new
-                    {
-                        CommandHandlerType = t,
-                        CommandType = i.GetGenericArguments()[0],
-                    }))
+                        {
+                            CommandHandlerType = t,
+                            CommandType = i.GetGenericArguments()[0],
+                        }))
                 .Select(t => typeof(EventStoreCqrsBuilder)
                     .GetRuntimeMethods()
                     .First(m => m.Name.Equals(nameof(AddCommand), StringComparison.OrdinalIgnoreCase))
@@ -76,13 +75,11 @@ namespace Atc.Cosmos.EventStore.Cqrs.DependencyInjection.Internal
 
             configure?.Invoke(projectionBuilder);
 
-            SetFiltersFromProjection<TProjection>(projectionBuilder);
-
             builder
                 .Services
                 .Configure<ProjectionOptions>(
                     typeof(TProjection).Name,
-                    options => projectionBuilder.Build(options));
+                    options => projectionBuilder.Build<TProjection>(options));
 
             return this;
         }
@@ -113,13 +110,5 @@ namespace Atc.Cosmos.EventStore.Cqrs.DependencyInjection.Internal
 
             return this;
         }
-
-        private static void SetFiltersFromProjection<T>(ProjectionBuilder builder)
-            => Array.ForEach(
-                typeof(T)
-                    .GetCustomAttributes<ProjectionFilterAttribute>()
-                    .Select(a => a.Filter)
-                    .ToArray(),
-                f => builder.WithFilter(f));
     }
 }
