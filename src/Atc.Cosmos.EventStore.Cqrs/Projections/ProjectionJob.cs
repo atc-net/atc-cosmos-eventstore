@@ -28,7 +28,8 @@ namespace Atc.Cosmos.EventStore.Cqrs.Projections
             subscription = client.SubscribeToStreams(
                 ConsumerGroup.GetAsAutoScalingInstance(options.Name),
                 SubscriptionStartOptions.FromBegining,
-                OnProcessEventsAsync);
+                OnProcessEventsAsync,
+                options.ExceptionHandler);
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
