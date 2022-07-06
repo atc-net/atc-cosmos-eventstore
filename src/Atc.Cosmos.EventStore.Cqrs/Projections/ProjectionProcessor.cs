@@ -33,22 +33,25 @@ namespace Atc.Cosmos.EventStore.Cqrs.Projections
         }
 
         [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "By Design")]
-        public async Task ProcessBatchAsync(
+        public async Task<ProjectionAction> ProcessBatchAsync(
             IEnumerable<IEvent> batch,
             CancellationToken cancellationToken)
         {
-            var groupedEvents = batch
-                .Where(e => filters.Any(f => f.Evaluate(e.Metadata.StreamId)))
-                .GroupBy(e => e.Metadata.StreamId)
-                .ToArray();
+            var projection = projectionFactory
+                .GetProjection<TProjection>();
 
-            diagnostics.ProcessingGroupedEvents(projectionName, groupedEvents, batch);
-
-            foreach (var events in groupedEvents)
+            try
             {
-                var operation = diagnostics.StartStreamProjection(projectionName, events.Key);
-                try
+                var groupedEvents = batch
+                    .Where(e => filters.Any(f => f.Evaluate(e.Metadata.StreamId)))
+                    .GroupBy(e => e.Metadata.StreamId)
+                    .ToArray();
+
+                diagnostics.ProcessingGroupedEvents(projectionName, groupedEvents, batch);
+
+                foreach (var events in groupedEvents)
                 {
+                    var operation = diagnostics.StartStreamProjection(projectionName, events.Key);
                     if (!projectionMetadata.CanConsumeOneOrMoreEvents(events))
                     {
                         // Skip if projection is not consuming any of the events.
@@ -56,30 +59,42 @@ namespace Atc.Cosmos.EventStore.Cqrs.Projections
                         continue;
                     }
 
-                    var projection = projectionFactory
-                        .GetProjection<TProjection>();
+                    try
+                    {
+                        await projection
+                            .InitializeAsync(
+                                events.Key,
+                                cancellationToken)
+                            .ConfigureAwait(false);
 
-                    await projection
-                        .InitializeAsync(
-                            events.Key,
-                            cancellationToken)
-                        .ConfigureAwait(false);
+                        await projectionMetadata
+                            .ConsumeEventsAsync(events, projection, cancellationToken)
+                            .ConfigureAwait(false);
 
-                    await projectionMetadata
-                        .ConsumeEventsAsync(events, projection, cancellationToken)
-                        .ConfigureAwait(false);
+                        await projection
+                            .CompleteAsync(cancellationToken)
+                            .ConfigureAwait(false);
 
-                    await projection
-                        .CompleteAsync(cancellationToken)
-                        .ConfigureAwait(false);
+                        operation.ProjectionCompleted(events);
+                    }
+                    catch (Exception ex)
+                    {
+                        operation.ProjectionFailed(events, ex);
 
-                    operation.ProjectionCompleted(events);
-                }
-                catch (Exception ex)
-                {
-                    operation.ProjectionFailed(events, ex);
+                        return await projection
+                            .FailedAsync(ex, cancellationToken)
+                            .ConfigureAwait(false);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                return await projection
+                    .FailedAsync(ex, cancellationToken)
+                    .ConfigureAwait(false);
+            }
+
+            return ProjectionAction.Continue;
         }
     }
 }

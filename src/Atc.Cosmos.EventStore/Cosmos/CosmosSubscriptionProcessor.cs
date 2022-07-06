@@ -32,11 +32,16 @@ namespace Atc.Cosmos.EventStore.Cosmos
 
         public async Task StopAsync()
         {
-            await processor
-                .StopAsync()
-                .ConfigureAwait(false);
+            if (activity is { })
+            {
+                await processor
+                    .StopAsync()
+                    .ConfigureAwait(false);
 
-            activity?.SubscriptionStopped();
+                activity.SubscriptionStopped();
+            }
+
+            activity = null;
         }
     }
 }
