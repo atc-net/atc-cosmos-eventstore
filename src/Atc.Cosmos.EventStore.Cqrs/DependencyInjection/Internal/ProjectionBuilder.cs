@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Atc.Cosmos.EventStore.Cqrs.Projections;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -38,11 +41,27 @@ namespace Atc.Cosmos.EventStore.Cqrs.DependencyInjection.Internal
             return this;
         }
 
-        public void Build(ProjectionOptions options)
+        public void Build<TProjection>(ProjectionOptions options)
+            where TProjection : class, IProjection
         {
+            SetFiltersFromProjection<TProjection>();
+            if (filters.Count == 0)
+            {
+                throw new ArgumentException(
+                    $"Please provide a filter for type {typeof(TProjection)}");
+            }
+
             options.Name = name;
             options.Filters = filters;
             options.ExceptionHandler = exceptionHandler;
         }
+
+        private void SetFiltersFromProjection<T>()
+               => Array.ForEach(
+                   typeof(T)
+                       .GetCustomAttributes<ProjectionFilterAttribute>()
+                       .Select(a => a.Filter)
+                       .ToArray(),
+                   f => WithFilter(f));
     }
 }
