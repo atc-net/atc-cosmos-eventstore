@@ -7,12 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.8] - 2022-07-06
+
 ### Added
-- Exception delegate for receiving any exception douing a stream subscription.
-- Throws `ArgumentException` when a projection is missing a `ProjectionFilter`.
-- **BREAKING** - `IProjection` now require you to implement `FailedAsync(Exception exception,
-  CancellationToken cancellationToken)` and instruct the framework on how to proceed when encountering an exception.
-- Convenience extension methods to CommandContext.
+
+-   Exception delegate for receiving any exception douing a stream subscription.
+-   Throws `ArgumentException` when a projection is missing a `ProjectionFilter`.
+-   **BREAKING** - `IProjection` now require you to implement `FailedAsync(Exception exception,
+    CancellationToken cancellationToken)` and instruct the framework on how to proceed when encountering an exception.
+-   Convenience extension methods to CommandContext.
 
 ## [1.5.3] - 2022-07-05
 
@@ -55,7 +58,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   EventStore `ConnectionString` option has been made obsolete, please use `UseCredentials` or `UseCosmosEmulator` instead.
 
-[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.5.3...HEAD
+[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.6.8...HEAD
+
+[1.6.8]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.5.3...v1.6.8
 
 [1.5.3]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.4.5...v1.5.3
 
