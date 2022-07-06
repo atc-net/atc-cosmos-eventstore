@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Exception delegate for receiving any exception douing a stream subscription.
+- Throws `ArgumentException` when a projection is missing a `ProjectionFilter`.
+- **BREAKING** - `IProjection` now require you to implement `FailedAsync(Exception exception,
+  CancellationToken cancellationToken)` and instruct the framework on how to proceed when encountering an exception.
+- Convenience extension methods to CommandContext.
+
 ## [1.5.3] - 2022-07-05
 
 ### Added

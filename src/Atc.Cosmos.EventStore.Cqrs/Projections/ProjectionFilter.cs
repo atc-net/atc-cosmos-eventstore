@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Projections
 {
-    internal class StreamFilter
+    internal class ProjectionFilter
     {
         private readonly IReadOnlyList<Func<string, bool>> validators;
         private readonly bool endsOnAcceptAll;
 
-        public StreamFilter(string filter)
+        public ProjectionFilter(string filter)
         {
             validators = filter
                 .Split(
