@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Tests.Projections
 {
-    public class StreamFilterTests
+    public class ProjectionFilterTests
     {
         [Theory]
         [InlineAutoNSubstituteData("*", "type.1", false)]
@@ -36,7 +36,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.Tests.Projections
             string filter,
             string streamId,
             bool pass)
-            => new StreamFilter(filter)
+            => new ProjectionFilter(filter)
                 .Evaluate(streamId)
                 .Should()
                 .Be(pass);
@@ -70,7 +70,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.Tests.Projections
             string filter,
             string streamId,
             bool pass)
-            => new StreamFilter(filter)
+            => new ProjectionFilter(filter)
                 .Evaluate(streamId)
                 .Should()
                 .Be(pass);

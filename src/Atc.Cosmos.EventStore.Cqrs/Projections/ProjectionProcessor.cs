@@ -11,7 +11,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.Projections
     internal class ProjectionProcessor<TProjection> : IProjectionProcessor<TProjection>
         where TProjection : IProjection
     {
-        private readonly IReadOnlyCollection<StreamFilter> filters;
+        private readonly IReadOnlyCollection<ProjectionFilter> filters;
         private readonly IProjectionFactory projectionFactory;
         private readonly IProjectionDiagnostics diagnostics;
         private readonly IProjectionMetadata projectionMetadata;

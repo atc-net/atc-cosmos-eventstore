@@ -6,7 +6,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.Projections
     {
         string Name { get; }
 
-        IReadOnlyCollection<StreamFilter> Filters { get; }
+        IReadOnlyCollection<ProjectionFilter> Filters { get; }
 
         ProcessExceptionHandler ExceptionHandler { get; }
     }
