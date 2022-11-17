@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Atc.Cosmos.EventStore.Converters;
@@ -29,19 +28,18 @@ namespace Atc.Cosmos.EventStore.Cosmos
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             };
 
-            var pipeline = new EventDataConverterPipeline(
-                new IEventDataConverter[]
-                {
-                    new FaultedEventDataConverter(),
-                    new UnknownEventDataConverter(),
-                }.Concat(options.Value.EventDataConverter)
-                .Concat(new[] { new NamedEventConverter(typeProvider) }));
-
-            jsonSerializerOptions.Converters.Add(new EventDocumentConverter(pipeline));
             jsonSerializerOptions.Converters.Add(new TimeSpanConverter());
             jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             jsonSerializerOptions.Converters.Add(new StreamIdConverter());
             jsonSerializerOptions.Converters.Add(new StreamVersionConverter());
+            jsonSerializerOptions.Converters.Add(
+                new EventDocumentConverter(
+                    new EventDataConverterPipelineBuilder()
+                        .AddConverter(new FaultedEventDataConverter())
+                        .AddConverter(new UnknownEventDataConverter())
+                        .AddConverters(options.Value.EventDataConverter)
+                        .AddConverter(new NamedEventConverter(typeProvider))
+                        .Build()));
 
             foreach (var converter in options.Value.CustomJsonConverter)
             {

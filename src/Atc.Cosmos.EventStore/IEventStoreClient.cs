@@ -97,11 +97,11 @@ namespace Atc.Cosmos.EventStore
         /// </summary>
         /// <remarks>
         ///   Only one checkpoint per name can exists at any given time.
-        ///   A checkpoint will be overriden when using an existing name.
+        ///   A checkpoint will be overridden when using an existing name.
         /// </remarks>
         /// <param name="name">Name of checkpoint.</param>
         /// <param name="streamId">Id of stream.</param>
-        /// <param name="version">Version within the stream this chackpoint is related too.</param>
+        /// <param name="version">Version within the stream this checkpoint is related too.</param>
         /// <param name="state">(Optional) State object to store along side the checkpoint.</param>
         /// <param name="cancellationToken">(Optional) <seealso cref="CancellationToken"/> representing request cancellation.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
@@ -126,7 +126,7 @@ namespace Atc.Cosmos.EventStore
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Gets a named chackpoint from a stream.
+        /// Gets a named checkpoint from a stream.
         /// </summary>
         /// <param name="name">Name of checkpoint.</param>
         /// <param name="streamId">Id of stream.</param>

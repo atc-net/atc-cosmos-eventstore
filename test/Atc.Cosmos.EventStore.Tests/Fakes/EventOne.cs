@@ -1,10 +1,9 @@
 using System;
 
-namespace Atc.Cosmos.EventStore.Tests.Fakes
-{
-    public record EventOne(string Name, int Number);
+namespace Atc.Cosmos.EventStore.Tests.Fakes;
 
-    public record EventTwo(string Name, DateTimeOffset Timestamp);
+public record EventOne(string Name, int Number);
 
-    public record EventThree(string Name);
-}
+public record EventTwo(string Name, DateTimeOffset Timestamp);
+
+public record EventThree(string Name);
