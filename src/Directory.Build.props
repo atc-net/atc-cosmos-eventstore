@@ -19,7 +19,7 @@
   <ItemGroup>
     <None Include="..\..\docs\images\icon.png" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
-
+ 
   <PropertyGroup Label="Build instructions">
     <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.1</TargetFramework>

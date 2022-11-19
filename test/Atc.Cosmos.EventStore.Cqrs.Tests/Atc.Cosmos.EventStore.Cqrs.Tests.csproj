@@ -24,4 +24,8 @@
     <ProjectReference Include="..\..\src\Atc.Cosmos.EventStore.Cqrs\Atc.Cosmos.EventStore.Cqrs.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Remove="System.IO" />
+  </ItemGroup>
+
 </Project>
