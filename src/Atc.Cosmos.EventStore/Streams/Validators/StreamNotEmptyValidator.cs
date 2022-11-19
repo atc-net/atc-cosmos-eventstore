@@ -20,7 +20,7 @@ internal class StreamNotEmptyValidator : IStreamValidator
                 metadata.Version,
                 version,
                 StreamConflictReason.StreamIsEmpty,
-                $"Stream is expected to be empty but found {metadata.Version} events.");
+                $"Stream is expected to not be empty, but found {metadata.Version.Value} events.");
         }
     }
 }
