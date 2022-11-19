@@ -1,16 +1,13 @@
-using System;
+namespace Atc.Cosmos.EventStore;
 
-namespace Atc.Cosmos.EventStore
+public interface IStreamIndex
 {
-    public interface IStreamIndex
-    {
-        StreamId StreamId { get; }
+    StreamId StreamId { get; }
 
-        /// <summary>
-        /// Gets Timestamp for when the stream was created.
-        /// </summary>
-        DateTimeOffset Timestamp { get; }
+    /// <summary>
+    /// Gets Timestamp for when the stream was created.
+    /// </summary>
+    DateTimeOffset Timestamp { get; }
 
-        bool IsActive { get; }
-    }
+    bool IsActive { get; }
 }

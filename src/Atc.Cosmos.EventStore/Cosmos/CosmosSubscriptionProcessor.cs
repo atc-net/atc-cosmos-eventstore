@@ -1,47 +1,45 @@
-using System.Threading.Tasks;
 using Atc.Cosmos.EventStore.Diagnostics;
 using Microsoft.Azure.Cosmos;
 
-namespace Atc.Cosmos.EventStore.Cosmos
+namespace Atc.Cosmos.EventStore.Cosmos;
+
+internal class CosmosSubscriptionProcessor : IStreamSubscription
 {
-    internal class CosmosSubscriptionProcessor : IStreamSubscription
+    private readonly ISubscriptionTelemetry telemetry;
+    private readonly ChangeFeedProcessor processor;
+    private readonly ConsumerGroup consumerGroup;
+    private ISubscriptionActivity? activity;
+
+    public CosmosSubscriptionProcessor(
+        ISubscriptionTelemetry telemetry,
+        ChangeFeedProcessor processor,
+        ConsumerGroup consumerGroup)
     {
-        private readonly ISubscriptionTelemetry telemetry;
-        private readonly ChangeFeedProcessor processor;
-        private readonly ConsumerGroup consumerGroup;
-        private ISubscriptionActivity? activity;
+        this.telemetry = telemetry;
+        this.processor = processor;
+        this.consumerGroup = consumerGroup;
+    }
 
-        public CosmosSubscriptionProcessor(
-            ISubscriptionTelemetry telemetry,
-            ChangeFeedProcessor processor,
-            ConsumerGroup consumerGroup)
-        {
-            this.telemetry = telemetry;
-            this.processor = processor;
-            this.consumerGroup = consumerGroup;
-        }
+    public async Task StartAsync()
+    {
+        await processor
+            .StartAsync()
+            .ConfigureAwait(false);
 
-        public async Task StartAsync()
+        activity = telemetry.SubscriptionStarted(consumerGroup);
+    }
+
+    public async Task StopAsync()
+    {
+        if (activity is { })
         {
             await processor
-                .StartAsync()
+                .StopAsync()
                 .ConfigureAwait(false);
 
-            activity = telemetry.SubscriptionStarted(consumerGroup);
+            activity.SubscriptionStopped();
         }
 
-        public async Task StopAsync()
-        {
-            if (activity is { })
-            {
-                await processor
-                    .StopAsync()
-                    .ConfigureAwait(false);
-
-                activity.SubscriptionStopped();
-            }
-
-            activity = null;
-        }
+        activity = null;
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Atc.Cosmos.EventStore.Converters;
 
 namespace Atc.Cosmos.EventStore.Tests.Fakes;

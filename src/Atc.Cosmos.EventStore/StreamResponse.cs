@@ -1,10 +1,7 @@
-using System;
+namespace Atc.Cosmos.EventStore;
 
-namespace Atc.Cosmos.EventStore
-{
-    public record StreamResponse(
-            StreamId StreamId,
-            StreamVersion Version,
-            DateTimeOffset Timestamp,
-            StreamState State);
-}
+public record StreamResponse(
+        StreamId StreamId,
+        StreamVersion Version,
+        DateTimeOffset Timestamp,
+        StreamState State);

@@ -1,7 +1,6 @@
-namespace Atc.Cosmos.EventStore.Streams
+namespace Atc.Cosmos.EventStore.Streams;
+
+internal interface IStreamWriteValidator
 {
-    internal interface IStreamWriteValidator
-    {
-        void Validate(IStreamMetadata metadata, StreamVersion version);
-    }
+    void Validate(IStreamMetadata metadata, StreamVersion version);
 }

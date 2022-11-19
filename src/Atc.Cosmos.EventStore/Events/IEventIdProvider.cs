@@ -1,7 +1,6 @@
-namespace Atc.Cosmos.EventStore.Events
+namespace Atc.Cosmos.EventStore.Events;
+
+public interface IEventIdProvider
 {
-    public interface IEventIdProvider
-    {
-        string CreateUniqueId(IStreamMetadata metadata);
-    }
+    string CreateUniqueId(IStreamMetadata metadata);
 }

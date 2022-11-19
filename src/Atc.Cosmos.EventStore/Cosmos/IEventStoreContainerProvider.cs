@@ -1,13 +1,12 @@
 using Microsoft.Azure.Cosmos;
 
-namespace Atc.Cosmos.EventStore.Cosmos
+namespace Atc.Cosmos.EventStore.Cosmos;
+
+internal interface IEventStoreContainerProvider
 {
-    internal interface IEventStoreContainerProvider
-    {
-        Container GetStreamContainer();
+    Container GetStreamContainer();
 
-        Container GetSubscriptionContainer();
+    Container GetSubscriptionContainer();
 
-        Container GetIndexContainer();
-    }
+    Container GetIndexContainer();
 }

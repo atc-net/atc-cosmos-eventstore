@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace Atc.Cosmos.EventStore.Events;
 
-namespace Atc.Cosmos.EventStore.Events
+public interface IDateTimeProvider
 {
-    public interface IDateTimeProvider
-    {
-        DateTimeOffset GetDateTime();
-    }
+    DateTimeOffset GetDateTime();
 }

@@ -1,22 +1,19 @@
-using System;
-using System.Collections.Generic;
 using Atc.Cosmos.EventStore.Events;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Atc.Cosmos.EventStore.DependencyInjection
+namespace Atc.Cosmos.EventStore.DependencyInjection;
+
+internal class EventCatalogBuilder : IEventCatalogBuilder
 {
-    internal class EventCatalogBuilder : IEventCatalogBuilder
+    private readonly Dictionary<EventName, Type> mappings = new();
+
+    public IEventCatalogBuilder FromType(string name, Type type)
     {
-        private readonly Dictionary<EventName, Type> mappings = new();
+        mappings.Add(name, type);
 
-        public IEventCatalogBuilder FromType(string name, Type type)
-        {
-            mappings.Add(name, type);
-
-            return this;
-        }
-
-        public IEventCatalog Build()
-            => new EventCatalog(mappings);
+        return this;
     }
+
+    public IEventCatalog Build()
+        => new EventCatalog(mappings);
 }

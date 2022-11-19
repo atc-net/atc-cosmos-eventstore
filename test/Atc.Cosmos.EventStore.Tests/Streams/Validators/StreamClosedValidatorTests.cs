@@ -4,56 +4,55 @@ using FluentAssertions;
 using NSubstitute;
 using Xunit;
 
-namespace Atc.Cosmos.EventStore.Tests.Streams.Validators
+namespace Atc.Cosmos.EventStore.Tests.Streams.Validators;
+
+public class StreamClosedValidatorTests
 {
-    public class StreamClosedValidatorTests
+    [Theory, AutoNSubstituteData]
+    internal void Should_Validate_When_Stream_IsNew(
+        IStreamMetadata metadata,
+        StreamVersion version,
+        StreamClosedValidator sut)
     {
-        [Theory, AutoNSubstituteData]
-        internal void Should_Validate_When_Stream_IsNew(
-            IStreamMetadata metadata,
-            StreamVersion version,
-            StreamClosedValidator sut)
-        {
-            metadata
-                .State
-                .Returns(StreamState.New);
+        metadata
+            .State
+            .Returns(StreamState.New);
 
-            FluentActions.Invoking(
-                () => sut.Validate(metadata, version))
-                .Should()
-                .NotThrow();
-        }
+        FluentActions.Invoking(
+            () => sut.Validate(metadata, version))
+            .Should()
+            .NotThrow();
+    }
 
-        [Theory, AutoNSubstituteData]
-        internal void Should_Validate_When_Stream_IsActive(
-            IStreamMetadata metadata,
-            StreamVersion version,
-            StreamClosedValidator sut)
-        {
-            metadata
-                .State
-                .Returns(StreamState.Active);
+    [Theory, AutoNSubstituteData]
+    internal void Should_Validate_When_Stream_IsActive(
+        IStreamMetadata metadata,
+        StreamVersion version,
+        StreamClosedValidator sut)
+    {
+        metadata
+            .State
+            .Returns(StreamState.Active);
 
-            FluentActions.Invoking(
-                () => sut.Validate(metadata, version))
-                .Should()
-                .NotThrow();
-        }
+        FluentActions.Invoking(
+            () => sut.Validate(metadata, version))
+            .Should()
+            .NotThrow();
+    }
 
-        [Theory, AutoNSubstituteData]
-        internal void Should_Throw_When_Stream_IsClosed(
-            IStreamMetadata metadata,
-            StreamVersion version,
-            StreamClosedValidator sut)
-        {
-            metadata
-                .State
-                .Returns(StreamState.Closed);
+    [Theory, AutoNSubstituteData]
+    internal void Should_Throw_When_Stream_IsClosed(
+        IStreamMetadata metadata,
+        StreamVersion version,
+        StreamClosedValidator sut)
+    {
+        metadata
+            .State
+            .Returns(StreamState.Closed);
 
-            FluentActions.Invoking(
-                () => sut.Validate(metadata, version))
-                .Should()
-                .Throw<StreamClosedException>();
-        }
+        FluentActions.Invoking(
+            () => sut.Validate(metadata, version))
+            .Should()
+            .Throw<StreamClosedException>();
     }
 }

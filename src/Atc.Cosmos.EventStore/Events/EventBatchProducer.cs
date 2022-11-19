@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Atc.Cosmos.EventStore.Streams;
 
 namespace Atc.Cosmos.EventStore.Events;

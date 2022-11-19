@@ -1,5 +1,3 @@
-using System;
-
 namespace Atc.Cosmos.EventStore.Tests.Fakes;
 
 public record EventOne(string Name, int Number);

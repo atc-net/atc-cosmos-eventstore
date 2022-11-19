@@ -1,23 +1,22 @@
-namespace Atc.Cosmos.EventStore.Cqrs
+namespace Atc.Cosmos.EventStore.Cqrs;
+
+/// <summary>
+/// Defines the behavior when writing to a stream results in a conflict.
+/// </summary>
+public enum OnConflict
 {
     /// <summary>
-    /// Defines the behavior when writing to a stream results in a conflict.
+    /// Fail command on stream write conflict.
     /// </summary>
-    public enum OnConflict
-    {
-        /// <summary>
-        /// Fail command on stream write conflict.
-        /// </summary>
-        Fail,
+    Fail,
 
-        /// <summary>
-        /// Retry writing events on stream write conflict.
-        /// </summary>
-        Retry,
+    /// <summary>
+    /// Retry writing events on stream write conflict.
+    /// </summary>
+    Retry,
 
-        /// <summary>
-        /// Rerun command on stream write conflict.
-        /// </summary>
-        RerunCommand,
-    }
+    /// <summary>
+    /// Rerun command on stream write conflict.
+    /// </summary>
+    RerunCommand,
 }

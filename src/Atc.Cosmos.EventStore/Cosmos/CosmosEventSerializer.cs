@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.Json;
@@ -8,96 +7,95 @@ using Atc.Cosmos.EventStore.Events;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Options;
 
-namespace Atc.Cosmos.EventStore.Cosmos
+namespace Atc.Cosmos.EventStore.Cosmos;
+
+/// <summary>
+/// EventStore cosmos JSON serializer implementation for <seealso cref="System.Text.Json"/>.
+/// </summary>
+internal class CosmosEventSerializer : CosmosSerializer
 {
-    /// <summary>
-    /// EventStore cosmos JSON serializer implementation for <seealso cref="System.Text.Json"/>.
-    /// </summary>
-    internal class CosmosEventSerializer : CosmosSerializer
+    private readonly JsonSerializerOptions jsonSerializerOptions;
+
+    public CosmosEventSerializer(
+        IOptions<EventStoreClientOptions> options,
+        IEventTypeProvider typeProvider)
     {
-        private readonly JsonSerializerOptions jsonSerializerOptions;
-
-        public CosmosEventSerializer(
-            IOptions<EventStoreClientOptions> options,
-            IEventTypeProvider typeProvider)
+        jsonSerializerOptions = new JsonSerializerOptions
         {
-            jsonSerializerOptions = new JsonSerializerOptions
-            {
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                WriteIndented = true,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            };
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            WriteIndented = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        };
 
-            jsonSerializerOptions.Converters.Add(new TimeSpanConverter());
-            jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            jsonSerializerOptions.Converters.Add(new StreamIdConverter());
-            jsonSerializerOptions.Converters.Add(new StreamVersionConverter());
-            jsonSerializerOptions.Converters.Add(
-                new EventDocumentConverter(
-                    new EventDataConverterPipelineBuilder()
-                        .AddConverter(new FaultedEventDataConverter())
-                        .AddConverter(new UnknownEventDataConverter())
-                        .AddConverters(options.Value.EventDataConverter)
-                        .AddConverter(new NamedEventConverter(typeProvider))
-                        .Build()));
+        jsonSerializerOptions.Converters.Add(new TimeSpanConverter());
+        jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        jsonSerializerOptions.Converters.Add(new StreamIdConverter());
+        jsonSerializerOptions.Converters.Add(new StreamVersionConverter());
+        jsonSerializerOptions.Converters.Add(
+            new EventDocumentConverter(
+                new EventDataConverterPipelineBuilder()
+                    .AddConverter(new FaultedEventDataConverter())
+                    .AddConverter(new UnknownEventDataConverter())
+                    .AddConverters(options.Value.EventDataConverter)
+                    .AddConverter(new NamedEventConverter(typeProvider))
+                    .Build()));
 
-            foreach (var converter in options.Value.CustomJsonConverter)
-            {
-                jsonSerializerOptions.Converters.Add(converter);
-            }
+        foreach (var converter in options.Value.CustomJsonConverter)
+        {
+            jsonSerializerOptions.Converters.Add(converter);
+        }
+    }
+
+    [return: MaybeNull]
+    public override T FromStream<T>(Stream stream)
+    {
+        if (stream is null)
+        {
+            throw new ArgumentNullException(nameof(stream));
         }
 
-        [return: MaybeNull]
-        public override T FromStream<T>(Stream stream)
+        using (stream)
         {
-            if (stream is null)
+            if (stream.CanSeek && stream.Length == 0)
             {
-                throw new ArgumentNullException(nameof(stream));
-            }
-
-            using (stream)
-            {
-                if (stream.CanSeek && stream.Length == 0)
-                {
-                    return default;
-                }
-
-                if (typeof(Stream).IsAssignableFrom(typeof(T)))
-                {
-                    return (T)(object)stream;
-                }
-
-                // Response data from cosmos always comes as a memory stream.
-                // Note: This might change in v4, but so far it doesn't look like it.
-                if (stream is MemoryStream memoryStream && memoryStream.TryGetBuffer(out ArraySegment<byte> buffer))
-                {
-                    return JsonSerializer.Deserialize<T>(buffer, jsonSerializerOptions);
-                }
-
                 return default;
             }
-        }
 
-        public override Stream ToStream<T>(T input)
-        {
-            if (input is null)
+            if (typeof(Stream).IsAssignableFrom(typeof(T)))
             {
-                throw new ArgumentNullException(nameof(input));
+                return (T)(object)stream;
             }
 
-            var streamPayload = new MemoryStream();
+            // Response data from cosmos always comes as a memory stream.
+            // Note: This might change in v4, but so far it doesn't look like it.
+            if (stream is MemoryStream memoryStream && memoryStream.TryGetBuffer(out ArraySegment<byte> buffer))
+            {
+                return JsonSerializer.Deserialize<T>(buffer, jsonSerializerOptions);
+            }
 
-            using var utf8JsonWriter = new Utf8JsonWriter(
-                streamPayload,
-                new JsonWriterOptions
-                {
-                    Indented = jsonSerializerOptions.WriteIndented,
-                });
-
-            JsonSerializer.Serialize(utf8JsonWriter, input, jsonSerializerOptions);
-            streamPayload.Position = 0;
-
-            return streamPayload;
+            return default;
         }
+    }
+
+    public override Stream ToStream<T>(T input)
+    {
+        if (input is null)
+        {
+            throw new ArgumentNullException(nameof(input));
+        }
+
+        var streamPayload = new MemoryStream();
+
+        using var utf8JsonWriter = new Utf8JsonWriter(
+            streamPayload,
+            new JsonWriterOptions
+            {
+                Indented = jsonSerializerOptions.WriteIndented,
+            });
+
+        JsonSerializer.Serialize(utf8JsonWriter, input, jsonSerializerOptions);
+        streamPayload.Position = 0;
+
+        return streamPayload;
     }
 }

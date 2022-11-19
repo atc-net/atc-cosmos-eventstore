@@ -1,9 +1,6 @@
-using System.Threading.Tasks;
+namespace Atc.Cosmos.EventStore.Cqrs.Internal;
 
-namespace Atc.Cosmos.EventStore.Cqrs.Internal
+internal interface IDependencyInitializer
 {
-    internal interface IDependencyInitializer
-    {
-        Task EnsureInitializeAsync();
-    }
+    Task EnsureInitializeAsync();
 }
