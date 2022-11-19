@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Atc.Cosmos.EventStore.Converters;
 using Azure.Core;
 using Microsoft.Azure.Cosmos;
 
@@ -49,6 +50,11 @@ namespace Atc.Cosmos.EventStore
         /// Gets collections of custom <seealso cref="JsonConverter"/>.
         /// </summary>
         public ICollection<JsonConverter> CustomJsonConverter { get; } = new List<JsonConverter>();
+
+        /// <summary>
+        /// Gets collections of custom <seealso cref="IEventDataConverter"/> event data converters.
+        /// </summary>
+        public ICollection<IEventDataConverter> EventDataConverter { get; } = new List<IEventDataConverter>();
 
         public string? Endpoint { get; private set; }
 

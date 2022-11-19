@@ -16,10 +16,10 @@ namespace Atc.Cosmos.EventStore.Events
         public EventCatalog(IReadOnlyDictionary<EventName, Type> mappings)
             => this.mappings = mappings;
 
-        public Type GetEventType(EventName name)
+        public Type? GetEventType(EventName name)
             => mappings.TryGetValue(name, out var type)
              ? type
-             : throw new EventNotRegisteredException((string)name);
+             : default;
 
         public string GetName(object evt)
         {

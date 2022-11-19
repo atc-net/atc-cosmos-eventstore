@@ -21,12 +21,12 @@ namespace Atc.Cosmos.EventStore.Tests.Events
                 .Be(mappings[mappings.Keys.First()]);
 
         [Theory, AutoNSubstituteData]
-        internal void ShouldThrow_When_Name_IsNotFound(
+        internal void ShouldReturn_Null_When_Name_IsNotFound(
             EventCatalog sut)
-            => FluentActions
-                .Invoking(() => sut.GetEventType("non-existing-name"))
+            => sut
+                .GetEventType("non-existing-name")
                 .Should()
-                .Throw<EventNotRegisteredException>();
+                .BeNull();
 
         [Theory, AutoNSubstituteData]
         public void Should_Resolve_Name_From_Type(

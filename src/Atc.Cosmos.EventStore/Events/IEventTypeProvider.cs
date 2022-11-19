@@ -1,9 +1,8 @@
 using System;
 
-namespace Atc.Cosmos.EventStore.Events
+namespace Atc.Cosmos.EventStore.Events;
+
+public interface IEventTypeProvider
 {
-    public interface IEventTypeProvider
-    {
-        Type GetEventType(EventName name);
-    }
+    Type? GetEventType(EventName name);
 }

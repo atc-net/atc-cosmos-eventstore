@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 namespace Atc.Cosmos.EventStore.Cosmos
 {
     /// <summary>
-    /// EventStore cosmos JSON serializer implementation for System.Text.Json.
+    /// EventStore cosmos JSON serializer implementation for <seealso cref="System.Text.Json"/>.
     /// </summary>
     internal class CosmosEventSerializer : CosmosSerializer
     {
@@ -28,11 +28,18 @@ namespace Atc.Cosmos.EventStore.Cosmos
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             };
 
-            jsonSerializerOptions.Converters.Add(new EventDocumentConverter(typeProvider));
             jsonSerializerOptions.Converters.Add(new TimeSpanConverter());
             jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             jsonSerializerOptions.Converters.Add(new StreamIdConverter());
             jsonSerializerOptions.Converters.Add(new StreamVersionConverter());
+            jsonSerializerOptions.Converters.Add(
+                new EventDocumentConverter(
+                    new EventDataConverterPipelineBuilder()
+                        .AddConverter(new FaultedEventDataConverter())
+                        .AddConverter(new UnknownEventDataConverter())
+                        .AddConverters(options.Value.EventDataConverter)
+                        .AddConverter(new NamedEventConverter(typeProvider))
+                        .Build()));
 
             foreach (var converter in options.Value.CustomJsonConverter)
             {

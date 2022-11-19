@@ -5,6 +5,6 @@ namespace Atc.Cosmos.EventStore.IntegrationTests
 {
     public class SampleEventTypeProvider : IEventTypeProvider
     {
-        public Type GetEventType(EventName name) => typeof(SampleEvent);
+        public Type? GetEventType(EventName name) => typeof(SampleEvent);
     }
 }

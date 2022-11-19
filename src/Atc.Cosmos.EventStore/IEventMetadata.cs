@@ -13,6 +13,11 @@ namespace Atc.Cosmos.EventStore
         string EventId { get; }
 
         /// <summary>
+        /// Gets the name of the event.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
         /// Gets the correlation id associated with the event.
         /// </summary>
         string? CorrelationId { get; }
