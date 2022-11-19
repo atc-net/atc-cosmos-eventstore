@@ -40,7 +40,7 @@ internal class StateProjector<TCommand> : IStateProjector<TCommand>
 
             readValidator.Validate(
                 metadata,
-                (StreamVersion?)command.RequiredVersion ?? StreamVersion.Any);
+                command.RequiredVersion?.Value ?? StreamVersion.Any);
 
             state.Version = metadata.Version;
 
@@ -50,7 +50,7 @@ internal class StateProjector<TCommand> : IStateProjector<TCommand>
         await foreach (var evt in eventStore
             .ReadFromStreamAsync(
                 state.Id,
-                (StreamVersion?)command.RequiredVersion ?? StreamVersion.Any,
+                command.RequiredVersion?.Value ?? StreamVersion.Any,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false))
         {
