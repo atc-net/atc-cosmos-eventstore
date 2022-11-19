@@ -1,21 +1,20 @@
-using System;
 using System.Text.Json;
 
 namespace Atc.Cosmos.EventStore.Converters;
 
 internal class EventDataConverterPipeline
 {
-    private readonly Func<IEventMetadata, JsonElement, JsonSerializerOptions, object?> pipeline;
+    private readonly IEventDataConverterPipelineExecutor? pipeline;
 
     public EventDataConverterPipeline(
-        Func<IEventMetadata, JsonElement, JsonSerializerOptions, object?> pipeline)
+        IEventDataConverterPipelineExecutor? pipeline)
         => this.pipeline = pipeline;
 
     public object Convert(
         IEventMetadata metadata,
         JsonElement data,
         JsonSerializerOptions options)
-        => pipeline.Invoke(metadata, data, options)
+        => pipeline?.Execute(metadata, data, options)
         ?? new UnknownEvent(
             data.GetRawText());
 }

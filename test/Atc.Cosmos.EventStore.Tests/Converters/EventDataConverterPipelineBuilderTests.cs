@@ -19,13 +19,11 @@ public class EventDataConverterPipelineBuilderTests
         FakeEventDataConverter[] converters,
         FakeEventDataConverter converter,
         EventDataConverterPipelineBuilder sut)
-    {
-        sut
+        => sut
             .AddConverter(converter)
             .AddConverters(converters)
             .Build()
             .Convert(metadata, doc.RootElement, options)
             .Should()
             .Be(string.Join(string.Empty, new[] { converter }.Concat(converters).Select(c => c.Val)));
-    }
 }

@@ -5,7 +5,7 @@ using Atc.Cosmos.EventStore.Events;
 namespace Atc.Cosmos.EventStore.Converters;
 
 /// <summary>
-/// Responsible for converting from a named event to a CLI type.
+/// Responsible for converting from a named event to a type.
 /// </summary>
 internal class NamedEventConverter : IEventDataConverter
 {

@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text.Json;
 
 namespace Atc.Cosmos.EventStore.Converters;
 
@@ -31,16 +30,12 @@ internal class EventDataConverterPipelineBuilder
 
     public EventDataConverterPipeline Build()
     {
-        Func<IEventMetadata, JsonElement, JsonSerializerOptions, object?> next = (_, _, _) => null;
-        foreach (var c in converters.Reverse())
+        IEventDataConverterPipelineExecutor? pipeline = null;
+        foreach (var converter in converters.Reverse())
         {
-            next = (meta, data, options) => c.Convert(
-                meta,
-                data,
-                options,
-                () => next.Invoke(meta, data, options));
+            pipeline = new EventDataConverterExecutor(converter, pipeline);
         }
 
-        return new EventDataConverterPipeline(next);
+        return new EventDataConverterPipeline(pipeline);
     }
 }
