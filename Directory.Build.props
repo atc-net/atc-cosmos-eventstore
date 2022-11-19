@@ -16,7 +16,7 @@
 
   <PropertyGroup Label="Compile settings">
     <Nullable>enable</Nullable>
-    <LangVersion>10.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>1573,1591,1712,CA1014</NoWarn>
 
@@ -41,7 +41,7 @@
   <ItemGroup Label="Code Analyzers">
     <PackageReference Include="SecurityCodeScan.VS2019" Version="5.6.7" PrivateAssets="all" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.321" PrivateAssets="All" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.47.0.55603" PrivateAssets="all" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.48.0.56517" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>
