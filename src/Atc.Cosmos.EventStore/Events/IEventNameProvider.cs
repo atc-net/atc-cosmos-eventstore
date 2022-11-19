@@ -1,7 +1,6 @@
-namespace Atc.Cosmos.EventStore.Events
+namespace Atc.Cosmos.EventStore.Events;
+
+public interface IEventNameProvider
 {
-    public interface IEventNameProvider
-    {
-        string GetName(object evt);
-    }
+    string GetName(object evt);
 }

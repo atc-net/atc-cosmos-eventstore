@@ -1,8 +1,7 @@
-namespace Atc.Cosmos.EventStore.Cqrs.Projections
+namespace Atc.Cosmos.EventStore.Cqrs.Projections;
+
+internal interface IProjectionOptionsFactory
 {
-    internal interface IProjectionOptionsFactory
-    {
-        IProjectionOptions GetOptions<TProjection>()
-            where TProjection : IProjection;
-    }
+    IProjectionOptions GetOptions<TProjection>()
+        where TProjection : IProjection;
 }

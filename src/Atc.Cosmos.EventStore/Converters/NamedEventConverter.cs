@@ -1,4 +1,3 @@
-using System;
 using System.Text.Json;
 using Atc.Cosmos.EventStore.Events;
 

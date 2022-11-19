@@ -1,9 +1,8 @@
 using Microsoft.Azure.Cosmos;
 
-namespace Atc.Cosmos.EventStore.Cosmos
+namespace Atc.Cosmos.EventStore.Cosmos;
+
+internal interface ICosmosClientFactory
 {
-    internal interface ICosmosClientFactory
-    {
-        CosmosClient GetClient();
-    }
+    CosmosClient GetClient();
 }

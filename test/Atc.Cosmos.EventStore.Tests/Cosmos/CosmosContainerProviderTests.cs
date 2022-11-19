@@ -8,98 +8,97 @@ using Microsoft.Extensions.Options;
 using NSubstitute;
 using Xunit;
 
-namespace Atc.Cosmos.EventStore.Tests.Cosmos
+namespace Atc.Cosmos.EventStore.Tests.Cosmos;
+
+public class CosmosContainerProviderTests
 {
-    public class CosmosContainerProviderTests
+    [Theory, AutoNSubstituteData]
+    internal void Should_Provide_StreamContainer(
+        [Frozen] ICosmosClientFactory cosmosFactory,
+        [Substitute] CosmosClient cosmosClient,
+        [Substitute] IOptions<EventStoreClientOptions> options,
+        [Substitute] Container container)
     {
-        [Theory, AutoNSubstituteData]
-        internal void Should_Provide_StreamContainer(
-            [Frozen] ICosmosClientFactory cosmosFactory,
-            [Substitute] CosmosClient cosmosClient,
-            [Substitute] IOptions<EventStoreClientOptions> options,
-            [Substitute] Container container)
-        {
-            options
-                .Value
-                .Returns(new EventStoreClientOptions());
-            cosmosClient
-                .GetContainer(default, default)
-                .ReturnsForAnyArgs(container);
-            cosmosFactory
-                .GetClient()
-                .Returns(cosmosClient);
+        options
+            .Value
+            .Returns(new EventStoreClientOptions());
+        cosmosClient
+            .GetContainer(default, default)
+            .ReturnsForAnyArgs(container);
+        cosmosFactory
+            .GetClient()
+            .Returns(cosmosClient);
 
-            var sut = new CosmosContainerProvider(cosmosFactory, options);
+        var sut = new CosmosContainerProvider(cosmosFactory, options);
 
-            sut.GetStreamContainer()
-                .Should()
-                .Be(container);
+        sut.GetStreamContainer()
+            .Should()
+            .Be(container);
 
-            cosmosClient
-                .Received(1)
-                .GetContainer(
-                    options.Value.EventStoreDatabaseId,
-                    options.Value.EventStoreContainerId);
-        }
+        cosmosClient
+            .Received(1)
+            .GetContainer(
+                options.Value.EventStoreDatabaseId,
+                options.Value.EventStoreContainerId);
+    }
 
-        [Theory, AutoNSubstituteData]
-        internal void Should_Provide_SubscriptionContainer(
-            [Frozen] ICosmosClientFactory cosmosFactory,
-            [Substitute] CosmosClient cosmosClient,
-            [Substitute] IOptions<EventStoreClientOptions> options,
-            [Substitute] Container container)
-        {
-            options
-                .Value
-                .Returns(new EventStoreClientOptions());
-            cosmosClient
-                .GetContainer(default, default)
-                .ReturnsForAnyArgs(container);
-            cosmosFactory
-                .GetClient()
-                .Returns(cosmosClient);
+    [Theory, AutoNSubstituteData]
+    internal void Should_Provide_SubscriptionContainer(
+        [Frozen] ICosmosClientFactory cosmosFactory,
+        [Substitute] CosmosClient cosmosClient,
+        [Substitute] IOptions<EventStoreClientOptions> options,
+        [Substitute] Container container)
+    {
+        options
+            .Value
+            .Returns(new EventStoreClientOptions());
+        cosmosClient
+            .GetContainer(default, default)
+            .ReturnsForAnyArgs(container);
+        cosmosFactory
+            .GetClient()
+            .Returns(cosmosClient);
 
-            var sut = new CosmosContainerProvider(cosmosFactory, options);
+        var sut = new CosmosContainerProvider(cosmosFactory, options);
 
-            sut.GetSubscriptionContainer()
-                .Should()
-                .Be(container);
+        sut.GetSubscriptionContainer()
+            .Should()
+            .Be(container);
 
-            cosmosClient
-                .Received(1)
-                .GetContainer(
-                    options.Value.EventStoreDatabaseId,
-                    options.Value.SubscriptionContainerId);
-        }
+        cosmosClient
+            .Received(1)
+            .GetContainer(
+                options.Value.EventStoreDatabaseId,
+                options.Value.SubscriptionContainerId);
+    }
 
-        [Theory, AutoNSubstituteData]
-        internal void Should_Provide_IndexContainer(
-            [Frozen] ICosmosClientFactory cosmosFactory,
-            [Substitute] CosmosClient cosmosClient,
-            [Substitute] IOptions<EventStoreClientOptions> options,
-            [Substitute] Container container)
-        {
-            options
-                .Value
-                .Returns(new EventStoreClientOptions());
-            cosmosClient
-                .GetContainer(default, default)
-                .ReturnsForAnyArgs(container);
-            cosmosFactory
-                .GetClient()
-                .Returns(cosmosClient);
+    [Theory, AutoNSubstituteData]
+    internal void Should_Provide_IndexContainer(
+        [Frozen] ICosmosClientFactory cosmosFactory,
+        [Substitute] CosmosClient cosmosClient,
+        [Substitute] IOptions<EventStoreClientOptions> options,
+        [Substitute] Container container)
+    {
+        options
+            .Value
+            .Returns(new EventStoreClientOptions());
+        cosmosClient
+            .GetContainer(default, default)
+            .ReturnsForAnyArgs(container);
+        cosmosFactory
+            .GetClient()
+            .Returns(cosmosClient);
 
-            var sut = new CosmosContainerProvider(cosmosFactory, options);
+        var sut = new CosmosContainerProvider(cosmosFactory, options);
 
-            sut.GetIndexContainer()
-                .Should()
-                .Be(container);
+        sut.GetIndexContainer()
+            .Should()
+            .Be(container);
 
-            cosmosClient
-                .Received(1)
-                .GetContainer(
-                    options.Value.EventStoreDatabaseId,
-                    options.Value.IndexContainerId);
-        }
+        cosmosClient
+            .Received(1)
+            .GetContainer(
+                options.Value.EventStoreDatabaseId,
+                options.Value.IndexContainerId);
     }
 }

@@ -1,8 +1,7 @@
-namespace Atc.Cosmos.EventStore.Cqrs
+namespace Atc.Cosmos.EventStore.Cqrs;
+
+public interface ICommandProcessorFactory
 {
-    public interface ICommandProcessorFactory
-    {
-        ICommandProcessor<TCommand> Create<TCommand>()
-            where TCommand : ICommand;
-    }
+    ICommandProcessor<TCommand> Create<TCommand>()
+        where TCommand : ICommand;
 }

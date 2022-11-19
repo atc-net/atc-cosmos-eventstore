@@ -1,6 +1,5 @@
-namespace Atc.Cosmos.EventStore.Events
+namespace Atc.Cosmos.EventStore.Events;
+
+public interface IEventCatalog : IEventNameProvider, IEventTypeProvider
 {
-    public interface IEventCatalog : IEventNameProvider, IEventTypeProvider
-    {
-    }
 }

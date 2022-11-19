@@ -1,7 +1,6 @@
-﻿namespace Atc.Cosmos.EventStore.IntegrationTests
+﻿namespace Atc.Cosmos.EventStore.IntegrationTests;
+
+public class SampleEvent
 {
-    public class SampleEvent
-    {
-        public string Name { get; set; }
-    }
+    public string Name { get; set; }
 }

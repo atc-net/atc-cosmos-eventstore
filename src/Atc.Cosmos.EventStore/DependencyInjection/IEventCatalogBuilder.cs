@@ -1,9 +1,6 @@
-using System;
+namespace Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.Extensions.DependencyInjection
+public interface IEventCatalogBuilder
 {
-    public interface IEventCatalogBuilder
-    {
-        IEventCatalogBuilder FromType(string name, Type type);
-    }
+    IEventCatalogBuilder FromType(string name, Type type);
 }

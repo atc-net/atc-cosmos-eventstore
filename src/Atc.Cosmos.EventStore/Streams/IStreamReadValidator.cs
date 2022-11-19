@@ -1,7 +1,6 @@
-namespace Atc.Cosmos.EventStore.Streams
+namespace Atc.Cosmos.EventStore.Streams;
+
+public interface IStreamReadValidator
 {
-    public interface IStreamReadValidator
-    {
-        void Validate(IStreamMetadata metadata, StreamVersion version);
-    }
+    void Validate(IStreamMetadata metadata, StreamVersion version);
 }

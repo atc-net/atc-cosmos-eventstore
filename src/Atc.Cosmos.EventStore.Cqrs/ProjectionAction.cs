@@ -1,8 +1,7 @@
-﻿namespace Atc.Cosmos.EventStore.Cqrs
+﻿namespace Atc.Cosmos.EventStore.Cqrs;
+
+public enum ProjectionAction
 {
-    public enum ProjectionAction
-    {
-        Continue = 0,
-        Stop,
-    }
+    Continue = 0,
+    Stop,
 }

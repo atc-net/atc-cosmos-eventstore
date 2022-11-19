@@ -1,16 +1,13 @@
-using System;
+namespace Atc.Cosmos.EventStore.Cqrs;
 
-namespace Atc.Cosmos.EventStore.Cqrs
+[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
+public sealed class ProjectionFilterAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
-    public sealed class ProjectionFilterAttribute : Attribute
+    public ProjectionFilterAttribute(
+        string filter)
     {
-        public ProjectionFilterAttribute(
-            string filter)
-        {
-            Filter = filter;
-        }
-
-        public string Filter { get; }
+        Filter = filter;
     }
+
+    public string Filter { get; }
 }

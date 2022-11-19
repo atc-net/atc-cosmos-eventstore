@@ -1,18 +1,14 @@
-using System;
-using System.Linq;
+namespace Atc.Cosmos.EventStore.Cqrs.Diagnostics;
 
-namespace Atc.Cosmos.EventStore.Cqrs.Diagnostics
+internal interface IProjectionProcessOperation
 {
-    internal interface IProjectionProcessOperation
-    {
-        void ProjectionSkipped(
-            IGrouping<StreamId, IEvent> events);
+    void ProjectionSkipped(
+        IGrouping<StreamId, IEvent> events);
 
-        void ProjectionCompleted(
-            IGrouping<StreamId, IEvent> events);
+    void ProjectionCompleted(
+        IGrouping<StreamId, IEvent> events);
 
-        void ProjectionFailed(
-            IGrouping<StreamId, IEvent> events,
-            Exception exception);
-    }
+    void ProjectionFailed(
+        IGrouping<StreamId, IEvent> events,
+        Exception exception);
 }

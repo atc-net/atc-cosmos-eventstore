@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
+﻿namespace Atc.Cosmos.EventStore.Cqrs.Testing;
 
-namespace Atc.Cosmos.EventStore.Cqrs.Testing
+public interface ICommandContextInspector
 {
-    public interface ICommandContextInspector
-    {
-        IReadOnlyCollection<object> Events { get; }
+    IReadOnlyCollection<object> Events { get; }
 
-        object? ResponseObject { get; }
-    }
+    object? ResponseObject { get; }
 }

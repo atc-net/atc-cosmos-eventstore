@@ -1,5 +1,3 @@
-using System;
-
 namespace Atc.Cosmos.EventStore;
 
 /// <summary>

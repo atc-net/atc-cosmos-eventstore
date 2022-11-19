@@ -1,19 +1,16 @@
-using System.Threading.Tasks;
+namespace Atc.Cosmos.EventStore;
 
-namespace Atc.Cosmos.EventStore
+public interface IStreamSubscription
 {
-    public interface IStreamSubscription
-    {
-        /// <summary>
-        /// Start processing subscription.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task StartAsync();
+    /// <summary>
+    /// Start processing subscription.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task StartAsync();
 
-        /// <summary>
-        /// Stop processing.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task StopAsync();
-    }
+    /// <summary>
+    /// Stop processing.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task StopAsync();
 }

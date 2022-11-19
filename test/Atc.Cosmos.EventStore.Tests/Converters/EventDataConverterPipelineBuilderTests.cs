@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Text.Json;
 using Atc.Cosmos.EventStore.Converters;
 using Atc.Cosmos.EventStore.Tests.Fakes;

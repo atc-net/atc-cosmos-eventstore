@@ -1,11 +1,10 @@
-namespace Atc.Cosmos.EventStore.Streams
+namespace Atc.Cosmos.EventStore.Streams;
+
+internal interface IStreamSubscriptionFactory
 {
-    internal interface IStreamSubscriptionFactory
-    {
-        IStreamSubscription Create(
-            ConsumerGroup consumerGroup,
-            SubscriptionStartOptions startOptions,
-            ProcessEventsHandler eventsHandler,
-            ProcessExceptionHandler exceptionHandler);
-    }
+    IStreamSubscription Create(
+        ConsumerGroup consumerGroup,
+        SubscriptionStartOptions startOptions,
+        ProcessEventsHandler eventsHandler,
+        ProcessExceptionHandler exceptionHandler);
 }
