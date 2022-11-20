@@ -5,6 +5,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.Internal;
 public abstract class ConsumeEventMetadata
 {
     private readonly Dictionary<Type, MethodInfo> consumeEvents;
+    private readonly bool canConsumeAnyEvent;
 
     protected ConsumeEventMetadata(
         Type type)
@@ -21,14 +22,21 @@ public abstract class ConsumeEventMetadata
                         .GetRuntimeMethods()
                         .First(m => m.Name.Equals(nameof(ProjectTypedEvent), StringComparison.OrdinalIgnoreCase))
                         .MakeGenericMethod(t));
+
+        canConsumeAnyEvent = type
+            .GetInterfaces()
+            .Any(t => t.UnderlyingSystemType == typeof(IConsumeAnyEvent)
+                   || t.UnderlyingSystemType == typeof(IConsumeAnyEventAsync));
     }
 
     public bool CanConsumeEvent(IEvent evt)
         => consumeEvents
-            .ContainsKey(evt.Data.GetType());
+            .ContainsKey(evt.Data.GetType())
+        || canConsumeAnyEvent;
 
     public bool IsNotConsumingEvents()
-        => consumeEvents.Keys.Count == 0;
+        => consumeEvents.Keys.Count == 0
+        && !canConsumeAnyEvent;
 
     protected async ValueTask ConsumeAsync(
         IEvent evt,
@@ -48,12 +56,26 @@ public abstract class ConsumeEventMetadata
             CorrelationId: evt.Metadata.CorrelationId,
             CausationId: evt.Metadata.CausationId);
 
-        var response = consumeEvents[evt.Data.GetType()]
-            .Invoke(null, new object[] { projection, evt.Data, metadata, cancellationToken });
-
-        if (response is ValueTask v)
+        if (consumeEvents.TryGetValue(evt.Data.GetType(), out var method))
         {
-            await v.ConfigureAwait(false);
+            var response = method.Invoke(null, new object[] { projection, evt.Data, metadata, cancellationToken });
+
+            if (response is ValueTask v)
+            {
+                await v.ConfigureAwait(false);
+            }
+        }
+
+        if (canConsumeAnyEvent)
+        {
+            (projection as IConsumeAnyEvent)?.Consume(evt.Data, metadata);
+
+            if (projection is IConsumeAnyEventAsync consumeAsync)
+            {
+                await consumeAsync
+                    .ConsumeAsync(evt.Data, metadata, cancellationToken)
+                    .ConfigureAwait(false);
+            }
         }
     }
 
