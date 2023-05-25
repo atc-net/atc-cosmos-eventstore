@@ -52,14 +52,6 @@ public sealed class EventStoreOptionsBuilder
         return this;
     }
 
-    public EventStoreOptionsBuilder UseCustomEventIdProvider<T>()
-        where T : class, IEventIdProvider
-    {
-        Services.TryAddSingleton<IEventIdProvider, T>();
-
-        return this;
-    }
-
     public EventStoreOptionsBuilder UseEvents(Action<IEventCatalogBuilder> configure)
     {
         var builder = new EventCatalogBuilder();

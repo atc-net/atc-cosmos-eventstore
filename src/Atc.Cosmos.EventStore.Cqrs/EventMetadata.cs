@@ -1,7 +1,6 @@
 namespace Atc.Cosmos.EventStore.Cqrs;
 
 public record EventMetadata(
-    string EventId,
     EventStreamId StreamId,
     DateTimeOffset Timestamp,
     long Version,

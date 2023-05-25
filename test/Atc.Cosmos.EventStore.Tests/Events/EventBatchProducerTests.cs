@@ -12,13 +12,11 @@ public class EventBatchProducerTests
 {
     private readonly IDateTimeProvider dateTimeProvider;
     private readonly IEventNameProvider nameProvider;
-    private readonly IEventIdProvider eventIdProvider;
     private readonly EventBatchProducer sut;
     private readonly StreamMetadata metadata;
     private readonly StreamWriteOptions options;
     private readonly DateTimeOffset expectedTimestamp;
     private readonly string expectedName;
-    private readonly string expectedEventId;
     private readonly TestEvent @event;
     private readonly EventDocument convertedEvent;
     private readonly StreamMetadata convertedMetadata;
@@ -32,7 +30,6 @@ public class EventBatchProducerTests
     {
         dateTimeProvider = Substitute.For<IDateTimeProvider>();
         nameProvider = Substitute.For<IEventNameProvider>();
-        eventIdProvider = Substitute.For<IEventIdProvider>();
         expectedName = "event-name";
         expectedTimestamp = DateTimeOffset.Now;
         metadata = new StreamMetadata(
@@ -48,7 +45,6 @@ public class EventBatchProducerTests
             CorrelationId = "B",
         };
         @event = new Fixture().Create<TestEvent>();
-        expectedEventId = new Fixture().Create<string>();
 
         dateTimeProvider
             .GetDateTime()
@@ -56,11 +52,8 @@ public class EventBatchProducerTests
         nameProvider
             .GetName(default)
             .ReturnsForAnyArgs(expectedName);
-        eventIdProvider
-            .CreateUniqueId(default)
-            .ReturnsForAnyArgs(expectedEventId);
 
-        sut = new EventBatchProducer(dateTimeProvider, eventIdProvider, nameProvider);
+        sut = new EventBatchProducer(dateTimeProvider, nameProvider);
         var batch = sut.FromEvents(
             new[] { @event },
             metadata,
@@ -111,19 +104,11 @@ public class EventBatchProducerTests
             .Be(metadata.Version.Value + 1);
 
     [Fact]
-    public void Id_Should_Be_PropertyEventId()
+    public void Id_Should_Be_PropertyVersion()
         => convertedEvent
             .Id
             .Should()
-            .Be(convertedEvent.Properties.EventId);
-
-    [Fact]
-    public void Should_Have_EventId()
-        => convertedEvent
-            .Properties
-            .EventId
-            .Should()
-            .Be(expectedEventId);
+            .Be($"{(long)convertedEvent.Properties.Version}");
 
     [Fact]
     public void PartitionKey_Should_Be_StreamId()
@@ -141,7 +126,7 @@ public class EventBatchProducerTests
             .Be(metadata.StreamId);
 
     [Fact]
-    public void Should_Have_Event_Obejct_Set_As_Data()
+    public void Should_Have_Event_Object_Set_As_Data()
         => convertedEvent
             .Data
             .Should()

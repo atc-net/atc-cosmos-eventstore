@@ -110,7 +110,6 @@ internal class CommandHandlerTester<TCommand> :
                         {
                             CausationId = Guid.NewGuid().ToString(),
                             CorrelationId = Guid.NewGuid().ToString(),
-                            EventId = Guid.NewGuid().ToString(),
                             Name = "test",
                             Version = version++,
                             Timestamp = DateTimeOffset.UtcNow,

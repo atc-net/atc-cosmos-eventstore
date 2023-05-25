@@ -22,7 +22,6 @@ public static class ServiceCollectionExtensions
         configure?.Invoke(configureOptions);
 
         services.TryAddSingleton<IDateTimeProvider, UtcDateTimeProvider>();
-        services.TryAddSingleton<IEventIdProvider, GuidEventIdProvider>();
 
         services.TryAddSingleton<IStreamWriteValidator, StreamWriteValidator>();
         services.TryAddSingleton<IStreamReadValidator, StreamReadValidator>();

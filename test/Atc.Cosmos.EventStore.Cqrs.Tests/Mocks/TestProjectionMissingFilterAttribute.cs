@@ -1,6 +1,6 @@
-﻿namespace Atc.Cosmos.EventStore.Cqrs.Tests.Mocks;
+namespace Atc.Cosmos.EventStore.Cqrs.Tests.Mocks;
 
-internal class TestProjectionMissingFilterAttribute : IProjection
+internal sealed class TestProjectionMissingFilterAttribute : IProjection
 {
     public Task CompleteAsync(
         CancellationToken cancellationToken)

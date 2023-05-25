@@ -7,8 +7,8 @@ namespace Atc.Cosmos.EventStore.Events;
 /// </summary>
 internal class EventMetadata : IEventMetadata
 {
-    [JsonIgnore]
-    public string EventId { get; set; } = string.Empty;
+    ////[JsonIgnore]
+    ////public string EventId { get; set; } = string.Empty;
 
     [JsonPropertyName(EventMetadataNames.EventName)]
     public string Name { get; set; } = string.Empty;

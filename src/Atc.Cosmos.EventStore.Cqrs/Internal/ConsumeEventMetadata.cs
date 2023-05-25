@@ -49,7 +49,6 @@ public abstract class ConsumeEventMetadata
         }
 
         var metadata = new EventMetadata(
-            evt.Metadata.EventId,
             EventStreamId.FromStreamId(evt.Metadata.StreamId),
             evt.Metadata.Timestamp,
             (long)evt.Metadata.Version,
