@@ -1,7 +1,7 @@
 namespace Atc.Cosmos.EventStore.Cqrs.Tests.Mocks;
 
 [ProjectionFilter("**")]
-internal class TestProjection : IProjection
+internal sealed class TestProjection : IProjection
 {
     public Task CompleteAsync(
         CancellationToken cancellationToken)

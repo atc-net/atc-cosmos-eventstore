@@ -52,7 +52,6 @@ public class ConsumeEventMetadataTests :
                 .Should()
                 .BeEquivalentTo(
                     new EventMetadata(
-                        fixture.ConsumableEven.Metadata.EventId,
                         EventStreamId.FromStreamId(fixture.ConsumableEven.Metadata.StreamId),
                         fixture.ConsumableEven.Metadata.Timestamp,
                         (long)fixture.ConsumableEven.Metadata.Version,

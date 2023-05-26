@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Xunit;
 using static Atc.Cosmos.EventStore.Cqrs.Tests.Internal.ConsumeEventMetadataTestSpec;
 
@@ -52,7 +52,6 @@ public class ConsumeEventAsyncMetadataTests :
                 .Should()
                 .BeEquivalentTo(
                     new EventMetadata(
-                        fixture.ConsumableEven.Metadata.EventId,
                         EventStreamId.FromStreamId(fixture.ConsumableEven.Metadata.StreamId),
                         fixture.ConsumableEven.Metadata.Timestamp,
                         (long)fixture.ConsumableEven.Metadata.Version,

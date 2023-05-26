@@ -6,11 +6,6 @@ namespace Atc.Cosmos.EventStore;
 public interface IEventMetadata
 {
     /// <summary>
-    /// Gets the unique id of the event.
-    /// </summary>
-    string EventId { get; }
-
-    /// <summary>
     /// Gets the name of the event.
     /// </summary>
     string Name { get; }
