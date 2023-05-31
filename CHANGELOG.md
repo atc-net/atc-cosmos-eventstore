@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unknown or invalid events can now be observed through the `IConsumeEvent<T>` and `IConsumeEventAsync<T>` by using well known types `FaultedEvent` and `UnknownEvent`.
 - Introduced new interfaces `IConsumeAnyEvent` and `IConsumeAnyEventAsync` for consuming any event without specifying it type.
 - Command processor is now registered as singleton, eliminating the need for using ICommandProcessorFactory.
-
+- Optionally configure cosmos client to accept any server certificate when using emulator.
+ 
 ### Fixed
 - Raise condition when 2 command processors tries to add the first event to the same stream concurrently.
 - Rerunning command now create a new instance of the command processor to clear out any previous state it might contain.
