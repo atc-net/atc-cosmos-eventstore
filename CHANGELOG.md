@@ -7,21 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.23] - 2023-05-31
+
 ### Added
-- Pipeline for controlling event data convertion `IEventDataConverter`
-- Added custom event data converters to be configured using `EventStoreOptions`. This will enable scenarioes such as converting from one version of an event to another.
-- Unknown or invalid events can now be observed through the `IConsumeEvent<T>` and `IConsumeEventAsync<T>` by using well known types `FaultedEvent` and `UnknownEvent`.
-- Introduced new interfaces `IConsumeAnyEvent` and `IConsumeAnyEventAsync` for consuming any event without specifying it type.
-- Command processor is now registered as singleton, eliminating the need for using ICommandProcessorFactory.
-- Optionally configure cosmos client to accept any server certificate when using emulator.
- 
+
+-   Pipeline for controlling event data convertion `IEventDataConverter`
+-   Added custom event data converters to be configured using `EventStoreOptions`. This will enable scenarioes such as converting from one version of an event to another.
+-   Unknown or invalid events can now be observed through the `IConsumeEvent<T>` and `IConsumeEventAsync<T>` by using well known types `FaultedEvent` and `UnknownEvent`.
+-   Introduced new interfaces `IConsumeAnyEvent` and `IConsumeAnyEventAsync` for consuming any event without specifying it type.
+-   Command processor is now registered as singleton, eliminating the need for using ICommandProcessorFactory.
+-   Optionally configure cosmos client to accept any server certificate when using emulator.
+
 ### Fixed
-- Raise condition when 2 command processors tries to add the first event to the same stream concurrently.
-- Rerunning command now create a new instance of the command processor to clear out any previous state it might contain.
+
+-   Raise condition when 2 command processors tries to add the first event to the same stream concurrently.
+-   Rerunning command now create a new instance of the command processor to clear out any previous state it might contain.
 
 ### Removed
-- Setting `ConfigurationString` when configuring event store options.
-- `EventId` has been removed from `Metadata`.
+
+-   Setting `ConfigurationString` when configuring event store options.
+-   `EventId` has been removed from `Metadata`.
 
 ## [1.6.8] - 2022-07-06
 
@@ -74,7 +79,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   EventStore `ConnectionString` option has been made obsolete, please use `UseCredentials` or `UseCosmosEmulator` instead.
 
-[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.6.8...HEAD
+[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.7.23...HEAD
+
+[1.7.23]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.6.8...v1.7.23
 
 [1.6.8]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.5.3...v1.6.8
 
