@@ -116,6 +116,7 @@ public class CosmosMetadataReaderTests
             .BeEquivalentTo(expectedMetadata);
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
     public async Task Should_Have_State_New_When_Document_IsNotFound(
         StreamId streamId,
@@ -136,6 +137,7 @@ public class CosmosMetadataReaderTests
             .Be(StreamState.New);
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
     public async Task Should_Have_StreamVersion_StartOfStream_When_Document_IsNotFound(
         StreamId streamId,
@@ -156,6 +158,7 @@ public class CosmosMetadataReaderTests
             .Be(StreamVersion.StartOfStream);
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
     public async Task Should_Have_Correct_Id_When_Document_IsNotFound(
         StreamId streamId,
@@ -176,6 +179,7 @@ public class CosmosMetadataReaderTests
             .Be(StreamMetadata.StreamMetadataId);
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
     public async Task Should_Have_StreamId_As_PartitionKey_When_Document_IsNotFound(
         StreamId streamId,
@@ -196,6 +200,7 @@ public class CosmosMetadataReaderTests
             .Be(streamId.Value);
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
     public async Task Should_Have_Timestamp_When_Document_IsNotFound(
         StreamId streamId,

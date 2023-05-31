@@ -54,12 +54,14 @@ public class CosmosStreamIteratorTests
             .Returns(feedResponse);
 
         container = Substitute.For<Container>();
+#pragma warning disable NS5004 // Argument matcher used with WithAnyArgs. This matcher may not be executed..
         container
             .GetItemQueryIterator<EventDocument>(
                 Arg.Do<QueryDefinition>(q => query = q),
                 Arg.Any<string>(),
                 Arg.Do<QueryRequestOptions>(o => options = o))
             .ReturnsForAnyArgs(feedIterator);
+#pragma warning restore NS5004 // Argument matcher used with WithAnyArgs. This matcher may not be executed..
 
         containerProvider = Substitute.For<IEventStoreContainerProvider>();
         containerProvider
