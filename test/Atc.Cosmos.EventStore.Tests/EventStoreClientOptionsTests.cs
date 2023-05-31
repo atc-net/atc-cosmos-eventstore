@@ -10,29 +10,11 @@ public class EventStoreClientOptionsTests
     [Fact]
     internal void Should_Default_ToCosmosEmulator()
     {
-#pragma warning disable CS0618 // Type or member is obsolete
         var options = new EventStoreClientOptions();
 
-        options.ConnectionString.Should().Be(EventStoreClientOptions.CosmosEmulatorConnectionString);
-#pragma warning restore CS0618 // Type or member is obsolete
-        options.AuthKey.Should().BeNull();
-        options.Endpoint.Should().BeNull();
-        options.Credential.Should().BeNull();
-    }
-
-    [Fact]
-    internal void Should_Set_ConnectionString()
-    {
-#pragma warning disable CS0618 // Type or member is obsolete
-        var options = new EventStoreClientOptions
-        {
-            ConnectionString = "connection-string",
-        };
-
-        options.ConnectionString.Should().Be("connection-string");
-#pragma warning restore CS0618 // Type or member is obsolete
-        options.AuthKey.Should().BeNull();
-        options.Endpoint.Should().BeNull();
+        options.AuthKey.Should().Be(EventStoreClientOptions.EmulatorAuthKey);
+        options.Endpoint.Should().Be(EventStoreClientOptions.EmulatorEndpoint);
+        options.AllowAnyServerCertificate.Should().BeFalse();
         options.Credential.Should().BeNull();
     }
 
@@ -45,9 +27,6 @@ public class EventStoreClientOptionsTests
         options.AuthKey.Should().Be("auth-key");
         options.Endpoint.Should().Be("endpoint");
         options.Credential.Should().BeNull();
-#pragma warning disable CS0618 // Type or member is obsolete
-        options.ConnectionString.Should().BeNull();
-#pragma warning restore CS0618 // Type or member is obsolete
     }
 
     [Theory, AutoNSubstituteData]
@@ -60,8 +39,29 @@ public class EventStoreClientOptionsTests
         options.Endpoint.Should().Be("endpoint");
         options.Credential.Should().Be(token);
         options.AuthKey.Should().BeNull();
-#pragma warning disable CS0618 // Type or member is obsolete
-        options.ConnectionString.Should().BeNull();
-#pragma warning restore CS0618 // Type or member is obsolete
+    }
+
+    [Fact]
+    internal void Should_AllowAnyServerCertificate_When_UsingEmulator()
+    {
+        var options = new EventStoreClientOptions();
+        options.UseCosmosEmulator(allowAnyServerCertificate: true);
+
+        options.AuthKey.Should().Be(EventStoreClientOptions.EmulatorAuthKey);
+        options.Endpoint.Should().Be(EventStoreClientOptions.EmulatorEndpoint);
+        options.AllowAnyServerCertificate.Should().BeTrue();
+        options.Credential.Should().BeNull();
+    }
+
+    [Fact]
+    internal void Should_ConfigureCustomEndpointPort_When_UsingEmulator()
+    {
+        var options = new EventStoreClientOptions();
+        options.UseCosmosEmulator("https://localhost:10222/");
+
+        options.AuthKey.Should().Be(EventStoreClientOptions.EmulatorAuthKey);
+        options.Endpoint.Should().Be("https://localhost:10222/");
+        options.AllowAnyServerCertificate.Should().BeFalse();
+        options.Credential.Should().BeNull();
     }
 }

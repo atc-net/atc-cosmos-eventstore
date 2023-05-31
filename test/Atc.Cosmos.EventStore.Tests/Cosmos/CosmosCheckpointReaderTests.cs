@@ -89,6 +89,7 @@ public class CosmosCheckpointReaderTests
                 cancellationToken);
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
     public async Task Should_Return_Null_When_Document_IsNotFound(
         string name,
@@ -109,6 +110,7 @@ public class CosmosCheckpointReaderTests
             .BeNull();
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
     public async Task Should_Propergate_CosmosException_When_StatusCode_IsNot_NotFound(
         string name,

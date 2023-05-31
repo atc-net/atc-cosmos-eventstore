@@ -4,7 +4,9 @@ public static class ConsumeEventMetadataTestSpec
 {
     public record ConsumedEvent(string Name);
 
+#pragma warning disable S2094 // Classes should not be empty
     public record NotConsumedEvent();
+#pragma warning restore S2094 // Classes should not be empty
 
     public class ConsumesOneEvent
         : IConsumeEvent<ConsumedEvent>
