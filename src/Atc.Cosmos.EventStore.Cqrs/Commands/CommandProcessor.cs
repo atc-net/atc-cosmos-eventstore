@@ -5,26 +5,48 @@ internal class CommandProcessor<TCommand> : ICommandProcessor<TCommand>
 {
     private readonly IStateWriter<TCommand> stateWriter;
     private readonly IStateProjector<TCommand> stateProjector;
-    private readonly ICommandHandler<TCommand> handler;
-    private int reruns;
+    private readonly ICommandHandlerFactory handlerFactory;
 
     public CommandProcessor(
         IStateWriter<TCommand> stateWriter,
         IStateProjector<TCommand> stateProjector,
-        ICommandHandler<TCommand> handler)
+        ICommandHandlerFactory handlerFactory)
     {
         this.stateWriter = stateWriter;
         this.stateProjector = stateProjector;
-        this.handler = handler;
+        this.handlerFactory = handlerFactory;
     }
 
     public async ValueTask<CommandResult> ExecuteAsync(
         TCommand command,
         CancellationToken cancellationToken)
+        => await SafeExecuteAsync(
+                command,
+                GetReruns(command),
+                cancellationToken)
+            .ConfigureAwait(false);
+
+    private static ResultType GetResultType(StreamVersionConflictException versionConflict)
+        => versionConflict.Reason switch
+        {
+            StreamConflictReason.StreamIsEmpty => ResultType.NotFound,
+            StreamConflictReason.StreamIsNotEmpty => ResultType.Exists,
+            _ => ResultType.Conflict,
+        };
+
+    private static int GetReruns(TCommand command)
+        => command.Behavior == OnConflict.RerunCommand
+         ? command.BehaviorCount
+         : 0;
+
+    private async ValueTask<CommandResult> SafeExecuteAsync(
+        TCommand command,
+        int reruns,
+        CancellationToken cancellationToken)
     {
         try
         {
-            reruns = GetReruns(command);
+            var handler = handlerFactory.Create<TCommand>();
 
             // Read and project events to aggregate (command handler).
             var state = await stateProjector
@@ -60,10 +82,11 @@ internal class CommandProcessor<TCommand> : ICommandProcessor<TCommand>
         }
         catch (StreamWriteConflictException conflict)
         {
-            if (ShouldRerunCommand())
+            reruns--;
+            if (reruns > 0)
             {
                 return await
-                    ExecuteAsync(command, cancellationToken)
+                    SafeExecuteAsync(command, reruns, cancellationToken)
                    .ConfigureAwait(false);
             }
 
@@ -80,20 +103,4 @@ internal class CommandProcessor<TCommand> : ICommandProcessor<TCommand>
                 GetResultType(versionConflict));
         }
     }
-
-    private static int GetReruns(TCommand command)
-        => command.Behavior == OnConflict.RerunCommand
-         ? command.BehaviorCount
-         : 0;
-
-    private static ResultType GetResultType(StreamVersionConflictException versionConflict)
-        => versionConflict.Reason switch
-        {
-            StreamConflictReason.StreamIsEmpty => ResultType.NotFound,
-            StreamConflictReason.StreamIsNotEmpty => ResultType.Exists,
-            _ => ResultType.Conflict,
-        };
-
-    private bool ShouldRerunCommand()
-        => reruns-- > 0;
 }
