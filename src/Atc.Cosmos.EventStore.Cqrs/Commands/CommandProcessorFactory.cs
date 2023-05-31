@@ -8,9 +8,7 @@ internal class CommandProcessorFactory : ICommandProcessorFactory
 
     public CommandProcessorFactory(
         IServiceProvider provider)
-    {
-        this.provider = provider;
-    }
+        => this.provider = provider;
 
     public ICommandProcessor<TCommand> Create<TCommand>()
         where TCommand : ICommand

@@ -10,9 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Pipeline for controlling event data convertion `IEventDataConverter`
 - Added custom event data converters to be configured using `EventStoreOptions`. This will enable scenarioes such as converting from one version of an event to another.
-- Unknown or invalid events can now be observed through the `IConsumeEvent<T>` and `IConsumeEventAsync<T>` but using well known types `FaultedEvent` and `UnknownEvent`.
+- Unknown or invalid events can now be observed through the `IConsumeEvent<T>` and `IConsumeEventAsync<T>` by using well known types `FaultedEvent` and `UnknownEvent`.
 - Introduced new interfaces `IConsumeAnyEvent` and `IConsumeAnyEventAsync` for consuming any event without specifying it type.
-- Fixed raise condition when 2 command processors tries to add the first event to the same stream concurrently.
+- Command processor is now registered as singleton, eliminating the need for using ICommandProcessorFactory.
+
+### Fixed
+- Raise condition when 2 command processors tries to add the first event to the same stream concurrently.
+- Rerunning command now create a new instance of the command processor to clear out any previous state it might contain.
 
 ### Removed
 - Setting `ConfigurationString` when configuring event store options.
