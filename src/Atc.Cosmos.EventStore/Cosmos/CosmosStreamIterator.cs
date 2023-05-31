@@ -1,44 +1,40 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using Atc.Cosmos.EventStore.Events;
 using Atc.Cosmos.EventStore.Streams;
 using Microsoft.Azure.Cosmos;
 
-namespace Atc.Cosmos.EventStore.Cosmos
+namespace Atc.Cosmos.EventStore.Cosmos;
+
+internal class CosmosStreamIterator : IStreamIterator
 {
-    internal class CosmosStreamIterator : IStreamIterator
+    private readonly IEventStoreContainerProvider containerProvider;
+
+    public CosmosStreamIterator(
+        IEventStoreContainerProvider containerProvider)
+        => this.containerProvider = containerProvider;
+
+    public async IAsyncEnumerable<IEvent> ReadAsync(
+        StreamId streamId,
+        StreamVersion fromVersion,
+        StreamReadFilter? filter,
+        [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        private readonly IEventStoreContainerProvider containerProvider;
+        var pk = new PartitionKey(streamId.Value);
+        var resultSet = containerProvider
+            .GetStreamContainer()
+            .GetItemQueryIterator<EventDocument>(
+                CosmosStreamQueryBuilder.GetQueryDefinition(streamId, fromVersion, filter),
+                requestOptions: new() { PartitionKey = pk });
 
-        public CosmosStreamIterator(
-            IEventStoreContainerProvider containerProvider)
-            => this.containerProvider = containerProvider;
-
-        public async IAsyncEnumerable<IEvent> ReadAsync(
-            StreamId streamId,
-            StreamVersion fromVersion,
-            StreamReadFilter? filter,
-            [EnumeratorCancellation] CancellationToken cancellationToken)
+        while (resultSet.HasMoreResults && !cancellationToken.IsCancellationRequested)
         {
-            var pk = new PartitionKey(streamId.Value);
-            var resultSet = containerProvider
-                .GetStreamContainer()
-                .GetItemQueryIterator<EventDocument>(
-                    CosmosStreamQueryBuilder.GetQueryDefinition(streamId, fromVersion, filter),
-                    requestOptions: new() { PartitionKey = pk });
+            var items = await resultSet
+                .ReadNextAsync(cancellationToken)
+                .ConfigureAwait(false);
 
-            while (resultSet.HasMoreResults && !cancellationToken.IsCancellationRequested)
+            foreach (var item in items.Resource.Where(d => d is not null))
             {
-                var items = await resultSet
-                    .ReadNextAsync(cancellationToken)
-                    .ConfigureAwait(false);
-
-                foreach (var item in items.Resource.Where(d => d is not null))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
         }
     }

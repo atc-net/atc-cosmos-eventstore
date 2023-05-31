@@ -1,56 +1,66 @@
-using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Options;
 
-namespace Atc.Cosmos.EventStore.Cosmos
+namespace Atc.Cosmos.EventStore.Cosmos;
+
+internal sealed class CosmosClientFactory : ICosmosClientFactory, IDisposable
 {
-    internal sealed class CosmosClientFactory : ICosmosClientFactory, IDisposable
+    private readonly CosmosClient cosmosClient;
+    private bool disposedValue;
+
+    [SuppressMessage(
+        "Critical Vulnerability",
+        "S4830:Server certificates should be verified during SSL/TLS connections",
+        Justification = "This is only allowed when running against cosmos emulator")]
+    public CosmosClientFactory(
+        IOptions<EventStoreClientOptions> options,
+        CosmosEventSerializer eventSerializer)
     {
-        private readonly CosmosClient cosmosClient;
-        private bool disposedValue;
+        options.Value.CosmosClientOptions.Serializer = eventSerializer;
 
-        public CosmosClientFactory(
-            IOptions<EventStoreClientOptions> options,
-            CosmosEventSerializer eventSerializer)
+        if (options.Value.AllowAnyServerCertificate)
         {
-            options.Value.CosmosClientOptions.Serializer = eventSerializer;
-#pragma warning disable CS0618 // Type or member is obsolete
-            cosmosClient = options.Value.Credential is null
-                ? options.Value.ConnectionString is not null
-                    ? new CosmosClient(
-                        options.Value.ConnectionString,
-                        options.Value.CosmosClientOptions)
-                    : new CosmosClient(
-                        options.Value.Endpoint,
-                        options.Value.AuthKey,
-                        options.Value.CosmosClientOptions)
-                : new CosmosClient(
-                    options.Value.Endpoint,
-                    options.Value.Credential,
-                    options.Value.CosmosClientOptions);
-#pragma warning restore CS0618 // Type or member is obsolete
+            options.Value.CosmosClientOptions.HttpClientFactory = ()
+                => new HttpClient(
+                    new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+                        CheckCertificateRevocationList = true,
+                    });
+            options.Value.CosmosClientOptions.ConnectionMode = ConnectionMode.Gateway;
         }
 
-        public CosmosClient GetClient()
-            => cosmosClient;
+        cosmosClient = options.Value.Credential is null
+            ? new CosmosClient(
+                options.Value.Endpoint,
+                options.Value.AuthKey,
+                options.Value.CosmosClientOptions)
+            : new CosmosClient(
+                options.Value.Endpoint,
+                options.Value.Credential,
+                options.Value.CosmosClientOptions);
+    }
 
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
+    public CosmosClient GetClient()
+        => cosmosClient;
 
-        private void Dispose(bool disposing)
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (!disposedValue)
         {
-            if (!disposedValue)
+            if (disposing)
             {
-                if (disposing)
-                {
-                    cosmosClient.Dispose();
-                }
-
-                disposedValue = true;
+                cosmosClient.Dispose();
             }
+
+            disposedValue = true;
         }
     }
 }

@@ -1,9 +1,8 @@
-namespace Atc.Cosmos.EventStore.Cqrs.Commands
-{
-    internal class StreamState : IStreamState
-    {
-        public StreamId Id { get; set; }
+namespace Atc.Cosmos.EventStore.Cqrs.Commands;
 
-        public StreamVersion Version { get; set; }
-    }
+internal class StreamState : IStreamState
+{
+    public StreamId Id { get; set; }
+
+    public StreamVersion Version { get; set; }
 }

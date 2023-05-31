@@ -1,18 +1,16 @@
-using System;
 using System.Text.Json.Serialization;
 
-namespace Atc.Cosmos.EventStore.Streams
+namespace Atc.Cosmos.EventStore.Streams;
+
+internal class StreamIndex : IStreamIndex
 {
-    internal class StreamIndex : IStreamIndex
-    {
-        [JsonPropertyName("id")]
-        public StreamId StreamId { get; set; } = string.Empty;
+    [JsonPropertyName("id")]
+    public StreamId StreamId { get; set; } = string.Empty;
 
-        [JsonPropertyName("pk")]
-        public string PartitionKey { get; set; } = nameof(StreamIndex);
+    [JsonPropertyName("pk")]
+    public string PartitionKey { get; set; } = nameof(StreamIndex);
 
-        public DateTimeOffset Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
 
-        public bool IsActive { get; set; } = true;
-    }
+    public bool IsActive { get; set; } = true;
 }

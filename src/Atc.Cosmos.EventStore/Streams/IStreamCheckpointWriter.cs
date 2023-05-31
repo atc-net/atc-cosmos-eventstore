@@ -1,15 +1,11 @@
-using System.Threading;
-using System.Threading.Tasks;
+namespace Atc.Cosmos.EventStore.Streams;
 
-namespace Atc.Cosmos.EventStore.Streams
+internal interface IStreamCheckpointWriter
 {
-    internal interface IStreamCheckpointWriter
-    {
-        Task WriteAsync(
-            string name,
-            StreamId streamId,
-            StreamVersion streamVersion,
-            object? state,
-            CancellationToken cancellationToken);
-    }
+    Task WriteAsync(
+        string name,
+        StreamId streamId,
+        StreamVersion streamVersion,
+        object? state,
+        CancellationToken cancellationToken);
 }

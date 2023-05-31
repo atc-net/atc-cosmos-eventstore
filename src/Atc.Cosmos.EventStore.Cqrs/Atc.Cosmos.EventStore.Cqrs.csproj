@@ -12,6 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Remove="System.IO" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Atc.Cosmos.EventStore\Atc.Cosmos.EventStore.csproj" />
   </ItemGroup>
 

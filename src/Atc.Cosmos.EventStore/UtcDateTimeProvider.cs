@@ -1,11 +1,9 @@
-using System;
 using Atc.Cosmos.EventStore.Events;
 
-namespace Atc.Cosmos.EventStore
+namespace Atc.Cosmos.EventStore;
+
+public class UtcDateTimeProvider : IDateTimeProvider
 {
-    public class UtcDateTimeProvider : IDateTimeProvider
-    {
-        public DateTimeOffset GetDateTime()
-            => DateTimeOffset.UtcNow;
-    }
+    public DateTimeOffset GetDateTime()
+        => DateTimeOffset.UtcNow;
 }

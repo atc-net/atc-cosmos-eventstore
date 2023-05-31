@@ -1,13 +1,10 @@
-using System.Collections.Generic;
+namespace Atc.Cosmos.EventStore.Cqrs.Projections;
 
-namespace Atc.Cosmos.EventStore.Cqrs.Projections
+internal interface IProjectionOptions
 {
-    internal interface IProjectionOptions
-    {
-        string Name { get; }
+    string Name { get; }
 
-        IReadOnlyCollection<ProjectionFilter> Filters { get; }
+    IReadOnlyCollection<ProjectionFilter> Filters { get; }
 
-        ProcessExceptionHandler ExceptionHandler { get; }
-    }
+    ProcessExceptionHandler ExceptionHandler { get; }
 }

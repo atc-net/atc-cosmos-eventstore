@@ -1,13 +1,9 @@
-using System.Threading;
-using System.Threading.Tasks;
+namespace Atc.Cosmos.EventStore.Streams;
 
-namespace Atc.Cosmos.EventStore.Streams
+internal interface IStreamCheckpointReader
 {
-    internal interface IStreamCheckpointReader
-    {
-        Task<Checkpoint<TState>?> ReadAsync<TState>(
-            string name,
-            StreamId streamId,
-            CancellationToken cancellationToken);
-    }
+    Task<Checkpoint<TState>?> ReadAsync<TState>(
+        string name,
+        StreamId streamId,
+        CancellationToken cancellationToken);
 }

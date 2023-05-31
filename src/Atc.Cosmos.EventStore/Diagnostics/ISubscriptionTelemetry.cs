@@ -1,11 +1,8 @@
-using System;
+namespace Atc.Cosmos.EventStore.Diagnostics;
 
-namespace Atc.Cosmos.EventStore.Diagnostics
+internal interface ISubscriptionTelemetry
 {
-    internal interface ISubscriptionTelemetry
-    {
-        void ProcessExceptionHandlerFailed(Exception exception, ConsumerGroup consumerGroup);
+    void ProcessExceptionHandlerFailed(Exception exception, ConsumerGroup consumerGroup);
 
-        ISubscriptionActivity? SubscriptionStarted(ConsumerGroup consumerGroup);
-    }
+    ISubscriptionActivity? SubscriptionStarted(ConsumerGroup consumerGroup);
 }

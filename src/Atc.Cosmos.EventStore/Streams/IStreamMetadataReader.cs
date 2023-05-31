@@ -1,10 +1,6 @@
-using System.Threading;
-using System.Threading.Tasks;
+namespace Atc.Cosmos.EventStore.Streams;
 
-namespace Atc.Cosmos.EventStore.Streams
+internal interface IStreamMetadataReader
 {
-    internal interface IStreamMetadataReader
-    {
-        Task<IStreamMetadata> GetAsync(StreamId streamId, CancellationToken cancellationToken);
-    }
+    Task<IStreamMetadata> GetAsync(StreamId streamId, CancellationToken cancellationToken);
 }

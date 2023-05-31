@@ -1,22 +1,17 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+namespace Atc.Cosmos.EventStore.Cqrs.Projections;
 
-namespace Atc.Cosmos.EventStore.Cqrs.Projections
+public interface IProjectionMetadata
 {
-    public interface IProjectionMetadata
-    {
-        bool CanConsumeEvent(
-            IEvent evt);
+    bool CanConsumeEvent(
+        IEvent evt);
 
-        bool CanConsumeOneOrMoreEvents(
-            IEnumerable<IEvent> events);
+    bool CanConsumeOneOrMoreEvents(
+        IEnumerable<IEvent> events);
 
-        bool IsNotConsumingEvents();
+    bool IsNotConsumingEvents();
 
-        ValueTask ConsumeEventsAsync(
-            IEnumerable<IEvent> events,
-            IProjection projection,
-            CancellationToken cancellationToken);
-    }
+    ValueTask ConsumeEventsAsync(
+        IEnumerable<IEvent> events,
+        IProjection projection,
+        CancellationToken cancellationToken);
 }

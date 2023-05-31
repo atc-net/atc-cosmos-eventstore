@@ -1,12 +1,8 @@
-using System.Threading;
-using System.Threading.Tasks;
+namespace Atc.Cosmos.EventStore.Streams;
 
-namespace Atc.Cosmos.EventStore.Streams
+internal interface IStreamSubscriptionRemover
 {
-    internal interface IStreamSubscriptionRemover
-    {
-        Task DeleteAsync(
-            ConsumerGroup consumerGroup,
-            CancellationToken cancellationToken);
-    }
+    Task DeleteAsync(
+        ConsumerGroup consumerGroup,
+        CancellationToken cancellationToken);
 }

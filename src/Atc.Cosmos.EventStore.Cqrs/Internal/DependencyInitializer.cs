@@ -1,17 +1,13 @@
-using System;
-using System.Threading.Tasks;
+namespace Atc.Cosmos.EventStore.Cqrs.Internal;
 
-namespace Atc.Cosmos.EventStore.Cqrs.Internal
+internal class DependencyInitializer : IDependencyInitializer
 {
-    internal class DependencyInitializer : IDependencyInitializer
-    {
-        private readonly Task initializer;
+    private readonly Task initializer;
 
-        public DependencyInitializer(
-            Func<Task> task)
-            => initializer = task();
+    public DependencyInitializer(
+        Func<Task> task)
+        => initializer = task();
 
-        public Task EnsureInitializeAsync()
-            => initializer;
-    }
+    public Task EnsureInitializeAsync()
+        => initializer;
 }
