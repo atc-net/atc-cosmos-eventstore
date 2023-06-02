@@ -73,7 +73,7 @@ public class CosmosBatchWriterTests
             .GetDateTime()
             .Returns(expectedDateTime);
 
-        sut = new CosmosBatchWriter(containerProvider, dateTimeProvider);
+        sut = new CosmosBatchWriter(containerProvider);
     }
 
     [Theory, AutoNSubstituteData]
@@ -130,23 +130,5 @@ public class CosmosBatchWriterTests
             .Awaiting(() => sut.WriteAsync(streamBatch, cancellationToken))
             .Should()
             .ThrowAsync<StreamWriteConflictException>();
-    }
-
-    [Theory, AutoNSubstituteData]
-    internal async Task Should_Create_Index_When_Stream_IsEmpty(
-        StreamBatch streamBatch,
-        CancellationToken cancellationToken)
-    {
-        streamBatch.Metadata.ETag = null;
-
-        await sut.WriteAsync(streamBatch, cancellationToken);
-
-        _ = container
-            .Received()
-            .UpsertItemAsync<StreamIndex>(
-                Arg.Is<StreamIndex>(arg => arg.PartitionKey == nameof(StreamIndex) && arg.StreamId == streamBatch.Metadata.StreamId),
-                new PartitionKey(nameof(StreamIndex)),
-                Arg.Is<ItemRequestOptions>(arg => arg.EnableContentResponseOnWrite == false),
-                cancellationToken);
     }
 }

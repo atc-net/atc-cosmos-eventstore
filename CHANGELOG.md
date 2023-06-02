@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Removed writing to stream-index when a new stream is created.
+
 ## [1.7.23] - 2023-05-31
 
 ### Added
