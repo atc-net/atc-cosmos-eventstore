@@ -8,14 +8,11 @@ namespace Atc.Cosmos.EventStore.Cosmos;
 internal class CosmosBatchWriter : IStreamBatchWriter
 {
     private readonly IEventStoreContainerProvider containerProvider;
-    private readonly IDateTimeProvider dateTimeProvider;
 
     public CosmosBatchWriter(
-        IEventStoreContainerProvider containerProvider,
-        IDateTimeProvider dateTimeProvider)
+        IEventStoreContainerProvider containerProvider)
     {
         this.containerProvider = containerProvider;
-        this.dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<IStreamMetadata> WriteAsync(
@@ -38,23 +35,6 @@ internal class CosmosBatchWriter : IStreamBatchWriter
                 new TransactionalBatchItemRequestOptions { EnableContentResponseOnWrite = false });
         }
 
-        if (IsEmptyStream(batch.Metadata))
-        {
-            await containerProvider
-                .GetIndexContainer()
-                .UpsertItemAsync(
-                    new StreamIndex
-                    {
-                        StreamId = batch.Metadata.StreamId.Value,
-                        Timestamp = dateTimeProvider.GetDateTime(),
-                        IsActive = true,
-                    },
-                    new PartitionKey(nameof(StreamIndex)),
-                    new ItemRequestOptions { EnableContentResponseOnWrite = false },
-                    cancellationToken)
-                .ConfigureAwait(false);
-        }
-
         using var batchResponse = await tx
             .ExecuteAsync(cancellationToken)
             .ConfigureAwait(false);
@@ -63,9 +43,6 @@ internal class CosmosBatchWriter : IStreamBatchWriter
 
         return GetMetadataFromResponse(batchResponse);
     }
-
-    private static bool IsEmptyStream(StreamMetadata metadata)
-        => string.IsNullOrWhiteSpace(metadata.ETag); // As metadata has already been updated we can only use ETag to see if its a new stream.
 
     private static IStreamMetadata GetMetadataFromResponse(TransactionalBatchResponse response)
     {
