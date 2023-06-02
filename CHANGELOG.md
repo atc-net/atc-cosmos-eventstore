@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.3] - 2023-06-02
+
 ### Fixed
-- Removed writing to stream-index when a new stream is created.
+
+-   Removed writing to stream-index when a new stream is created.
 
 ## [1.7.23] - 2023-05-31
 
@@ -82,7 +85,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   EventStore `ConnectionString` option has been made obsolete, please use `UseCredentials` or `UseCosmosEmulator` instead.
 
-[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.7.23...HEAD
+[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.8.3...HEAD
+
+[1.8.3]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.7.23...v1.8.3
 
 [1.7.23]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.6.8...v1.7.23
 
