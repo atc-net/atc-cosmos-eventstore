@@ -1,4 +1,6 @@
 using System.Collections.ObjectModel;
+using Atc.Cosmos.EventStore.Cosmos;
+using Atc.Cosmos.EventStore.Events;
 using Atc.Cosmos.EventStore.Streams;
 using Atc.Test;
 using AutoFixture.AutoNSubstitute;
@@ -81,6 +83,24 @@ public class EventStoreClientTests
         result
             .Should()
             .BeEquivalentTo(expected);
+    }
+
+    [Theory, AutoNSubstituteData]
+    internal async Task Should_Throw_EventLimitExceededException(
+        EventStoreClient sut,
+        StreamId streamId,
+        IReadOnlyList<object> events,
+        CancellationToken cancellationToken)
+    {
+        await sut
+            .Invoking(
+                c => c.WriteToStreamAsync(
+                    streamId,
+                    Enumerable.Repeat(events[0], CosmosConstants.BatchLimit).ToList(),
+                    StreamVersion.StartOfStream,
+                    cancellationToken: cancellationToken))
+            .Should()
+            .ThrowExactlyAsync<EventLimitExceededException>();
     }
 
     [Theory, AutoNSubstituteData]
