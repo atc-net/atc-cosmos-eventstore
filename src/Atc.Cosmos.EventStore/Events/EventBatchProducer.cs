@@ -1,3 +1,4 @@
+using Atc.Cosmos.EventStore.Cosmos;
 using Atc.Cosmos.EventStore.Streams;
 
 namespace Atc.Cosmos.EventStore.Events;
@@ -31,7 +32,8 @@ internal class EventBatchProducer : IEventBatchProducer
                 options?.CorrelationId,
                 options?.CausationId,
                 timestamp))
-            .ToArray();
+            .ToArray()
+            .ThrowIfEventLimitExceeded();
 
         return new StreamBatch(
             new StreamMetadata(
