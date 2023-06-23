@@ -11,7 +11,8 @@ public static class CosmosConstants
     /// <summary>
     /// A transaction will consist of at least 2 operations,
     /// one for the stream metadata and the other for the events.
-    /// Since there is no efficient way to determine the size of the total payload, 
+    /// Since there is no efficient way to determine the size of the total payload,
+    /// we assume the worst case scenario as set the limit to half of the batch limit.
     /// </summary>
     public const int EventLimit = BatchLimit / 2;
 }
