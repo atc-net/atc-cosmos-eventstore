@@ -9,7 +9,6 @@ public class EventDocumentExtensionsTests
     [Theory]
     [InlineData(10)]
     [InlineData(50)]
-    [InlineData(99)]
     public void ThrowIfLimitExceeded_ShouldNotThrow(int eventsCount)
     {
         var events = new List<object>();

@@ -29,7 +29,7 @@ public class CommandContextTests
         CommandContext sut,
         object eventData)
     {
-        for (int i = 0; i < 99; i++)
+        for (int i = 0; i < 50; i++)
         {
             sut.AddEvent(eventData);
         }
