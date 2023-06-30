@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed issue where adding two or more projections with the same class name would override their configurations resulting in the "dead" projections.
+
 ## [1.8.3] - 2023-06-02
 
 ### Fixed

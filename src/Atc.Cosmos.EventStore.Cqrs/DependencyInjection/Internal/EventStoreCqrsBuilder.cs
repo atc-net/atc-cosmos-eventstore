@@ -74,7 +74,7 @@ internal class EventStoreCqrsBuilder : IEventStoreCqrsBuilder
         builder
             .Services
             .Configure<ProjectionOptions>(
-                typeof(TProjection).Name,
+                typeof(TProjection).FullName,
                 options => projectionBuilder.Build<TProjection>(options));
 
         return this;
