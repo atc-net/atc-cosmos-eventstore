@@ -7,16 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.17] - 2023-07-03
+
 ### Added
 
-- Introduced options to provide events async when testing commands using `ICommandGiven`, `ICommandWhen` and `ICommandThen`.
-- Introduce hard limits to the number of events the system can accept per operation. 
-    - A maximum of 10 events per command context (CQRS)
-    - A maximum of 50 events per stream batch (Event Store)
+-   Introduced options to provide events async when testing commands using `ICommandGiven`, `ICommandWhen` and `ICommandThen`.
+-   Introduce hard limits to the number of events the system can accept per operation. 
+    -   A maximum of 10 events per command context (CQRS)
+    -   A maximum of 50 events per stream batch (Event Store)
 
 ### Fixed
 
-- Fixed issue where adding two or more projections with the same class name would override their configurations resulting in the "dead" projections.
+-   Fixed issue where adding two or more projections with the same class name would override their configurations resulting in the "dead" projections.
 
 ## [1.8.3] - 2023-06-02
 
@@ -96,7 +98,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   EventStore `ConnectionString` option has been made obsolete, please use `UseCredentials` or `UseCosmosEmulator` instead.
 
-[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.8.3...HEAD
+[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.9.17...HEAD
+
+[1.9.17]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.8.3...v1.9.17
 
 [1.8.3]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.7.23...v1.8.3
 
