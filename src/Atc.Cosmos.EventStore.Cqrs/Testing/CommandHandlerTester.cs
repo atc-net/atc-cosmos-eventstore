@@ -27,7 +27,7 @@ internal class CommandHandlerTester<TCommand> :
 
     private readonly ICommandHandler<TCommand> handler;
     private readonly TestMetadata handlerMetadata;
-    private readonly List<object> events;
+    private Func<Task<object[]>> eventsProvider = EmptyEventStreamAsync;
     private TCommand? command;
 
     public CommandHandlerTester(
@@ -35,17 +35,18 @@ internal class CommandHandlerTester<TCommand> :
     {
         this.handler = handler;
         this.handlerMetadata = new TestMetadata(handler);
-        this.events = new List<object>();
     }
 
-    public ICommandWhen<TCommand> GivenEvents(params object[] events)
+    public ICommandWhen<TCommand> GivenEvents(
+        Func<Task<object[]>> eventsFactory)
     {
-        this.events.AddRange(events);
+        this.eventsProvider = eventsFactory;
 
         return this;
     }
 
-    public ICommandThen WhenExecuting(TCommand command)
+    public ICommandThen WhenExecuting(
+        TCommand command)
     {
         this.command = command;
 
@@ -96,10 +97,13 @@ internal class CommandHandlerTester<TCommand> :
         throw new InvalidOperationException($"{typeof(TException).Name} not thrown");
     }
 
+    private static Task<object[]> EmptyEventStreamAsync()
+        => Task.FromResult<object[]>(Array.Empty<string>());
+
     private async Task<CommandContext> ExecuteAsync(CancellationToken cancellationToken)
     {
         var version = 1;
-        foreach (var evt in events)
+        foreach (var evt in await eventsProvider().ConfigureAwait(false))
         {
             await handlerMetadata
                 .ApplyEventAsync(
