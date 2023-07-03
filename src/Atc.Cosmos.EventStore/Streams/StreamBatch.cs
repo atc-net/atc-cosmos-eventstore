@@ -10,6 +10,7 @@ internal class StreamBatch
     {
         Metadata = metadata;
         Documents = events;
+        Documents.ThrowIfEventLimitExceeded();
     }
 
     public StreamMetadata Metadata { get; }

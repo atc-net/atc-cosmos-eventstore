@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Introduced options to provide events async when testing commands using `ICommandGiven`, `ICommandWhen` and `ICommandThen`.
+- Introduce hard limits to the number of events the system can accept per operation. 
+    - A maximum of 10 events per command context (CQRS)
+    - A maximum of 50 events per stream batch (Event Store)
+
+### Fixed
+
+- Fixed issue where adding two or more projections with the same class name would override their configurations resulting in the "dead" projections.
+
 ## [1.8.3] - 2023-06-02
 
 ### Fixed

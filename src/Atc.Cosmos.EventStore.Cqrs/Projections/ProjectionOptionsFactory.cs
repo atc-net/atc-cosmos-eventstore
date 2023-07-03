@@ -8,12 +8,10 @@ internal class ProjectionOptionsFactory : IProjectionOptionsFactory
 
     public ProjectionOptionsFactory(
         IOptionsMonitor<ProjectionOptions> namedOptions)
-    {
-        this.namedOptions = namedOptions;
-    }
+        => this.namedOptions = namedOptions;
 
     public IProjectionOptions GetOptions<TProjection>()
         where TProjection : IProjection
         => namedOptions.Get(
-            typeof(TProjection).Name);
+            typeof(TProjection).FullName);
 }

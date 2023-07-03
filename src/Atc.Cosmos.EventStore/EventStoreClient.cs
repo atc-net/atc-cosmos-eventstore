@@ -1,3 +1,5 @@
+using Atc.Cosmos.EventStore.Cosmos;
+using Atc.Cosmos.EventStore.Events;
 using Atc.Cosmos.EventStore.Streams;
 
 namespace Atc.Cosmos.EventStore;
@@ -92,7 +94,7 @@ internal class EventStoreClient : IEventStoreClient
         => streamWriter
             .WriteAsync(
                 streamId,
-                Arguments.EnsureNoNullValues(events, nameof(events)),
+                Arguments.EnsureNoNullValues(events, nameof(events)).ThrowIfEventLimitExceeded(),
                 version ?? StreamVersion.Any,
                 options,
                 cancellationToken);
