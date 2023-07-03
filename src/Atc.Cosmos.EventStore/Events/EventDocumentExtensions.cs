@@ -10,7 +10,8 @@ internal static class EventDocumentExtensions
     {
         if (events.Count > limit)
         {
-            throw new EventLimitExceededException(events.Count, limit);
+            throw new InvalidOperationException(
+                $"The maximum number of events ({limit}) per command has been exceeded: {events.Count}");
         }
 
         return events;

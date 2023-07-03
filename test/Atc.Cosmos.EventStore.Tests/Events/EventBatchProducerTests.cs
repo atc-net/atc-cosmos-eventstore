@@ -226,6 +226,6 @@ public class EventBatchProducerTests
                         metadata,
                         options))
             .Should()
-            .ThrowExactly<EventLimitExceededException>();
+            .ThrowExactly<InvalidOperationException>();
     }
 }

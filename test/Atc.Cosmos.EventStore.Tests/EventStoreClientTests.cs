@@ -86,7 +86,7 @@ public class EventStoreClientTests
     }
 
     [Theory, AutoNSubstituteData]
-    internal async Task Should_Throw_EventLimitExceededException(
+    internal async Task Should_Throw_InvalidOperationException(
         EventStoreClient sut,
         StreamId streamId,
         IReadOnlyList<object> events,
@@ -100,7 +100,7 @@ public class EventStoreClientTests
                     StreamVersion.StartOfStream,
                     cancellationToken: cancellationToken))
             .Should()
-            .ThrowExactlyAsync<EventLimitExceededException>();
+            .ThrowExactlyAsync<InvalidOperationException>();
     }
 
     [Theory, AutoNSubstituteData]

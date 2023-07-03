@@ -36,6 +36,6 @@ public class CommandContextTests
 
         sut.Invoking(c => c.AddEvent(new object()))
             .Should()
-            .Throw<EventLimitExceededException>();
+            .Throw<InvalidOperationException>();
     }
 }

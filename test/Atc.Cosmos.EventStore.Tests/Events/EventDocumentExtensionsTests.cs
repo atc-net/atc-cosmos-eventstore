@@ -31,7 +31,7 @@ public class EventDocumentExtensionsTests
             events.Add(new object());
         }
 
-        var ex = Assert.Throws<EventLimitExceededException>(() =>
+        var ex = Assert.Throws<InvalidOperationException>(() =>
         {
             events.ThrowIfEventLimitExceeded();
         });

@@ -28,6 +28,6 @@ public class StreamBatchTests
         var action = () => new StreamBatch(
             metadata,
             Enumerable.Repeat(events[0], 100).ToList());
-        action.Should().Throw<EventLimitExceededException>();
+        action.Should().Throw<InvalidOperationException>();
     }
 }
