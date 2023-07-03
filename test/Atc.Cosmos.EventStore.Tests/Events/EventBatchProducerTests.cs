@@ -213,4 +213,19 @@ public class EventBatchProducerTests
             .State
             .Should()
             .Be(StreamState.Active);
+
+    [Theory, AutoNSubstituteData]
+    internal void Throws_If_Limit_Exceeded(
+        IReadOnlyCollection<TestEvent> events,
+        EventBatchProducer sut)
+    {
+        sut.Invoking(
+                x => x
+                    .FromEvents(
+                        Enumerable.Repeat(events, 100).ToList(),
+                        metadata,
+                        options))
+            .Should()
+            .ThrowExactly<InvalidOperationException>();
+    }
 }
