@@ -19,7 +19,6 @@ internal class CosmosSubscriptionFactory : IStreamSubscriptionFactory
 
     public IStreamSubscription Create(
         ConsumerGroup consumerGroup,
-        SubscriptionStartOptions startOptions,
         ProcessEventsHandler eventsHandler,
         ProcessExceptionHandler exceptionHandler)
     {
@@ -27,17 +26,17 @@ internal class CosmosSubscriptionFactory : IStreamSubscriptionFactory
             .GetStreamContainer()
             .GetChangeFeedProcessorBuilder<EventDocument>(
                 GetProcessorName(consumerGroup),
-                (c, ct) => eventsHandler(c.Where(ExcludeMetaDataChanges).ToArray(), ct))
+                (ctx, c, ct) => eventsHandler(c.Where(ExcludeMetaDataChanges).ToArray(), ct))
             .WithErrorNotification((lt, ex) => exceptionHandler(lt, ex))
             .WithLeaseContainer(containerProvider.GetSubscriptionContainer())
-            .WithMaxItems(100)
-            .WithPollInterval(TimeSpan.FromMilliseconds(1000));
+            .WithMaxItems(consumerGroup.MaxItems)
+            .WithPollInterval(consumerGroup.PollingInterval);
 
-        if (startOptions == SubscriptionStartOptions.FromBegining)
+        if (consumerGroup.StartOptions != SubscriptionStartOptions.FromNowOrLastCheckpoint)
         {
             // Instruct processor to start from beginning.
             // see https://docs.microsoft.com/en-us/azure/cosmos-db/change-feed-processor#reading-from-the-beginning
-            builder.WithStartTime(DateTime.MinValue.ToUniversalTime());
+            builder.WithStartTime(consumerGroup.StartOptions.StartFrom);
         }
 
         if (!string.IsNullOrEmpty(consumerGroup.Instance))

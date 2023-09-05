@@ -1,4 +1,3 @@
-using Atc.Cosmos.EventStore.Cosmos;
 using Atc.Cosmos.EventStore.Events;
 using Atc.Cosmos.EventStore.Streams;
 
@@ -75,13 +74,11 @@ internal class EventStoreClient : IEventStoreClient
 
     public IStreamSubscription SubscribeToStreams(
         ConsumerGroup consumerGroup,
-        SubscriptionStartOptions startOptions,
         ProcessEventsHandler eventsHandler,
         ProcessExceptionHandler exceptionHandler)
         => subscriptionFactory
             .Create(
                 Arguments.EnsureNotNull(consumerGroup, nameof(consumerGroup)),
-                startOptions,
                 Arguments.EnsureNotNull(eventsHandler, nameof(eventsHandler)),
                 Arguments.EnsureNotNull(exceptionHandler, nameof(exceptionHandler)));
 
