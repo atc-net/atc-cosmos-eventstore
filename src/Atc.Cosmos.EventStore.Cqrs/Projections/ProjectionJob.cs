@@ -23,8 +23,7 @@ internal class ProjectionJob<TProjection> :
 
         var options = optionsFactory.GetOptions<TProjection>();
         subscription = client.SubscribeToStreams(
-            ConsumerGroup.GetAsAutoScalingInstance(options.Name),
-            SubscriptionStartOptions.FromBegining,
+            options.CreateConsumerGroup(),
             OnProcessEventsAsync,
             options.ExceptionHandler);
     }

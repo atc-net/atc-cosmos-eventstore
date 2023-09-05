@@ -10,6 +10,8 @@ internal class ProjectionOptions : IProjectionOptions
         Name = string.Empty;
         Filters = Array.Empty<ProjectionFilter>();
         ExceptionHandler = EmptyExceptionHandler;
+        StartsFrom = SubscriptionStartOptions.FromNowOrLastCheckpoint;
+        ShareProjectionAcrossProcesses = true;
     }
 
     public string Name { get; set; }
@@ -17,4 +19,29 @@ internal class ProjectionOptions : IProjectionOptions
     public IReadOnlyCollection<ProjectionFilter> Filters { get; set; }
 
     public ProcessExceptionHandler ExceptionHandler { get; set; }
+
+    public SubscriptionStartOptions StartsFrom { get; set; }
+
+    public TimeSpan PollingInterval { get; set; }
+
+    public int MaxItems { get; set; }
+
+    public bool ShareProjectionAcrossProcesses { get; set; }
+
+    public ConsumerGroup CreateConsumerGroup()
+    {
+        var cg = new ConsumerGroup(Name)
+        {
+            MaxItems = MaxItems,
+            PollingInterval = PollingInterval,
+            StartOptions = StartsFrom,
+        };
+
+        if (ShareProjectionAcrossProcesses)
+        {
+            cg.Instance = ConsumerGroup.GetAutoScalingInstance();
+        }
+
+        return cg;
+    }
 }

@@ -8,13 +8,19 @@ internal class ProjectionBuilder : IProjectionBuilder
 {
     private readonly List<ProjectionFilter> filters;
     private ProcessExceptionHandler exceptionHandler;
+    private SubscriptionStartOptions startFrom;
     private string name;
+    private TimeSpan pollingInterval;
+    private int maxItems;
 
     public ProjectionBuilder(string name)
     {
         this.name = name;
         filters = new List<ProjectionFilter>();
         exceptionHandler = ProjectionOptions.EmptyExceptionHandler;
+        startFrom = SubscriptionStartOptions.FromBegining;
+        pollingInterval = TimeSpan.FromSeconds(1);
+        maxItems = 100;
     }
 
     public IProjectionBuilder WithFilter(string filter)
@@ -38,6 +44,27 @@ internal class ProjectionBuilder : IProjectionBuilder
         return this;
     }
 
+    public IProjectionBuilder WithProjectionStartsFrom(SubscriptionStartOptions startFrom)
+    {
+        this.startFrom = startFrom;
+
+        return this;
+    }
+
+    public IProjectionBuilder WithPollingInterval(TimeSpan pollingInterval)
+    {
+        this.pollingInterval = pollingInterval;
+
+        return this;
+    }
+
+    public IProjectionBuilder WithMaxItems(int maxItems)
+    {
+        this.maxItems = maxItems;
+
+        return this;
+    }
+
     public void Build<TProjection>(ProjectionOptions options)
         where TProjection : class, IProjection
     {
@@ -51,6 +78,10 @@ internal class ProjectionBuilder : IProjectionBuilder
         options.Name = name;
         options.Filters = filters;
         options.ExceptionHandler = exceptionHandler;
+        options.StartsFrom = startFrom;
+        options.PollingInterval = pollingInterval;
+        options.MaxItems = maxItems;
+        options.ShareProjectionAcrossProcesses = true;
     }
 
     private void SetFiltersFromProjection<T>()

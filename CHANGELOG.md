@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Support for controlling the start time from where a new event subscription or projection should start receiving changes. By default, it will start from the beginning of time to preserve backwards compatibility.
+
+``` csharp
+services.AddEventStore(builder =>
+{
+    builder.UseCosmosDb();
+    builder.UseEvents(c => c.FromAssembly<MyEvent>());
+    builder.UseCQRS(c =>
+    {
+        c.AddProjectionJob<MyProjection>(
+            "super-projection-name",
+            c => c.WithProjectionStartsFrom(
+                SubscriptionStartOptions.FromBegining)); // setting the start time
+    });
+});
+```
+- Controlling projection `PollingInterval` and `MaxItems` received on ever iteration.
+
 ## [1.9.17] - 2023-07-03
 
 ### Added
