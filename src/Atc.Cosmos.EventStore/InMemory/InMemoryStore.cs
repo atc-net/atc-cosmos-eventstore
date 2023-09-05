@@ -31,7 +31,6 @@ internal class InMemoryStore :
 
     IStreamSubscription IStreamSubscriptionFactory.Create(
         ConsumerGroup consumerGroup,
-        SubscriptionStartOptions startOptions,
         ProcessEventsHandler eventsHandler,
         ProcessExceptionHandler exceptionHandler)
         => throw new NotImplementedException();

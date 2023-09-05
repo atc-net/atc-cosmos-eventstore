@@ -1,5 +1,4 @@
 using System.Net;
-using Atc.Cosmos.EventStore.Events;
 using Atc.Cosmos.EventStore.Streams;
 using Microsoft.Azure.Cosmos;
 

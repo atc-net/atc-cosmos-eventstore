@@ -7,4 +7,14 @@ internal interface IProjectionOptions
     IReadOnlyCollection<ProjectionFilter> Filters { get; }
 
     ProcessExceptionHandler ExceptionHandler { get; }
+
+    SubscriptionStartOptions StartsFrom { get; }
+
+    TimeSpan PollingInterval { get; }
+
+    int MaxItems { get; }
+
+    bool ShareProjectionAcrossProcesses { get; }
+
+    ConsumerGroup CreateConsumerGroup();
 }
