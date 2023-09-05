@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.3] - 2023-09-05
+
 ### Added
 
-- Support for controlling the start time from where a new event subscription or projection should start receiving changes. By default, it will start from the beginning of time to preserve backwards compatibility.
+-   Support for controlling the start time from where a new event subscription or projection should start receiving changes. By default, it will start from the beginning of time to preserve backwards compatibility.
 
-``` csharp
+```csharp
 services.AddEventStore(builder =>
 {
     builder.UseCosmosDb();
@@ -25,7 +27,8 @@ services.AddEventStore(builder =>
     });
 });
 ```
-- Controlling projection `PollingInterval` and `MaxItems` received on ever iteration.
+
+-   Controlling projection `PollingInterval` and `MaxItems` received on ever iteration.
 
 ## [1.9.17] - 2023-07-03
 
@@ -118,7 +121,9 @@ services.AddEventStore(builder =>
 
 -   EventStore `ConnectionString` option has been made obsolete, please use `UseCredentials` or `UseCosmosEmulator` instead.
 
-[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.9.17...HEAD
+[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.10.3...HEAD
+
+[1.10.3]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.9.17...v1.10.3
 
 [1.9.17]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.8.3...v1.9.17
 
