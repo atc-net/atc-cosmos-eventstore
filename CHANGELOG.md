@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.11.3] - 2023-09-08
+
 -   Add missing methods in `IProjectionBuilder` to enable configuration of projection subscription start options.
 
 ## [1.10.3] - 2023-09-05
@@ -123,7 +125,9 @@ services.AddEventStore(builder =>
 
 -   EventStore `ConnectionString` option has been made obsolete, please use `UseCredentials` or `UseCosmosEmulator` instead.
 
-[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.10.3...HEAD
+[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.11.3...HEAD
+
+[1.11.3]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.10.3...v1.11.3
 
 [1.10.3]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.9.17...v1.10.3
 
