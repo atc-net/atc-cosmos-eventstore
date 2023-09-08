@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+-   Add missing methods in `IProjectionBuilder` to enable configuration of projection subscription start options.
+
 ## [1.10.3] - 2023-09-05
 
 ### Added
