@@ -30,7 +30,7 @@ internal class StreamReader : IStreamReader
 
         readValidator.Validate(
             metadata,
-            filter?.RequiredVersion ?? StreamVersion.Any);
+            fromVersion);
 
         // If we don't have any events in the stream, then skip reading from stream.
         if (metadata.Version == 0)
