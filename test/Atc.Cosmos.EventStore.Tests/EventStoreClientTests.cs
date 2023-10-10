@@ -62,7 +62,7 @@ public class EventStoreClientTests
     }
 
     [Theory, AutoNSubstituteData]
-    internal async ValueTask Should_WriteToStream(
+    internal async Task Should_WriteToStream(
         [Frozen, Substitute] IStreamWriter writer,
         EventStoreClient sut,
         StreamId streamId,

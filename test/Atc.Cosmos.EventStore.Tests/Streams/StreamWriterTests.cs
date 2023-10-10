@@ -11,7 +11,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams;
 public class StreamWriterTests
 {
     [Theory, AutoNSubstituteData]
-    internal async ValueTask Should_Read_Metadata_From_StreamId(
+    internal async Task Should_Read_Metadata_From_StreamId(
         [Frozen, Substitute] IStreamMetadataReader metadataReader,
         [Frozen, Substitute] IStreamBatchWriter eventWriter,
         StreamWriter sut,
@@ -39,7 +39,7 @@ public class StreamWriterTests
     }
 
     [Theory, AutoNSubstituteData]
-    internal async ValueTask Should_Validate_Metadata_With_Required_Version(
+    internal async Task Should_Validate_Metadata_With_Required_Version(
         [Frozen, Substitute] IStreamWriteValidator validator,
         [Frozen, Substitute] IStreamBatchWriter eventWriter,
         StreamWriter sut,
@@ -67,7 +67,7 @@ public class StreamWriterTests
     }
 
     [Theory, AutoNSubstituteData]
-    internal async ValueTask Should_Convert_Events(
+    internal async Task Should_Convert_Events(
         [Frozen, Substitute] IEventBatchProducer eventConverter,
         [Frozen, Substitute] IStreamBatchWriter eventWriter,
         StreamWriter sut,
@@ -96,7 +96,7 @@ public class StreamWriterTests
     }
 
     [Theory, AutoNSubstituteData]
-    internal async ValueTask Should_Return_State_From_EventWriter(
+    internal async Task Should_Return_State_From_EventWriter(
         [Frozen, Substitute] IStreamBatchWriter eventWriter,
         StreamWriter sut,
         StreamId streamId,

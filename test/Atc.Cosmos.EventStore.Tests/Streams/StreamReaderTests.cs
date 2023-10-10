@@ -11,7 +11,7 @@ namespace Atc.Cosmos.EventStore.Tests.Streams;
 public class StreamReaderTests
 {
     [Theory, AutoNSubstituteData]
-    internal async ValueTask Should_Read_Metadata_From_StreamId(
+    internal async Task Should_Read_Metadata_From_StreamId(
         [Frozen, Substitute] IStreamMetadataReader metadataReader,
         [Frozen, Substitute] IStreamIterator streamIterator,
         [Substitute] IAsyncEnumerable<IEvent> enumerable,
@@ -75,7 +75,7 @@ public class StreamReaderTests
     }
 
     [Theory, AutoNSubstituteData]
-    internal async ValueTask Should_Read_From_Iterator(
+    internal async Task Should_Read_From_Iterator(
         [Frozen, Substitute] IStreamMetadataReader metadataReader,
         [Frozen, Substitute] IStreamIterator streamIterator,
         [Substitute] IAsyncEnumerable<IEvent> enumerable,
@@ -110,7 +110,7 @@ public class StreamReaderTests
     }
 
     [Theory, AutoNSubstituteData]
-    internal async ValueTask Should_Yield_Events_From_StreamIterator(
+    internal async Task Should_Yield_Events_From_StreamIterator(
         [Frozen, Substitute] IStreamMetadataReader metadataReader,
         [Frozen, Substitute] IStreamIterator streamIterator,
         [Substitute] IAsyncEnumerable<IEvent> enumerable,
