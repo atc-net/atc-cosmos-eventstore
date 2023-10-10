@@ -51,7 +51,8 @@ internal class StateProjector<TCommand> : IStateProjector<TCommand>
             .ReadFromStreamAsync(
                 state.Id,
                 command.RequiredVersion?.Value ?? StreamVersion.Any,
-                cancellationToken: cancellationToken)
+                filter: null,
+                cancellationToken)
             .ConfigureAwait(false))
         {
             await handlerMetadata
