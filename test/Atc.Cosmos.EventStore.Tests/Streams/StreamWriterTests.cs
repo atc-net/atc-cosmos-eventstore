@@ -13,17 +13,11 @@ public class StreamWriterTests
     [Theory, AutoNSubstituteData]
     internal async Task Should_Read_Metadata_From_StreamId(
         [Frozen, Substitute] IStreamMetadataReader metadataReader,
-        [Frozen, Substitute] IStreamBatchWriter eventWriter,
         StreamWriter sut,
         StreamId streamId,
         IReadOnlyList<object> events,
-        StreamMetadata expected,
         CancellationToken cancellationToken)
     {
-        eventWriter
-            .WriteAsync(default, default)
-            .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(expected));
-
         await sut.WriteAsync(
             streamId,
             events,
@@ -41,15 +35,15 @@ public class StreamWriterTests
     [Theory, AutoNSubstituteData]
     internal async Task Should_Validate_Metadata_With_Required_Version(
         [Frozen, Substitute] IStreamWriteValidator validator,
-        [Frozen, Substitute] IStreamBatchWriter eventWriter,
+        [Frozen, Substitute] IStreamMetadataReader metadataReader,
         StreamWriter sut,
         StreamId streamId,
         IReadOnlyList<object> events,
         StreamMetadata expected,
         CancellationToken cancellationToken)
     {
-        eventWriter
-            .WriteAsync(default, default)
+        metadataReader
+            .GetAsync(default, default)
             .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(expected));
 
         await sut.WriteAsync(
@@ -69,15 +63,15 @@ public class StreamWriterTests
     [Theory, AutoNSubstituteData]
     internal async Task Should_Convert_Events(
         [Frozen, Substitute] IEventBatchProducer eventConverter,
-        [Frozen, Substitute] IStreamBatchWriter eventWriter,
+        [Frozen, Substitute] IStreamMetadataReader metadataReader,
         StreamWriter sut,
         StreamId streamId,
         IReadOnlyList<object> events,
         StreamMetadata expected,
         CancellationToken cancellationToken)
     {
-        eventWriter
-            .WriteAsync(default, default)
+        metadataReader
+            .GetAsync(default, default)
             .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(expected));
 
         await sut.WriteAsync(
@@ -101,12 +95,17 @@ public class StreamWriterTests
         StreamWriter sut,
         StreamId streamId,
         IReadOnlyList<object> events,
-        StreamMetadata expected,
+        StreamMetadata metadata,
         CancellationToken cancellationToken)
     {
         eventWriter
             .WriteAsync(default, default)
-            .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(expected));
+            .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(metadata));
+        var expected = new StreamResponse(
+            metadata.StreamId,
+            metadata.Version,
+            metadata.Timestamp,
+            metadata.State);
 
         var result = await sut.WriteAsync(
             streamId,
