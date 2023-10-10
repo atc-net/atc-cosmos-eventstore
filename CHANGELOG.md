@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.6] - 2023-10-10
+
 ### Fixed
-- `RequiredVersion` was not respected when command handler was consuming events.
+
+-   `RequiredVersion` was not respected when command handler was consuming events.
 
 ## [1.11.3] - 2023-09-08
 
@@ -128,7 +131,9 @@ services.AddEventStore(builder =>
 
 -   EventStore `ConnectionString` option has been made obsolete, please use `UseCredentials` or `UseCosmosEmulator` instead.
 
-[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.11.3...HEAD
+[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.12.6...HEAD
+
+[1.12.6]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.11.3...v1.12.6
 
 [1.11.3]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.10.3...v1.11.3
 
