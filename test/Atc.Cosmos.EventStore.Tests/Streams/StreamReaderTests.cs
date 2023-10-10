@@ -37,10 +37,14 @@ public class StreamReaderTests
                 cancellationToken);
     }
 
-    [Theory, AutoNSubstituteData]
-    internal async ValueTask Should_Validate_Metadata_With_From_Version(
+    [Theory]
+    [InlineAutoNSubstituteData(StreamVersion.NotEmptyValue)]
+    [InlineAutoNSubstituteData(StreamVersion.StartOfStreamValue)]
+    [InlineAutoNSubstituteData(StreamVersion.AnyValue)]
+    internal async Task Should_Validate_Metadata_With_From_Version(
+        StreamVersion fromVersion,
         [Frozen, Substitute] IStreamMetadataReader metadataReader,
-        [Frozen, Substitute] IStreamWriteValidator validator,
+        [Frozen, Substitute] IStreamReadValidator validator,
         [Frozen, Substitute] IStreamIterator streamIterator,
         [Substitute] IAsyncEnumerable<IEvent> enumerable,
         StreamReader sut,
@@ -59,7 +63,7 @@ public class StreamReaderTests
         await ReadStream(
             sut,
             streamId,
-            StreamVersion.Any,
+            fromVersion,
             filter: null,
             cancellationToken: cancellationToken);
 
@@ -67,7 +71,7 @@ public class StreamReaderTests
             .Received()
             .Validate(
                 streamMetadata,
-                StreamVersion.Any);
+                fromVersion);
     }
 
     [Theory, AutoNSubstituteData]
