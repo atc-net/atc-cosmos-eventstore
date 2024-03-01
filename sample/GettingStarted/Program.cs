@@ -28,6 +28,8 @@ static void ConfigureServices(
                     // c.AddProjectionJob<TokenProjection>(nameof(SampleProjection));
                 });
         });
+
+    services.AddHostedService<ConsoleHostedService>();
 }
 
 await Host.CreateDefaultBuilder()
