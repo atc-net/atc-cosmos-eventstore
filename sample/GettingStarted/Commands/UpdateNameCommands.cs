@@ -3,7 +3,7 @@
 namespace GettingStarted;
 
 public record UpdateNameCommand(string Id, string Name)
-    : CommandBase<FooEventStreamId>(new FooEventStreamId(Id));
+    : CommandBase<SampleEventStreamId>(new SampleEventStreamId(Id));
 
 public class UpdateNameCommandHandler :
     ICommandHandler<UpdateNameCommand>,

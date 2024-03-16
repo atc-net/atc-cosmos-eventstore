@@ -2,8 +2,8 @@
 
 namespace GettingStarted;
 
-public record CreateCommand(string Id, string Name)
-    : CommandBase<FooEventStreamId>(new FooEventStreamId(Id));
+public record CreateCommand(string Id, string Name, string Address)
+    : CommandBase<SampleEventStreamId>(new SampleEventStreamId(Id));
 
 public class CreateCommandHandler :
     ICommandHandler<CreateCommand>,
@@ -23,7 +23,7 @@ public class CreateCommandHandler :
     {
         if (!created)
         {
-            context.AddEvent(new AddedEvent(command.Name));
+            context.AddEvent(new AddedEvent(command.Name, command.Address));
         }
 
         return ValueTask.CompletedTask;

@@ -2,18 +2,18 @@
 
 namespace GettingStarted;
 
-public sealed class FooEventStreamId : EventStreamId, IEquatable<FooEventStreamId?>
+public sealed class SampleEventStreamId : EventStreamId, IEquatable<SampleEventStreamId?>
 {
-    private const string TypeName = "foo";
+    private const string TypeName = "sample";
     public const string FilterIncludeAllEvents = TypeName + ".*";
 
-    public FooEventStreamId(string id)
+    public SampleEventStreamId(string id)
         : base(TypeName, id)
     {
         Id = id;
     }
 
-    public FooEventStreamId(EventStreamId id)
+    public SampleEventStreamId(EventStreamId id)
         : base(id.Parts.ToArray())
     {
         Id = id.Parts[1];
@@ -22,9 +22,9 @@ public sealed class FooEventStreamId : EventStreamId, IEquatable<FooEventStreamI
     public string Id { get; }
 
     public override bool Equals(object? obj)
-        => Equals(obj as FooEventStreamId);
+        => Equals(obj as SampleEventStreamId);
 
-    public bool Equals(FooEventStreamId? other)
+    public bool Equals(SampleEventStreamId? other)
         => other != null && Value == other.Value;
 
     public override int GetHashCode()

@@ -12,7 +12,7 @@ public class ConsoleHostedService(ICommandProcessorFactory commandProcessorFacto
         await commandProcessorFactory
             .Create<CreateCommand>()
             .ExecuteAsync(
-                new CreateCommand(id, "First"),
+                new CreateCommand(id, "First", "Address 1"),
                 cancellationToken);
 
         await commandProcessorFactory
@@ -24,13 +24,7 @@ public class ConsoleHostedService(ICommandProcessorFactory commandProcessorFacto
         await commandProcessorFactory
             .Create<UpdateNameCommand>()
             .ExecuteAsync(
-                new UpdateNameCommand(id, "Second"),
-                cancellationToken);
-
-        await commandProcessorFactory
-            .Create<UpdateNameCommand>()
-            .ExecuteAsync(
-                new UpdateNameCommand(id, "Second"),
+                new UpdateNameCommand(id, "Third"),
                 cancellationToken);
 
         await commandProcessorFactory

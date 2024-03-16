@@ -3,7 +3,7 @@
 namespace GettingStarted;
 
 public record DeleteCommand(string Id, string Reason)
-    : CommandBase<FooEventStreamId>(new FooEventStreamId(Id));
+    : CommandBase<SampleEventStreamId>(new SampleEventStreamId(Id));
 
 public class DeleteCommandHandler :
     ICommandHandler<DeleteCommand>,
