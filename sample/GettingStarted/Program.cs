@@ -32,7 +32,7 @@ void ConfigureServices(IServiceCollection services)
                             .InitializeAsync(CancellationToken.None));
 
                     c.AddCommandsFromAssembly<CreateCommand>();
-                    // c.AddProjectionJob<TokenProjection>(nameof(SampleProjection));
+                    c.AddProjectionJob<SampleProjection>(nameof(SampleProjection));
                 });
         });
 
