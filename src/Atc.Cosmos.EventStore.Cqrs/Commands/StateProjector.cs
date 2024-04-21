@@ -1,3 +1,4 @@
+using Atc.Cosmos.EventStore.Cqrs.Diagnostics;
 using Atc.Cosmos.EventStore.Streams;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Commands;
@@ -5,15 +6,18 @@ namespace Atc.Cosmos.EventStore.Cqrs.Commands;
 internal class StateProjector<TCommand> : IStateProjector<TCommand>
     where TCommand : ICommand
 {
+    private readonly ICommandTelemetry telemetry;
     private readonly IEventStoreClient eventStore;
     private readonly IStreamReadValidator readValidator;
     private readonly ICommandHandlerMetadata<TCommand> handlerMetadata;
 
     public StateProjector(
+        ICommandTelemetry telemetry,
         IEventStoreClient eventStore,
         IStreamReadValidator readValidator,
         ICommandHandlerMetadata<TCommand> handlerMetadata)
     {
+        this.telemetry = telemetry;
         this.eventStore = eventStore;
         this.readValidator = readValidator;
         this.handlerMetadata = handlerMetadata;
@@ -47,6 +51,7 @@ internal class StateProjector<TCommand> : IStateProjector<TCommand>
             return state;
         }
 
+        using var activity = telemetry.ProjectionStarted();
         await foreach (var evt in eventStore
             .ReadFromStreamAsync(
                 state.Id,
@@ -64,6 +69,8 @@ internal class StateProjector<TCommand> : IStateProjector<TCommand>
 
             state.Version = evt.Metadata.Version;
         }
+
+        activity.Completed(state.Version);
 
         return state;
     }

@@ -8,17 +8,17 @@ internal class ProjectionProcessor<TProjection> : IProjectionProcessor<TProjecti
 {
     private readonly IReadOnlyCollection<ProjectionFilter> filters;
     private readonly IProjectionFactory projectionFactory;
-    private readonly IProjectionDiagnostics diagnostics;
+    private readonly IProjectionTelemetry telemetry;
     private readonly IProjectionMetadata projectionMetadata;
     private readonly string projectionName;
 
     public ProjectionProcessor(
         IProjectionOptionsFactory optionsFactory,
         IProjectionFactory projectionFactory,
-        IProjectionDiagnostics diagnostics)
+        IProjectionTelemetry telemetry)
     {
         this.projectionFactory = projectionFactory;
-        this.diagnostics = diagnostics;
+        this.telemetry = telemetry;
         filters = optionsFactory
             .GetOptions<TProjection>()
             .Filters;
@@ -32,61 +32,59 @@ internal class ProjectionProcessor<TProjection> : IProjectionProcessor<TProjecti
         IEnumerable<IEvent> batch,
         CancellationToken cancellationToken)
     {
+        var groupedEvents = batch
+            .Where(e => filters.Any(f => f.Evaluate(e.Metadata.StreamId)))
+            .GroupBy(e => e.Metadata.StreamId)
+            .ToArray();
+        if (groupedEvents.Length == 0)
+        {
+            telemetry.ProjectionSkipped(projectionName);
+
+            return ProjectionAction.Continue;
+        }
+
+        using var batchTelemetry = telemetry.StartBatch(projectionName, groupedEvents.Length);
+
         var projection = projectionFactory
             .GetProjection<TProjection>();
 
-        try
+        foreach (var events in groupedEvents)
         {
-            var groupedEvents = batch
-                .Where(e => filters.Any(f => f.Evaluate(e.Metadata.StreamId)))
-                .GroupBy(e => e.Metadata.StreamId)
-                .ToArray();
+            using var operation = batchTelemetry.StartProjection(events.Key);
 
-            diagnostics.ProcessingGroupedEvents(projectionName, groupedEvents, batch);
-
-            foreach (var events in groupedEvents)
+            if (!projectionMetadata.CanConsumeOneOrMoreEvents(events))
             {
-                var operation = diagnostics.StartStreamProjection(projectionName, events.Key);
-                if (!projectionMetadata.CanConsumeOneOrMoreEvents(events))
-                {
-                    // Skip if projection is not consuming any of the events.
-                    operation.ProjectionSkipped(events);
-                    continue;
-                }
-
-                try
-                {
-                    await projection
-                        .InitializeAsync(
-                            events.Key,
-                            cancellationToken)
-                        .ConfigureAwait(false);
-
-                    await projectionMetadata
-                        .ConsumeEventsAsync(events, projection, cancellationToken)
-                        .ConfigureAwait(false);
-
-                    await projection
-                        .CompleteAsync(cancellationToken)
-                        .ConfigureAwait(false);
-
-                    operation.ProjectionCompleted(events);
-                }
-                catch (Exception ex)
-                {
-                    operation.ProjectionFailed(events, ex);
-
-                    return await projection
-                        .FailedAsync(ex, cancellationToken)
-                        .ConfigureAwait(false);
-                }
+                // Skip if projection is not consuming any of the events.
+                operation.ProjectionSkipped();
+                continue;
             }
-        }
-        catch (Exception ex)
-        {
-            return await projection
-                .FailedAsync(ex, cancellationToken)
-                .ConfigureAwait(false);
+
+            try
+            {
+                await projection
+                    .InitializeAsync(
+                        events.Key,
+                        cancellationToken)
+                    .ConfigureAwait(false);
+
+                await projectionMetadata
+                    .ConsumeEventsAsync(events, projection, cancellationToken)
+                    .ConfigureAwait(false);
+
+                await projection
+                    .CompleteAsync(cancellationToken)
+                    .ConfigureAwait(false);
+
+                operation.ProjectionCompleted();
+            }
+            catch (Exception ex)
+            {
+                operation.ProjectionFailed(ex);
+
+                return await projection
+                    .FailedAsync(ex, cancellationToken)
+                    .ConfigureAwait(false);
+            }
         }
 
         return ProjectionAction.Continue;

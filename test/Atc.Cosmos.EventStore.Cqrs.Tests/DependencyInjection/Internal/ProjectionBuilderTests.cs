@@ -3,7 +3,6 @@ using Atc.Cosmos.EventStore.Cqrs.Projections;
 using Atc.Cosmos.EventStore.Cqrs.Tests.Mocks;
 using Atc.Test;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Tests.DependencyInjection.Internal;
@@ -16,8 +15,7 @@ public class ProjectionBuilderTests
         ProjectionOptions options,
         ProjectionBuilder sut)
     {
-        var abstraction = sut as IProjectionBuilder;
-        abstraction.WithJobName(name);
+        sut.WithJobName(name);
         sut.Build<TestProjection>(options);
 
         options.Name.Should().Be(name);
@@ -38,8 +36,7 @@ public class ProjectionBuilderTests
         ProjectionOptions options,
         ProjectionBuilder sut)
     {
-        var abstraction = sut as IProjectionBuilder;
-        abstraction.WithExceptionHandler(handler);
+        sut.WithExceptionHandler(handler);
         sut.Build<TestProjection>(options);
 
         options.ExceptionHandler.Should().Be(handler);
@@ -61,8 +58,7 @@ public class ProjectionBuilderTests
         ProjectionOptions options,
         ProjectionBuilder sut)
     {
-        var abstraction = sut as IProjectionBuilder;
-        abstraction.WithProjectionStartsFrom(startFrom);
+        sut.WithProjectionStartsFrom(startFrom);
         sut.Build<TestProjection>(options);
 
         options.StartsFrom.Should().Be(startFrom);
@@ -84,8 +80,7 @@ public class ProjectionBuilderTests
         ProjectionOptions options,
         ProjectionBuilder sut)
     {
-        var abstraction = sut as IProjectionBuilder;
-        abstraction.WithPollingInterval(pollingInterval);
+        sut.WithPollingInterval(pollingInterval);
         sut.Build<TestProjection>(options);
 
         options.PollingInterval.Should().Be(pollingInterval);

@@ -7,11 +7,11 @@ namespace Atc.Cosmos.EventStore.Cosmos;
 internal class CosmosSubscriptionFactory : IStreamSubscriptionFactory
 {
     private readonly IEventStoreContainerProvider containerProvider;
-    private readonly ISubscriptionTelemetry telemetry;
+    private readonly ISubscriptionProcessorTelemetry telemetry;
 
     public CosmosSubscriptionFactory(
         IEventStoreContainerProvider containerProvider,
-        ISubscriptionTelemetry telemetry)
+        ISubscriptionProcessorTelemetry telemetry)
     {
         this.containerProvider = containerProvider;
         this.telemetry = telemetry;
@@ -27,7 +27,14 @@ internal class CosmosSubscriptionFactory : IStreamSubscriptionFactory
             .GetChangeFeedProcessorBuilder<EventDocument>(
                 GetProcessorName(consumerGroup),
                 (ctx, c, ct) => eventsHandler(c.Where(ExcludeMetaDataChanges).ToArray(), ct))
-            .WithErrorNotification((lt, ex) => exceptionHandler(lt, ex))
+            .WithErrorNotification(async (lt, ex) =>
+            {
+                telemetry.ProcessExceptionHandlerFailed(ex, consumerGroup);
+
+                await exceptionHandler
+                    .Invoke(lt, ex)
+                    .ConfigureAwait(false);
+            })
             .WithLeaseContainer(containerProvider.GetSubscriptionContainer())
             .WithMaxItems(consumerGroup.MaxItems)
             .WithPollInterval(consumerGroup.PollingInterval);

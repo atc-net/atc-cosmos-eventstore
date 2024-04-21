@@ -1,13 +1,18 @@
+using Atc.Cosmos.EventStore.Cqrs.Diagnostics;
+
 namespace Atc.Cosmos.EventStore.Cqrs.Commands;
 
 internal class StateWriter<TCommand> : IStateWriter<TCommand>
     where TCommand : ICommand
 {
+    private readonly ICommandTelemetry telemetry;
     private readonly IEventStoreClient eventStore;
 
     public StateWriter(
+        ICommandTelemetry telemetry,
         IEventStoreClient eventStore)
     {
+        this.telemetry = telemetry;
         this.eventStore = eventStore;
     }
 
@@ -43,9 +48,11 @@ internal class StateWriter<TCommand> : IStateWriter<TCommand>
         StreamVersion version,
         StreamWriteOptions options,
         IReadOnlyCollection<object> events,
-        int reties,
+        int retries,
         CancellationToken cancellationToken)
     {
+        using var activity = telemetry.WriteToStreamStarted(version, events.Count, retries);
+
         try
         {
             var response = await eventStore
@@ -61,14 +68,14 @@ internal class StateWriter<TCommand> : IStateWriter<TCommand>
         }
         catch (StreamWriteConflictException)
         {
-            if (reties > 0)
+            if (retries > 0)
             {
                 return await WriteToEventStoreAsync(
                         id,
                         version,
                         options,
                         events,
-                        reties - 1,
+                        retries - 1,
                         cancellationToken)
                     .ConfigureAwait(false);
             }
