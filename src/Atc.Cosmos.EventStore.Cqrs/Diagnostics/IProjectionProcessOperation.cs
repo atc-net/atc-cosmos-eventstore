@@ -1,14 +1,11 @@
 namespace Atc.Cosmos.EventStore.Cqrs.Diagnostics;
 
-internal interface IProjectionProcessOperation
+public interface IProjectionProcessOperationTelemetry : IDisposable
 {
-    void ProjectionSkipped(
-        IGrouping<StreamId, IEvent> events);
+    void ProjectionSkipped();
 
-    void ProjectionCompleted(
-        IGrouping<StreamId, IEvent> events);
+    void ProjectionCompleted();
 
     void ProjectionFailed(
-        IGrouping<StreamId, IEvent> events,
         Exception exception);
 }

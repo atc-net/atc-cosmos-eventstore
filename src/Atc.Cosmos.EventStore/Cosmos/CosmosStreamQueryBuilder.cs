@@ -21,7 +21,7 @@ public static class CosmosStreamQueryBuilder
             parameters["@fromVersion"] = fromVersion.Value;
         }
 
-        if (filter?.IncludeEvents is not null && filter.IncludeEvents.Any())
+        if (filter?.IncludeEvents is not null && filter.IncludeEvents.Count != 0)
         {
             var index = 1;
             query.Append("AND (");
