@@ -23,13 +23,14 @@ public static class EventStoreOptionsBuilderExtensions
         builder.Services.AddSingleton(typeof(ICommandProcessor<>), typeof(CommandProcessor<>));
         builder.Services.AddSingleton<ICommandProcessorFactory, CommandProcessorFactory>();
         builder.Services.AddSingleton<ICommandHandlerFactory, CommandHandlerFactory>();
+        builder.Services.AddSingleton<ICommandTelemetry, CommandTelemetry>();
+
         builder.Services.AddSingleton<IProjectionOptionsFactory, ProjectionOptionsFactory>();
         builder.Services.AddSingleton<IProjectionFactory, ProjectionFactory>();
 
         builder.Services.AddSingleton(typeof(ProjectionMetadata<>));
 
-        builder.Services.TryAddSingleton<IProjectionDiagnostics, ProjectionDiagnostics>();
-        builder.Services.TryAddSingleton<IProjectionProcessOperation, ProjectionProcessOperation>();
+        builder.Services.TryAddSingleton<IProjectionTelemetry, ProjectionTelemetry>();
 
         return builder;
     }

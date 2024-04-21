@@ -3,15 +3,15 @@ using Microsoft.Azure.Cosmos;
 
 namespace Atc.Cosmos.EventStore.Cosmos;
 
-internal class CosmosSubscriptionProcessor : IStreamSubscription
+internal sealed class CosmosSubscriptionProcessor :
+    IStreamSubscription
 {
-    private readonly ISubscriptionTelemetry telemetry;
+    private readonly ISubscriptionProcessorTelemetry telemetry;
     private readonly ChangeFeedProcessor processor;
     private readonly ConsumerGroup consumerGroup;
-    private ISubscriptionActivity? activity;
 
     public CosmosSubscriptionProcessor(
-        ISubscriptionTelemetry telemetry,
+        ISubscriptionProcessorTelemetry telemetry,
         ChangeFeedProcessor processor,
         ConsumerGroup consumerGroup)
     {
@@ -26,20 +26,15 @@ internal class CosmosSubscriptionProcessor : IStreamSubscription
             .StartAsync()
             .ConfigureAwait(false);
 
-        activity = telemetry.SubscriptionStarted(consumerGroup);
+        telemetry.SubscriptionStarted(consumerGroup);
     }
 
     public async Task StopAsync()
     {
-        if (activity is { })
-        {
-            await processor
-                .StopAsync()
-                .ConfigureAwait(false);
+        await processor
+            .StopAsync()
+            .ConfigureAwait(false);
 
-            activity.SubscriptionStopped();
-        }
-
-        activity = null;
+        telemetry.SubscriptionStopped(consumerGroup);
     }
 }

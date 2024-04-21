@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Introduce instrumentation support for Open Telemetry.
+```csharp
+builder
+    .Services
+    .AddOpenTelemetry()
+    .WithMetrics(metrics =>
+    {
+        metrics
+            .AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddRuntimeInstrumentation();
+    })
+    .WithTracing(tracing =>
+    {
+        if (builder.Environment.IsDevelopment())
+        {
+            // We want to view all traces in development
+            tracing.SetSampler(new AlwaysOnSampler());
+        }
+
+        tracing
+            .AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddSource(EventStoreDiagnostics.SourceName); // enable trace telemetry from event store and cqrs.
+    });
+```
+
 ## [1.12.6] - 2023-10-10
 
 ### Fixed

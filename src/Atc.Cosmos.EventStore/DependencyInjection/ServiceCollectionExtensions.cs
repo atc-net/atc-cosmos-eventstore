@@ -31,7 +31,7 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IStreamReader, StreamReader>();
         services.TryAddSingleton<IStreamWriter, StreamWriter>();
 
-        services.TryAddSingleton<ISubscriptionTelemetry, SubscriptionTelemetry>();
+        services.TryAddSingleton<ISubscriptionProcessorTelemetry, SubscriptionProcessorTelemetry>();
 
         return services;
     }
