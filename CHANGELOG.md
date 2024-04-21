@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.13.3] - 2024-04-21
+
 ### Added
 
-- Introduce instrumentation support for Open Telemetry.
+-   Introduce instrumentation support for Open Telemetry.
+
 ```csharp
 builder
     .Services
@@ -160,7 +163,9 @@ services.AddEventStore(builder =>
 
 -   EventStore `ConnectionString` option has been made obsolete, please use `UseCredentials` or `UseCosmosEmulator` instead.
 
-[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.12.6...HEAD
+[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.13.3...HEAD
+
+[1.13.3]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.12.6...v1.13.3
 
 [1.12.6]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.11.3...v1.12.6
 
