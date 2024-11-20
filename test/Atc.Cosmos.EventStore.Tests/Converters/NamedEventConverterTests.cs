@@ -18,7 +18,6 @@ public class NamedEventConverterTests
     internal void Should_Return_Value_FromNext_When_TypeName_IsNotFound(
         [Frozen] IEventTypeProvider typeProvider,
         IEventMetadata metadata,
-        JsonSerializerOptions options,
         string expected,
         NamedEventConverter sut)
     {
@@ -30,7 +29,7 @@ public class NamedEventConverterTests
             .Convert(
                 metadata,
                 doc.RootElement,
-                options,
+                new JsonSerializerOptions(),
                 () => expected)
             .Should()
             .Be(expected);
