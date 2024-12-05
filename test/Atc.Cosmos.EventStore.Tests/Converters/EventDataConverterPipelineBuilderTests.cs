@@ -14,7 +14,6 @@ public class EventDataConverterPipelineBuilderTests
     [Theory, AutoNSubstituteData]
     internal void Should_Call_All_Converters_InReverseOrder(
         IEventMetadata metadata,
-        JsonSerializerOptions options,
         FakeEventDataConverter[] converters,
         FakeEventDataConverter converter,
         EventDataConverterPipelineBuilder sut)
@@ -22,7 +21,7 @@ public class EventDataConverterPipelineBuilderTests
             .AddConverter(converter)
             .AddConverters(converters)
             .Build()
-            .Convert(metadata, doc.RootElement, options)
+            .Convert(metadata, doc.RootElement, new JsonSerializerOptions())
             .Should()
             .Be(string.Join(string.Empty, new[] { converter }.Concat(converters).Select(c => c.Val)));
 }

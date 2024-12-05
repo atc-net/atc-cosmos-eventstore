@@ -23,8 +23,7 @@ public class StreamInfoReaderTests
             .ReturnsForAnyArgs(expectedMetadata);
 
         var info = await sut
-            .ReadAsync(streamId, cancellationToken)
-            .ConfigureAwait(false);
+            .ReadAsync(streamId, cancellationToken);
 
         info
             .State
@@ -57,8 +56,7 @@ public class StreamInfoReaderTests
             .ReturnsForAnyArgs(expectedMetadata);
 
         await sut
-            .ReadAsync(streamId, cancellationToken)
-            .ConfigureAwait(false);
+            .ReadAsync(streamId, cancellationToken);
 
         _ = metadataReader
                 .Received(1)

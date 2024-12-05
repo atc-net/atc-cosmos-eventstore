@@ -14,14 +14,13 @@ public class FaultedEventDataConverterTests
     [Theory, AutoNSubstituteData]
     internal void Should_Return_Converted_Value(
         IEventMetadata metadata,
-        JsonSerializerOptions options,
         string expected,
         FaultedEventDataConverter sut)
         => sut
             .Convert(
                 metadata,
                 doc.RootElement,
-                options,
+                new JsonSerializerOptions(),
                 () => expected)
             .Should()
             .Be(expected);
@@ -29,14 +28,13 @@ public class FaultedEventDataConverterTests
     [Theory, AutoNSubstituteData]
     internal void Should_Return_FaultedEvent_When_Exception_IsThrown(
         IEventMetadata metadata,
-        JsonSerializerOptions options,
         KeyNotFoundException exception,
         FaultedEventDataConverter sut)
         => sut
             .Convert(
                 metadata,
                 doc.RootElement,
-                options,
+                new JsonSerializerOptions(),
                 () => throw exception)
             .Should()
             .BeEquivalentTo(
