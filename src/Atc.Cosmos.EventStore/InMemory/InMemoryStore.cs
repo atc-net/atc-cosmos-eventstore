@@ -9,6 +9,7 @@ internal class InMemoryStore :
     IStreamMetadataReader,
     IStreamIterator,
     IStreamBatchWriter,
+    IStreamDeleter,
     IStreamSubscriptionFactory,
     IStreamSubscriptionRemover,
     IStreamIndexReader,
@@ -67,6 +68,9 @@ internal class InMemoryStore :
     Task<IStreamMetadata> IStreamBatchWriter.WriteAsync(
         StreamBatch batch,
         CancellationToken cancellationToken)
+        => throw new NotImplementedException();
+
+    public Task DeleteAsync(StreamId streamId, CancellationToken cancellationToken)
         => throw new NotImplementedException();
 
     public Task WriteAsync(

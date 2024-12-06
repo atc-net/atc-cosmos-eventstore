@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using Atc.Cosmos.EventStore.Cosmos;
-using Atc.Cosmos.EventStore.Events;
 using Atc.Cosmos.EventStore.Streams;
 using Atc.Test;
 using AutoFixture.AutoNSubstitute;
@@ -104,7 +103,7 @@ public class EventStoreClientTests
     }
 
     [Theory, AutoNSubstituteData]
-    internal async Task Should_Throw_When_EventsList_Containes_NullObject(
+    internal async Task Should_Throw_When_EventsList_Contains_NullObject(
         EventStoreClient sut,
         StreamId streamId,
         Collection<object> events,
