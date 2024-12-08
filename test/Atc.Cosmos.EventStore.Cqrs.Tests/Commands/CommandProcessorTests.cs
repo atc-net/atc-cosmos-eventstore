@@ -48,6 +48,25 @@ public class CommandProcessorTests
     }
 
     [Theory, AutoNSubstituteData]
+    internal async Task Should_Set_Command_Context_StreamVersion(
+        [Frozen] ICommandHandlerFactory commandHandlerFactory,
+        [Frozen] IStateProjector<MockCommand> stateProjector,
+        CommandProcessor<MockCommand> sut,
+        MockCommand command,
+        ICommandHandler<MockCommand> handler,
+        Atc.Cosmos.EventStore.Cqrs.Commands.StreamState streamState,
+        CancellationToken cancellationToken)
+    {
+        commandHandlerFactory.Create<MockCommand>().Returns(handler);
+        stateProjector.ProjectAsync(command, handler, cancellationToken).Returns(streamState);
+
+        await sut.ExecuteAsync(command, cancellationToken);
+
+        var commandContext = handler.ReceivedCallWithArgument<CommandContext>();
+        commandContext.StreamVersion.Should().Be(streamState.Version);
+    }
+
+    [Theory, AutoNSubstituteData]
     internal async Task Should_Return_NotModified_When_Command_Emits_No_Events(
         [Frozen] ICommandHandlerFactory commandHandlerFactory,
         [Frozen] IStateProjector<MockCommand> stateProjector,
