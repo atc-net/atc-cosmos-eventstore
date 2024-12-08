@@ -60,7 +60,7 @@ internal class CommandProcessor<TCommand> : ICommandProcessor<TCommand>
                 .ConfigureAwait(false);
 
             // Execute command on aggregate.
-            var context = new CommandContext();
+            var context = new CommandContext(state.Version);
             await handler
                 .ExecuteAsync(command, context, cancellationToken)
                 .ConfigureAwait(false);
