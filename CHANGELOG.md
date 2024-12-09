@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ###  Added
 
 -   Implement `IEventStoreManagementClient.DeleteStreamAsync` using the newly released `DeleteAllItemsByPartitionKeyStreamAsync` method in the Cosmos SDK.
+-   Extend `CommandContext` with the current `StreamVersion` of the stream.
 
 ## [1.13.3] - 2024-04-21
 

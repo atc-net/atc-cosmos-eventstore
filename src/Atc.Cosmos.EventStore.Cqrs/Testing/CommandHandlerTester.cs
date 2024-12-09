@@ -125,7 +125,7 @@ internal class CommandHandlerTester<TCommand> :
                 .ConfigureAwait(false);
         }
 
-        var context = new CommandContext();
+        var context = new CommandContext(version);
 
         await handler
             .ExecuteAsync(command!, context, cancellationToken)
