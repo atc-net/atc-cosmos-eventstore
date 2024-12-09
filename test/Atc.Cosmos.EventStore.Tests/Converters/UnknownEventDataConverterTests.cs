@@ -14,14 +14,13 @@ public class UnknownEventDataConverterTests
     [Theory, AutoNSubstituteData]
     internal void Should_Return_Converted_Value_Id_NotNull(
         IEventMetadata metadata,
-        JsonSerializerOptions options,
         string expected,
         UnknownEventDataConverter sut)
         => sut
             .Convert(
                 metadata,
                 doc.RootElement,
-                options,
+                new JsonSerializerOptions(),
                 () => expected)
             .Should()
             .Be(expected);
@@ -29,13 +28,12 @@ public class UnknownEventDataConverterTests
     [Theory, AutoNSubstituteData]
     internal void Should_Return_UnknownEvent_When_Value_IsNot_Converted(
         IEventMetadata metadata,
-        JsonSerializerOptions options,
         UnknownEventDataConverter sut)
         => sut
             .Convert(
                 metadata,
                 doc.RootElement,
-                options,
+                new JsonSerializerOptions(),
                 () => null)
             .Should()
             .BeEquivalentTo(

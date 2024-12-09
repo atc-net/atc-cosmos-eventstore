@@ -39,7 +39,7 @@ internal interface IEventStoreManagementClient
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Deletes an entire stream and it's index.
+    /// Deletes an entire stream.
     /// </summary>
     /// <remarks>Attempting to write to a deleted stream will create a new empty stream.</remarks>
     /// <param name="streamId">Id of the event stream to delete.</param>

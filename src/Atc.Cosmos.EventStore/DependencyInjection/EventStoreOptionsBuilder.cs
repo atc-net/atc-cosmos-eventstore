@@ -33,6 +33,7 @@ public sealed class EventStoreOptionsBuilder
         Services.TryAddSingleton<IStreamMetadataReader, CosmosMetadataReader>();
         Services.TryAddSingleton<IStreamIterator, CosmosStreamIterator>();
         Services.TryAddSingleton<IStreamBatchWriter, CosmosBatchWriter>();
+        Services.TryAddSingleton<IStreamDeleter, CosmosDeleter>();
         Services.TryAddSingleton<IStreamSubscriptionFactory, CosmosSubscriptionFactory>();
 
         Services.TryAddSingleton<IStreamSubscriptionRemover, CosmosSubscriptionRemover>();
@@ -74,6 +75,7 @@ public sealed class EventStoreOptionsBuilder
         Services.TryAddSingleton<IStreamMetadataReader>(s => s.GetRequiredService<InMemoryStore>());
         Services.TryAddSingleton<IStreamIterator>(s => s.GetRequiredService<InMemoryStore>());
         Services.TryAddSingleton<IStreamBatchWriter>(s => s.GetRequiredService<InMemoryStore>());
+        Services.TryAddSingleton<IStreamDeleter>(s => s.GetRequiredService<InMemoryStore>());
         Services.TryAddSingleton<IStreamSubscriptionFactory>(s => s.GetRequiredService<InMemoryStore>());
         Services.TryAddSingleton<IStreamSubscriptionRemover>(s => s.GetRequiredService<InMemoryStore>());
         Services.TryAddSingleton<IStreamIndexReader>(s => s.GetRequiredService<InMemoryStore>());
