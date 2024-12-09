@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-###  Added
+## [1.14.11] - 2024-12-09
+
+### Added
 
 -   Implement `IEventStoreManagementClient.DeleteStreamAsync` using the newly released `DeleteAllItemsByPartitionKeyStreamAsync` method in the Cosmos SDK.
 -   Extend `CommandContext` with the current `StreamVersion` of the stream.
@@ -168,7 +170,9 @@ services.AddEventStore(builder =>
 
 -   EventStore `ConnectionString` option has been made obsolete, please use `UseCredentials` or `UseCosmosEmulator` instead.
 
-[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.13.3...HEAD
+[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.14.11...HEAD
+
+[1.14.11]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.13.3...v1.14.11
 
 [1.13.3]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.12.6...v1.13.3
 
