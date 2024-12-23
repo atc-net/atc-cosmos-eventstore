@@ -13,6 +13,7 @@ internal class EventStoreClient : IEventStoreClient
     private readonly IStreamCheckpointReader checkpointReader;
     private readonly IStreamSubscriptionFactory subscriptionFactory;
     private readonly IStreamSubscriptionRemover subscriptionRemover;
+    private readonly IStreamDeleter streamDeleter;
 
     public EventStoreClient(
         IStreamWriter streamWriter,
@@ -22,7 +23,8 @@ internal class EventStoreClient : IEventStoreClient
         IStreamCheckpointWriter checkpointWriter,
         IStreamCheckpointReader checkpointReader,
         IStreamSubscriptionFactory subscriptionFactory,
-        IStreamSubscriptionRemover subscriptionRemover)
+        IStreamSubscriptionRemover subscriptionRemover,
+        IStreamDeleter streamDeleter)
     {
         this.streamWriter = streamWriter;
         this.streamReader = streamReader;
@@ -32,6 +34,7 @@ internal class EventStoreClient : IEventStoreClient
         this.checkpointReader = checkpointReader;
         this.subscriptionFactory = subscriptionFactory;
         this.subscriptionRemover = subscriptionRemover;
+        this.streamDeleter = streamDeleter;
     }
 
     public Task DeleteSubscriptionAsync(
@@ -130,4 +133,9 @@ internal class EventStoreClient : IEventStoreClient
                 streamId,
                 cancellationToken)
             .ConfigureAwait(false);
+
+    public Task DeleteStreamAsync(
+        StreamId streamId,
+        CancellationToken cancellationToken = default)
+        => streamDeleter.DeleteAsync(streamId, cancellationToken);
 }

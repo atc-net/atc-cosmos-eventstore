@@ -16,7 +16,6 @@ public static class ServiceCollectionExtensions
     {
         services.TryAddSingleton<CosmosEventSerializer>();
         services.TryAddSingleton<IEventStoreClient, EventStoreClient>();
-        services.TryAddSingleton<IEventStoreManagementClient, EventStoreManagementClient>();
 
         var configureOptions = new EventStoreOptionsBuilder(services);
         configure?.Invoke(configureOptions);
