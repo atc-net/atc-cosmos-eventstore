@@ -231,4 +231,22 @@ public class EventStoreClientTests
             .Awaiting(() => sut.GetStreamCheckpointAsync(null, streamId, cancellationToken))
             .Should()
             .ThrowAsync<ArgumentNullException>();
+
+    [Theory, AutoNSubstituteData]
+    internal async Task Should_DeleteStream(
+        [Frozen] IStreamDeleter deleter,
+        EventStoreClient sut,
+        StreamId streamId,
+        CancellationToken cancellationToken)
+    {
+        await sut.DeleteStreamAsync(
+            streamId,
+            cancellationToken: cancellationToken);
+
+        _ = deleter
+            .Received(1)
+            .DeleteAsync(
+                streamId,
+                cancellationToken);
+    }
 }

@@ -129,4 +129,15 @@ public interface IEventStoreClient
         string name,
         StreamId streamId,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Deletes an entire stream.
+    /// </summary>
+    /// <remarks>Attempting to write to a deleted stream will create a new empty stream.</remarks>
+    /// <param name="streamId">Id of the event stream to delete.</param>
+    /// <param name="cancellationToken">(Optional) <seealso cref="CancellationToken"/> representing request cancellation.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task DeleteStreamAsync(
+        StreamId streamId,
+        CancellationToken cancellationToken = default);
 }
