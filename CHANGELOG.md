@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-###  Added
+## [1.15.4] - 2024-12-23
+
+### Added
 
 -   Remove `IEventStoreManagementClient` and move `DeleteStreamAsync` method to `IEventStoreClient`.
 
@@ -174,7 +176,9 @@ services.AddEventStore(builder =>
 
 -   EventStore `ConnectionString` option has been made obsolete, please use `UseCredentials` or `UseCosmosEmulator` instead.
 
-[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.14.11...HEAD
+[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.15.4...HEAD
+
+[1.15.4]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.14.11...v1.15.4
 
 [1.14.11]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.13.3...v1.14.11
 
