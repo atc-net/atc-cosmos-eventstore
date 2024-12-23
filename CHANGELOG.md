@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+###  Added
+
+-   Remove `IEventStoreManagementClient` and move `DeleteStreamAsync` method to `IEventStoreClient`.
+
 ## [1.14.11] - 2024-12-09
 
 ### Added
