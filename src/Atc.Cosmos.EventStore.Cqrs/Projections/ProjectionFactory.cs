@@ -16,4 +16,9 @@ internal class ProjectionFactory : IProjectionFactory
     public IProjectionMetadata GetProjectionMetadata<TProjection>()
         where TProjection : IProjection
         => serviceProvider.GetRequiredService<ProjectionMetadata<TProjection>>();
+
+    public ProjectionFactory CreateScope()
+    {
+        return new ProjectionFactory(serviceProvider.CreateScope().ServiceProvider);
+    }
 }
