@@ -7,4 +7,6 @@ internal interface IProjectionFactory
 
     IProjectionMetadata GetProjectionMetadata<TProjection>()
         where TProjection : IProjection;
+
+    ProjectionFactory CreateScope();
 }
