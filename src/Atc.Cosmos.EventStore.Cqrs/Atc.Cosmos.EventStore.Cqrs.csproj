@@ -5,6 +5,7 @@
     <PackageTags>event store; cqrs; events; cosmos</PackageTags>
     <Description>CQRS implementation for Atc.Cosmos.EventStore</Description>
 
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <DebugType>Portable</DebugType>

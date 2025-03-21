@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-   Ensure that a projection can run in its own scope. This is important as we do not want state to leak from one projection to the other.
+
 ## [1.15.4] - 2024-12-23
 
 ### Added

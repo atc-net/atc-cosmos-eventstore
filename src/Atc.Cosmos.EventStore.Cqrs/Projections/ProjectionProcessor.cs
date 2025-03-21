@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Atc.Cosmos.EventStore.Cqrs.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Projections;
 
@@ -7,23 +8,23 @@ internal class ProjectionProcessor<TProjection> : IProjectionProcessor<TProjecti
     where TProjection : IProjection
 {
     private readonly IReadOnlyCollection<ProjectionFilter> filters;
-    private readonly IProjectionFactory projectionFactory;
     private readonly IProjectionTelemetry telemetry;
-    private readonly IProjectionMetadata projectionMetadata;
+    private readonly ProjectionMetadata<TProjection> projectionMetadata;
+    private readonly IServiceProvider serviceProvider;
     private readonly string projectionName;
 
     public ProjectionProcessor(
         IProjectionOptionsFactory optionsFactory,
-        IProjectionFactory projectionFactory,
-        IProjectionTelemetry telemetry)
+        IProjectionTelemetry telemetry,
+        ProjectionMetadata<TProjection> projectionMetadata,
+        IServiceProvider serviceProvider)
     {
-        this.projectionFactory = projectionFactory;
         this.telemetry = telemetry;
+        this.projectionMetadata = projectionMetadata;
+        this.serviceProvider = serviceProvider;
         filters = optionsFactory
             .GetOptions<TProjection>()
             .Filters;
-        projectionMetadata = projectionFactory
-            .GetProjectionMetadata<TProjection>();
         projectionName = typeof(TProjection).Name;
     }
 
@@ -36,6 +37,7 @@ internal class ProjectionProcessor<TProjection> : IProjectionProcessor<TProjecti
             .Where(e => filters.Any(f => f.Evaluate(e.Metadata.StreamId)))
             .GroupBy(e => e.Metadata.StreamId)
             .ToArray();
+
         if (groupedEvents.Length == 0)
         {
             telemetry.ProjectionSkipped(projectionName);
@@ -45,11 +47,12 @@ internal class ProjectionProcessor<TProjection> : IProjectionProcessor<TProjecti
 
         using var batchTelemetry = telemetry.StartBatch(projectionName, groupedEvents.Length);
 
-        var projection = projectionFactory
-            .GetProjection<TProjection>();
-
         foreach (var events in groupedEvents)
         {
+            await using var scope = serviceProvider.CreateAsyncScope();
+
+            var projection = scope.ServiceProvider.GetRequiredService<TProjection>();
+
             using var operation = batchTelemetry.StartProjection(events.Key);
 
             if (!projectionMetadata.CanConsumeOneOrMoreEvents(events))
