@@ -5,6 +5,7 @@
     <PackageTags>event store; cqrs; events; cosmos</PackageTags>
     <Description>Event store implementation for Azure Cosmos DB</Description>
 
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <DebugType>Portable</DebugType>

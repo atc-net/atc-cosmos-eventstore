@@ -51,7 +51,7 @@ internal class ProjectionProcessor<TProjection> : IProjectionProcessor<TProjecti
         {
             await using var scope = serviceProvider.CreateAsyncScope();
 
-            var projection = scope.ServiceProvider.GetService<TProjection>();
+            var projection = scope.ServiceProvider.GetRequiredService<TProjection>();
 
             using var operation = batchTelemetry.StartProjection(events.Key);
 
