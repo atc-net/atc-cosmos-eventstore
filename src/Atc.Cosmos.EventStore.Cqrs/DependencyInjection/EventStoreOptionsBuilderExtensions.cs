@@ -26,7 +26,6 @@ public static class EventStoreOptionsBuilderExtensions
         builder.Services.AddSingleton<ICommandTelemetry, CommandTelemetry>();
 
         builder.Services.AddSingleton<IProjectionOptionsFactory, ProjectionOptionsFactory>();
-        builder.Services.AddSingleton<IProjectionFactory, ProjectionFactory>();
 
         builder.Services.AddSingleton(typeof(ProjectionMetadata<>));
 
