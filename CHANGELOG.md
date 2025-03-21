@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.17.0] - 2025-03-21
+
 ### Fixed
 
 -   Ensure that a projection can run in its own scope. This is important as we do not want state to leak from one projection to the other.
@@ -180,7 +182,9 @@ services.AddEventStore(builder =>
 
 -   EventStore `ConnectionString` option has been made obsolete, please use `UseCredentials` or `UseCosmosEmulator` instead.
 
-[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.15.4...HEAD
+[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.17.0...HEAD
+
+[1.17.0]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.15.4...v1.17.0
 
 [1.15.4]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.14.11...v1.15.4
 
