@@ -34,7 +34,9 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: 🛠️ Building library in release mode
-        run: dotnet pack -c Release -o ${GITHUB_WORKSPACE}/packages -p:ContinuousIntegrationBuild=true -p:publicrelease=true
+        run: |
+          dotnet build -c Release
+          dotnet pack -c Release -o ${GITHUB_WORKSPACE}/packages -p:ContinuousIntegrationBuild=true -p:publicrelease=true
 
       - name: 🛠️ Upload library to GitHub Package Repository
         run: dotnet nuget push ${GITHUB_WORKSPACE}/packages/*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/atc-net/index.json --skip-duplicate --no-symbols
