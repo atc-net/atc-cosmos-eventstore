@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Atc.Cosmos.EventStore.Cqrs.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Projections;
 
@@ -7,17 +8,20 @@ internal class ProjectionProcessor<TProjection> : IProjectionProcessor<TProjecti
     where TProjection : IProjection
 {
     private readonly IReadOnlyCollection<ProjectionFilter> filters;
-    private readonly IProjectionFactory projectionFactory;
     private readonly IProjectionTelemetry telemetry;
+    private readonly ProjectionMetadata<TProjection> projectionMetadata;
+    private readonly IServiceProvider serviceProvider;
     private readonly string projectionName;
 
     public ProjectionProcessor(
         IProjectionOptionsFactory optionsFactory,
-        IProjectionFactory projectionFactory,
-        IProjectionTelemetry telemetry)
+        IProjectionTelemetry telemetry,
+        ProjectionMetadata<TProjection> projectionMetadata,
+        IServiceProvider serviceProvider)
     {
-        this.projectionFactory = projectionFactory;
         this.telemetry = telemetry;
+        this.projectionMetadata = projectionMetadata;
+        this.serviceProvider = serviceProvider;
         filters = optionsFactory
             .GetOptions<TProjection>()
             .Filters;
@@ -45,10 +49,9 @@ internal class ProjectionProcessor<TProjection> : IProjectionProcessor<TProjecti
 
         foreach (var events in groupedEvents)
         {
-            var pf = projectionFactory.CreateScope();
+            await using var scope = serviceProvider.CreateAsyncScope();
 
-            var projection = pf.GetProjection<TProjection>();
-            var projectionMetadata = pf.GetProjectionMetadata<TProjection>();
+            var projection = scope.ServiceProvider.GetService<TProjection>();
 
             using var operation = batchTelemetry.StartProjection(events.Key);
 
