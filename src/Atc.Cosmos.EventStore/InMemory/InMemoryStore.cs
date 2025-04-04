@@ -84,8 +84,9 @@ internal class InMemoryStore :
             .GetOrAdd(streamId, new ConcurrentDictionary<string, CheckpointDocument>())
             .AddOrUpdate(
                 name,
-                key => new CheckpointDocument(name, streamId, streamVersion, dateTimeProvider.GetDateTime(), state),
-                (key, doc) => new CheckpointDocument(name, streamId, streamVersion, dateTimeProvider.GetDateTime(), state));
+                static (key, arg) => new CheckpointDocument(key, arg.streamId, arg.streamVersion, arg.currentTime, arg.state),
+                static (key, doc, arg) => new CheckpointDocument(key, arg.streamId, arg.streamVersion, arg.currentTime, arg),
+                (streamId, streamVersion, state, currentTime: dateTimeProvider.GetDateTime()));
 
         return Task.CompletedTask;
     }
