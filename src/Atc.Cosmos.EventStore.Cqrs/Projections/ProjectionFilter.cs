@@ -15,11 +15,7 @@ internal class ProjectionFilter
                 ? CreateEvaluateAll()
                 : CreateEvaluation(p))
             .ToArray();
-        endsOnAcceptAll = filter
-            .Split(
-                new[] { EventStreamId.PartSeperator },
-                StringSplitOptions.RemoveEmptyEntries)
-            .Last() == "**";
+        endsOnAcceptAll = filter.EndsWith("**");
     }
 
     public bool Evaluate(StreamId streamId)
