@@ -20,9 +20,9 @@ public static class EventStoreOptionsBuilderExtensions
 
         builder.Services.AddSingleton(typeof(IStateProjector<>), typeof(StateProjector<>));
         builder.Services.AddSingleton(typeof(IStateWriter<>), typeof(StateWriter<>));
-        builder.Services.AddSingleton(typeof(ICommandProcessor<>), typeof(CommandProcessor<>));
-        builder.Services.AddSingleton<ICommandProcessorFactory, CommandProcessorFactory>();
-        builder.Services.AddSingleton<ICommandHandlerFactory, CommandHandlerFactory>();
+        builder.Services.AddTransient(typeof(ICommandProcessor<>), typeof(CommandProcessor<>));
+        builder.Services.AddTransient<ICommandProcessorFactory, CommandProcessorFactory>();
+        builder.Services.AddTransient<ICommandHandlerFactory, CommandHandlerFactory>();
         builder.Services.AddSingleton<ICommandTelemetry, CommandTelemetry>();
 
         builder.Services.AddSingleton<IProjectionOptionsFactory, ProjectionOptionsFactory>();
