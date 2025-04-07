@@ -28,6 +28,7 @@ public static class EventStoreOptionsBuilderExtensions
         builder.Services.AddSingleton<IProjectionOptionsFactory, ProjectionOptionsFactory>();
 
         builder.Services.AddSingleton(typeof(ProjectionMetadata<>), typeof(ProjectionMetadata<>));
+        builder.Services.AddTransient<IProjectionFactory, DefaultProjectionFactory>();
 
         builder.Services.TryAddSingleton<IProjectionTelemetry, ProjectionTelemetry>();
 
