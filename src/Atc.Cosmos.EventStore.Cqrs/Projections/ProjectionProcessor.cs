@@ -10,18 +10,18 @@ internal class ProjectionProcessor<TProjection> : IProjectionProcessor<TProjecti
     private readonly IReadOnlyCollection<ProjectionFilter> filters;
     private readonly IProjectionTelemetry telemetry;
     private readonly ProjectionMetadata<TProjection> projectionMetadata;
-    private readonly IServiceProvider serviceProvider;
+    private readonly IServiceScopeFactory serviceScopeFactory;
     private readonly string projectionName;
 
     public ProjectionProcessor(
         IProjectionOptionsFactory optionsFactory,
         IProjectionTelemetry telemetry,
         ProjectionMetadata<TProjection> projectionMetadata,
-        IServiceProvider serviceProvider)
+        IServiceScopeFactory serviceScopeFactory)
     {
         this.telemetry = telemetry;
         this.projectionMetadata = projectionMetadata;
-        this.serviceProvider = serviceProvider;
+        this.serviceScopeFactory = serviceScopeFactory;
         filters = optionsFactory
             .GetOptions<TProjection>()
             .Filters;
@@ -49,10 +49,6 @@ internal class ProjectionProcessor<TProjection> : IProjectionProcessor<TProjecti
 
         foreach (var events in groupedEvents)
         {
-            await using var scope = serviceProvider.CreateAsyncScope();
-
-            var projection = scope.ServiceProvider.GetRequiredService<TProjection>();
-
             using var operation = batchTelemetry.StartProjection(events.Key);
 
             if (!projectionMetadata.CanConsumeOneOrMoreEvents(events))
@@ -62,11 +58,16 @@ internal class ProjectionProcessor<TProjection> : IProjectionProcessor<TProjecti
                 continue;
             }
 
+            var eventStreamId = EventStreamId.FromStreamId(events.Key);
+            await using var scope = serviceScopeFactory.CreateAsyncScope();
+            var projectionFactory = scope.ServiceProvider.GetRequiredService<IProjectionFactory>();
+            var projection = await projectionFactory.CreateAsync<TProjection>(eventStreamId, cancellationToken);
+
             try
             {
                 await projection
                     .InitializeAsync(
-                        events.Key,
+                        eventStreamId,
                         cancellationToken)
                     .ConfigureAwait(false);
 
