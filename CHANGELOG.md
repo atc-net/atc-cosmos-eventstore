@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.18.0] - 2025-04-08
+
 -   Changed `ICommandProcessorFactory`, `ICommandHandlerFactory` and `CommandProcessor<>` to be
     registered as transient rather than singleton. This allows `CommandHandler` implementations to use
     dependencies registered as scoped.
@@ -188,7 +190,9 @@ services.AddEventStore(builder =>
 
 -   EventStore `ConnectionString` option has been made obsolete, please use `UseCredentials` or `UseCosmosEmulator` instead.
 
-[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/1.23.0-preview...HEAD
+[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.18.0...HEAD
+
+[1.18.0]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.17.0...v1.18.0
 
 [1.23.0-preview]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.17.0...v1.23.0-preview
 
