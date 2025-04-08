@@ -9,11 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Changed `ICommandProcessorFactory`, `ICommandHandlerFactory` and `CommandProcessor<>` to be 
+-   Changed `ICommandProcessorFactory`, `ICommandHandlerFactory` and `CommandProcessor<>` to be 
  registered as transient rather than singleton. This allows `CommandHandler` implementations to use 
  dependencies registered as scoped.
 
-- Reintroduce `IProjectionFactory` in a slightly modified version to allow consumers to make additional "initialization" of projections.
+-   Reintroduce `IProjectionFactory` in a slightly modified version to allow consumers to make additional "initialization" of projections.
 
 ## [1.17.0] - 2025-03-21
 
