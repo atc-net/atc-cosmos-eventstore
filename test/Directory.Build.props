@@ -8,6 +8,7 @@
 
   <PropertyGroup Label="Compile settings">
     <Nullable>annotations</Nullable>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup Label="Test Analyzers">
@@ -18,5 +19,5 @@
   <ItemGroup>
     <Using Remove="System.IO" />
   </ItemGroup>
-  
+
 </Project>
