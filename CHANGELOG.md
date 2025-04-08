@@ -5,49 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.19.0] - 2025-04-04
+## [Unreleased]
 
-### Changed
-
-- Changed `ICommandProcessorFactory`, `ICommandHandlerFactory` and `CommandProcessor<>` to be 
- registered as transient rather than singleton. This allows `CommandHandler` implementations to use 
- dependencies registered as scoped.
-
-## [1.17.0] - 2025-03-21
-
-### Changed
-
-- Changed `ICommandProcessorFactory`, `ICommandHandlerFactory` and `CommandProcessor<>` to be 
- registered as transient rather than singleton. This allows `CommandHandler` implementations to use 
- dependencies registered as scoped.
-
-## [1.17.0] - 2025-03-21
-
-### Changed
-
-- Changed `ICommandProcessorFactory`, `ICommandHandlerFactory` and `CommandProcessor<>` to be 
- registered as transient rather than singleton. This allows `CommandHandler` implementations to use 
- dependencies registered as scoped.
-
-- Reintroduce `IProjectionFactory` in a slightly modified version to allow consumers to make additional "initialization" of projections.
-
-## [1.17.0] - 2025-03-21
-
-### Changed
-
--   Changed `ICommandProcessorFactory`, `ICommandHandlerFactory` and `CommandProcessor<>` to be 
- registered as transient rather than singleton. This allows `CommandHandler` implementations to use 
- dependencies registered as scoped.
-
--   Reintroduce `IProjectionFactory` in a slightly modified version to allow consumers to make additional "initialization" of projections.
-
-## [1.17.0] - 2025-03-21
-
-### Changed
-
--   Changed `ICommandProcessorFactory`, `ICommandHandlerFactory` and `CommandProcessor<>` to be 
- registered as transient rather than singleton. This allows `CommandHandler` implementations to use 
- dependencies registered as scoped.
+-   Changed `ICommandProcessorFactory`, `ICommandHandlerFactory` and `CommandProcessor<>` to be
+    registered as transient rather than singleton. This allows `CommandHandler` implementations to use
+    dependencies registered as scoped.
 
 -   Reintroduce `IProjectionFactory` in a slightly modified version to allow consumers to make additional "initialization" of projections.
 
@@ -140,7 +102,7 @@ services.AddEventStore(builder =>
 ### Added
 
 -   Introduced options to provide events async when testing commands using `ICommandGiven`, `ICommandWhen` and `ICommandThen`.
--   Introduce hard limits to the number of events the system can accept per operation. 
+-   Introduce hard limits to the number of events the system can accept per operation.
     -   A maximum of 10 events per command context (CQRS)
     -   A maximum of 50 events per stream batch (Event Store)
 
@@ -182,7 +144,7 @@ services.AddEventStore(builder =>
 -   Exception delegate for receiving any exception douing a stream subscription.
 -   Throws `ArgumentException` when a projection is missing a `ProjectionFilter`.
 -   **BREAKING** - `IProjection` now require you to implement `FailedAsync(Exception exception,
-    CancellationToken cancellationToken)` and instruct the framework on how to proceed when encountering an exception.
+      CancellationToken cancellationToken)` and instruct the framework on how to proceed when encountering an exception.
 -   Convenience extension methods to CommandContext.
 
 ## [1.5.3] - 2022-07-05
@@ -198,7 +160,7 @@ services.AddEventStore(builder =>
 -   Fixed issue where projection will not start do to missing dependency registration.
 -   Enhanced documentation for `EventStoreClientOptions` and fix spelling.
 -   Dependencies for `Microsoft.Azure.Cosmos` has been upgraded from `3.23.0` to `3.26.1`.
--   Dependencies for ` System.Text.Json` has been upgraded from `6.0.1` to `6.0.2`.
+-   Dependencies for `System.Text.Json` has been upgraded from `6.0.1` to `6.0.2`.
 
 ## [1.3.3] - 2022-01-31
 
@@ -226,7 +188,9 @@ services.AddEventStore(builder =>
 
 -   EventStore `ConnectionString` option has been made obsolete, please use `UseCredentials` or `UseCosmosEmulator` instead.
 
-[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.17.0...HEAD
+[Unreleased]: https://github.com/atc-net/atc-cosmos-eventstore/compare/1.23.0-preview...HEAD
+
+[1.23.0-preview]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.17.0...v1.23.0-preview
 
 [1.17.0]: https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.15.4...v1.17.0
 
