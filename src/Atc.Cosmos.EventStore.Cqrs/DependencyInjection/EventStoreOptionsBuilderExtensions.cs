@@ -18,17 +18,17 @@ public static class EventStoreOptionsBuilderExtensions
 
         configure?.Invoke(cqrsBuilder);
 
-        builder.Services.AddSingleton(typeof(IStateProjector<>), typeof(StateProjector<>));
-        builder.Services.AddSingleton(typeof(IStateWriter<>), typeof(StateWriter<>));
-        builder.Services.AddTransient(typeof(ICommandProcessor<>), typeof(CommandProcessor<>));
-        builder.Services.AddTransient<ICommandProcessorFactory, CommandProcessorFactory>();
-        builder.Services.AddTransient<ICommandHandlerFactory, CommandHandlerFactory>();
-        builder.Services.AddSingleton<ICommandTelemetry, CommandTelemetry>();
+        builder.Services.TryAddSingleton(typeof(IStateProjector<>), typeof(StateProjector<>));
+        builder.Services.TryAddSingleton(typeof(IStateWriter<>), typeof(StateWriter<>));
+        builder.Services.TryAddTransient(typeof(ICommandProcessor<>), typeof(CommandProcessor<>));
+        builder.Services.TryAddTransient<ICommandProcessorFactory, CommandProcessorFactory>();
+        builder.Services.TryAddTransient<ICommandHandlerFactory, CommandHandlerFactory>();
+        builder.Services.TryAddSingleton<ICommandTelemetry, CommandTelemetry>();
 
-        builder.Services.AddSingleton<IProjectionOptionsFactory, ProjectionOptionsFactory>();
+        builder.Services.TryAddSingleton<IProjectionOptionsFactory, ProjectionOptionsFactory>();
 
-        builder.Services.AddSingleton(typeof(ProjectionMetadata<>), typeof(ProjectionMetadata<>));
-        builder.Services.AddTransient<IProjectionFactory, DefaultProjectionFactory>();
+        builder.Services.TryAddSingleton(typeof(ProjectionMetadata<>), typeof(ProjectionMetadata<>));
+        builder.Services.TryAddTransient<IProjectionFactory, DefaultProjectionFactory>();
 
         builder.Services.TryAddSingleton<IProjectionTelemetry, ProjectionTelemetry>();
 
