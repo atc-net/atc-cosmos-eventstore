@@ -31,7 +31,7 @@ public class EventStreamId
     public string Value { get; }
 
     public static implicit operator EventStreamId(StreamId id)
-        => FromStreamId(id.Value);
+        => FromStreamId(id);
 
     public static EventStreamId FromStreamId(StreamId id)
         => new(
