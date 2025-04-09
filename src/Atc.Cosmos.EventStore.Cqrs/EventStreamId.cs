@@ -16,6 +16,16 @@ public class EventStreamId
         Value = string.Join(PartSeperator, parts);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EventStreamId"/> class from an existing <see cref="EventStreamId"/>.
+    /// </summary>
+    /// <param name="existing">The existing <see cref="EventStreamId"/>.</param>
+    public EventStreamId(EventStreamId existing)
+    {
+        Parts = existing.Parts;
+        Value = existing.Value;
+    }
+
     public IReadOnlyList<string> Parts { get; }
 
     public string Value { get; }
