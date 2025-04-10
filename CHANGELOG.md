@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+-   Use TryAdd when registering types in `UseCQRS()`
+
+-   Add a ctor on `EventStreamId` that allow cheaper "cloning" of an existing `EventStreamId`
+
 ## [1.18.0] - 2025-04-08
 
 -   Changed `ICommandProcessorFactory`, `ICommandHandlerFactory` and `CommandProcessor<>` to be
