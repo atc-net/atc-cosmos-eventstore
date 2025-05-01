@@ -85,7 +85,7 @@ internal class CommandProcessor<TCommand> : ICommandProcessor<TCommand>
             activity.Changed();
 
             return new CommandResult(
-                result.Id,
+                command.GetEventStreamId(),
                 result.Version,
                 ResultType.Changed,
                 context.ResponseObject);
