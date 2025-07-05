@@ -29,6 +29,7 @@ internal sealed class CosmosClientFactory : ICosmosClientFactory, IDisposable
                         CheckCertificateRevocationList = true,
                     });
             options.Value.CosmosClientOptions.ConnectionMode = ConnectionMode.Gateway;
+            options.Value.CosmosClientOptions.LimitToEndpoint = true;
         }
 
         cosmosClient = options.Value.Credential is null
