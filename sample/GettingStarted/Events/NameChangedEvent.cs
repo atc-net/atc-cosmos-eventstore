@@ -1,6 +1,4 @@
-﻿using Atc.Cosmos.EventStore.Cqrs;
-
-namespace GettingStarted;
+﻿namespace GettingStarted.Events;
 
 [StreamEvent("name-changed-event:v1")]
 public record NameChangedEvent(string OldName, string NewName);

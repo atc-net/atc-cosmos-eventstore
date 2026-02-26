@@ -1,7 +1,8 @@
 # ATC coding rules - https://github.com/atc-net/atc-coding-rules
-# Version: 1.0.2
-# Updated: 10-12-2020
-# Location: Src
+# Version: 1.0.0
+# Updated: 27-11-2025
+# Location: sample
+# Distribution: DotNet10
 # Inspired by: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
 
 ##########################################
@@ -25,8 +26,12 @@
 # https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/
 
 
-# Microsoft - Threading
-# https://github.com/microsoft/vs-threading/blob/master/doc/analyzers/index.md
+# Microsoft - Compiler Errors
+# https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-messages/
+
+
+# Microsoft - FxCop
+# https://github.com/dotnet/roslyn-analyzers
 
 
 # SecurityCodeScan
@@ -36,13 +41,11 @@
 # StyleCop
 # https://github.com/DotNetAnalyzers/StyleCopAnalyzers
 
-
 # SonarAnalyzer.CSharp
 # https://rules.sonarsource.com/csharp
 
+dotnet_diagnostic.S1075.severity = none             # Refactor your code not to use hardcoded absolute paths or URIs
 
 ##########################################
 # Custom - Code Analyzers Rules
 ##########################################
-
-dotnet_diagnostic.S6418.severity = none             # Cosmos emulator auth key is a well-known constant, not a secret

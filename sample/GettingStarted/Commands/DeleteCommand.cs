@@ -1,6 +1,6 @@
-﻿using Atc.Cosmos.EventStore.Cqrs;
+﻿using GettingStarted.Events;
 
-namespace GettingStarted;
+namespace GettingStarted.Commands;
 
 public record DeleteCommand(string Id, string Reason)
     : CommandBase<SampleEventStreamId>(new SampleEventStreamId(Id));
@@ -15,12 +15,12 @@ public class DeleteCommandHandler :
 
     public void Consume(AddedEvent evt, EventMetadata metadata)
     {
-        this.created = true;
+        created = true;
     }
 
     public void Consume(DeletedEvent evt, EventMetadata metadata)
     {
-        this.deleted = true;
+        deleted = true;
     }
 
     public ValueTask ExecuteAsync(
@@ -32,7 +32,7 @@ public class DeleteCommandHandler :
         {
             throw new InvalidOperationException("Cannot delete non-existing entity.");
         }
-        
+
         if (deleted)
         {
             throw new InvalidOperationException("Already deleted.");
