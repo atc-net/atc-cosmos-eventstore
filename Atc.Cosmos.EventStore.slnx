@@ -11,6 +11,9 @@
     <File Path="docs/Concepts.md" />
     <File Path="README.md" />
   </Folder>
+  <Folder Name="/sample/">
+    <Project Path="sample/GettingStarted/GettingStarted.csproj" />
+  </Folder>
   <Folder Name="/src/">
     <File Path="src/.editorconfig" />
     <File Path="src/Directory.Build.props" />
