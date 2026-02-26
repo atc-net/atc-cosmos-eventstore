@@ -21,7 +21,6 @@
     <File Path="test/.editorconfig" />
     <File Path="test/Directory.Build.props" />
     <Project Path="test/Atc.Cosmos.EventStore.Cqrs.Tests/Atc.Cosmos.EventStore.Cqrs.Tests.csproj" />
-    <Project Path="test/Atc.Cosmos.EventStore.IntegrationTests/Atc.Cosmos.EventStore.IntegrationTests.csproj" />
     <Project Path="test/Atc.Cosmos.EventStore.Tests/Atc.Cosmos.EventStore.Tests.csproj" />
   </Folder>
 </Solution>
