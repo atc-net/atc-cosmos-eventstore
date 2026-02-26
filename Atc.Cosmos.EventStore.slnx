@@ -1,0 +1,27 @@
+<Solution>
+  <Folder Name="/.build/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="global.json" />
+    <File Path="version.json" />
+  </Folder>
+  <Folder Name="/.docs/">
+    <File Path="CHANGELOG.md" />
+    <File Path="docs/Concepts.md" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <File Path="src/.editorconfig" />
+    <File Path="src/Directory.Build.props" />
+    <Project Path="src/Atc.Cosmos.EventStore.Cqrs/Atc.Cosmos.EventStore.Cqrs.csproj" />
+    <Project Path="src/Atc.Cosmos.EventStore/Atc.Cosmos.EventStore.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <File Path="test/.editorconfig" />
+    <File Path="test/Directory.Build.props" />
+    <Project Path="test/Atc.Cosmos.EventStore.Cqrs.Tests/Atc.Cosmos.EventStore.Cqrs.Tests.csproj" />
+    <Project Path="test/Atc.Cosmos.EventStore.IntegrationTests/Atc.Cosmos.EventStore.IntegrationTests.csproj" />
+    <Project Path="test/Atc.Cosmos.EventStore.Tests/Atc.Cosmos.EventStore.Tests.csproj" />
+  </Folder>
+</Solution>
