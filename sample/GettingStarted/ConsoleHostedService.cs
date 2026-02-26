@@ -1,5 +1,4 @@
-﻿using Atc.Cosmos.EventStore.Cqrs;
-using Microsoft.Extensions.Hosting;
+﻿using GettingStarted.Commands;
 
 namespace GettingStarted;
 

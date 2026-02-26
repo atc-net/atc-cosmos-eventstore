@@ -1,7 +1,6 @@
-﻿using Atc.Cosmos;
-using Atc.Cosmos.EventStore.Cqrs;
+﻿using GettingStarted.Events;
 
-namespace GettingStarted.Storage;
+namespace GettingStarted.Projections;
 
 [ProjectionFilter(SampleEventStreamId.FilterIncludeAllEvents)]
 public class SampleProjection(

@@ -1,0 +1,10 @@
+global using System.Text.Json.Serialization;
+global using Atc.Cosmos;
+global using Atc.Cosmos.EventStore;
+global using Atc.Cosmos.EventStore.Cqrs;
+global using Atc.Cosmos.Internal;
+global using GettingStarted;
+global using GettingStarted.Options;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Hosting;
+global using Microsoft.Extensions.Options;

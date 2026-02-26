@@ -1,7 +1,6 @@
-﻿using Atc.Cosmos;
-using Microsoft.Azure.Cosmos;
+﻿using Microsoft.Azure.Cosmos;
 
-namespace GettingStarted.Storage;
+namespace GettingStarted.Projections;
 
 public class ContainerInitializer : ICosmosContainerInitializer
 {

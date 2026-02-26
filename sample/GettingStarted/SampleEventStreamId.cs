@@ -1,11 +1,10 @@
-﻿using Atc.Cosmos.EventStore.Cqrs;
-
-namespace GettingStarted;
+﻿namespace GettingStarted;
 
 public sealed class SampleEventStreamId : EventStreamId, IEquatable<SampleEventStreamId?>
 {
-    private const string TypeName = "sample";
     public const string FilterIncludeAllEvents = TypeName + ".*";
+
+    private const string TypeName = "sample";
 
     public SampleEventStreamId(string id)
         : base(TypeName, id)
