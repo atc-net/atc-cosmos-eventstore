@@ -1,7 +1,8 @@
 # ATC coding rules - https://github.com/atc-net/atc-coding-rules
-# Version: 1.0.2
-# Updated: 10-12-2020
-# Location: Src
+# Version: 1.0.0
+# Updated: 27-11-2025
+# Location: src
+# Distribution: DotNet10
 # Inspired by: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
 
 ##########################################
@@ -25,8 +26,8 @@
 # https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/
 
 
-# Microsoft - Threading
-# https://github.com/microsoft/vs-threading/blob/master/doc/analyzers/index.md
+# Microsoft - Compiler Errors
+# https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-messages/
 
 
 # SecurityCodeScan
