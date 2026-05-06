@@ -27,9 +27,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Analyzer settings">
-    <AnalysisMode>Default</AnalysisMode>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisLevel>latest-All</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
@@ -40,9 +38,13 @@
 
   <!-- Shared code analyzers used for all projects in the solution -->
   <ItemGroup Label="Code Analyzers">
-    <PackageReference Include="SecurityCodeScan.VS2019" Version="5.6.7" PrivateAssets="all" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.321" PrivateAssets="All" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.22.0.136894" PrivateAssets="all" />
+    <PackageReference Include="Atc.Analyzer" Version="0.1.22" PrivateAssets="All" />
+    <PackageReference Include="AsyncFixer" Version="1.6.0" PrivateAssets="All" />
+    <PackageReference Include="Asyncify" Version="0.9.7" PrivateAssets="All" />
+    <PackageReference Include="Meziantou.Analyzer" Version="2.0.212" PrivateAssets="All" />
+    <PackageReference Include="SecurityCodeScan.VS2019" Version="5.6.7" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507" PrivateAssets="All" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.20.0.135146" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>
