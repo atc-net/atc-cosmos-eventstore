@@ -1,5 +1,3 @@
-﻿using GettingStarted.Commands;
-
 namespace GettingStarted;
 
 public class ConsoleHostedService(ICommandProcessorFactory commandProcessorFactory) : IHostedService
@@ -39,5 +37,6 @@ public class ConsoleHostedService(ICommandProcessorFactory commandProcessorFacto
                 cancellationToken);
     }
 
-    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+    public Task StopAsync(CancellationToken cancellationToken)
+        => Task.CompletedTask;
 }

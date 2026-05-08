@@ -1,6 +1,4 @@
-﻿using GettingStarted.Events;
-
-namespace GettingStarted.Projections;
+﻿namespace GettingStarted.Projections;
 
 [ProjectionFilter(SampleEventStreamId.FilterIncludeAllEvents)]
 public class SampleProjection(
@@ -13,7 +11,7 @@ public class SampleProjection(
     IConsumeEvent<DeletedEvent>
 {
     private SampleReadModel view = null!;
-    private bool deleted = false;
+    private bool deleted;
 
     public Task<ProjectionAction> FailedAsync(
         Exception exception,
@@ -35,30 +33,37 @@ public class SampleProjection(
                };
     }
 
-    public Task CompleteAsync(
-        CancellationToken cancellationToken) =>
-        deleted
+    public Task CompleteAsync(CancellationToken cancellationToken)
+        => deleted
             ? writer.TryDeleteAsync(view!.Id, view!.PartitionKey, cancellationToken)
             : writer.WriteAsync(view, cancellationToken);
 
-    public void Consume(AddedEvent evt, EventMetadata metadata)
+    public void Consume(
+        AddedEvent evt,
+        EventMetadata metadata)
     {
         view.Name = evt.Name;
         view.Address = evt.Address;
         deleted = false;
     }
 
-    public void Consume(NameChangedEvent evt, EventMetadata metadata)
+    public void Consume(
+        NameChangedEvent evt,
+        EventMetadata metadata)
     {
         view.Name = evt.NewName;
     }
 
-    public void Consume(AddressChangedEvent evt, EventMetadata metadata)
+    public void Consume(
+        AddressChangedEvent evt,
+        EventMetadata metadata)
     {
         view.Address = evt.NewAddress;
     }
 
-    public void Consume(DeletedEvent evt, EventMetadata metadata)
+    public void Consume(
+        DeletedEvent evt,
+        EventMetadata metadata)
     {
         deleted = true;
     }

@@ -1,12 +1,12 @@
-﻿using Microsoft.Azure.Cosmos;
-
-namespace GettingStarted.Projections;
+﻿namespace GettingStarted.Projections;
 
 public class ContainerInitializer : ICosmosContainerInitializer
 {
     public const string Name = "read-models";
 
-    public Task InitializeAsync(Database database, CancellationToken cancellationToken)
+    public Task InitializeAsync(
+        Database database,
+        CancellationToken cancellationToken)
     {
         var options = new ContainerProperties
         {

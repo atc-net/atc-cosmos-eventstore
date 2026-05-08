@@ -1,9 +1,4 @@
-﻿using GettingStarted.Events;
-
 namespace GettingStarted.Commands;
-
-public record CreateCommand(string Id, string Name, string Address)
-    : CommandBase<SampleEventStreamId>(new SampleEventStreamId(Id));
 
 public class CreateCommandHandler :
     ICommandHandler<CreateCommand>,
@@ -11,7 +6,9 @@ public class CreateCommandHandler :
 {
     private bool created;
 
-    public void Consume(CreateCommand evt, EventMetadata metadata)
+    public void Consume(
+        CreateCommand evt,
+        EventMetadata metadata)
     {
         this.created = true;
     }
