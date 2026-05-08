@@ -1,9 +1,4 @@
-﻿using GettingStarted.Events;
-
 namespace GettingStarted.Commands;
-
-public record UpdateNameCommand(string Id, string Name)
-    : CommandBase<SampleEventStreamId>(new SampleEventStreamId(Id));
 
 public class UpdateNameCommandHandler :
     ICommandHandler<UpdateNameCommand>,
@@ -13,13 +8,17 @@ public class UpdateNameCommandHandler :
     private bool created;
     private string? currentName;
 
-    public void Consume(AddedEvent evt, EventMetadata metadata)
+    public void Consume(
+        AddedEvent evt,
+        EventMetadata metadata)
     {
         created = true;
         currentName = evt.Name;
     }
 
-    public void Consume(NameChangedEvent evt, EventMetadata metadata)
+    public void Consume(
+        NameChangedEvent evt,
+        EventMetadata metadata)
     {
         currentName = evt.NewName;
     }

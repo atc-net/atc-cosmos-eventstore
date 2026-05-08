@@ -1,4 +1,4 @@
 namespace GettingStarted.Commands;
 
-public record DeleteCommand(string Id, string Reason)
+public record UpdateNameCommand(string Id, string Name)
     : CommandBase<SampleEventStreamId>(new SampleEventStreamId(Id));

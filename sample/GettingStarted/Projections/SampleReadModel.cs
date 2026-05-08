@@ -6,6 +6,10 @@ public class SampleReadModel : CosmosResource
     public string Id { get; set; } = string.Empty;
 
     [JsonPropertyName("pk")]
+    [SuppressMessage(
+        "Naming",
+        "CA1721:Property names should not match get methods",
+        Justification = "Property is the JSON pk field; GetPartitionKey is forced by the CosmosResource base class.")]
     public string PartitionKey { get; set; } = string.Empty;
 
     public string Name { get; set; } = string.Empty;

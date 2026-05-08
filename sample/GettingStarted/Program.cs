@@ -1,7 +1,3 @@
-﻿using GettingStarted.Commands;
-using GettingStarted.Events;
-using GettingStarted.Projections;
-
 void ConfigureServices(IServiceCollection services)
 {
     services.ConfigureOptions<ConfigureCosmosOptions>();
