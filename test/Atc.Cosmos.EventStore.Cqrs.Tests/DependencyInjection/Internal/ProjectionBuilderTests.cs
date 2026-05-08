@@ -1,13 +1,6 @@
-using Atc.Cosmos.EventStore.Cqrs.DependencyInjection.Internal;
-using Atc.Cosmos.EventStore.Cqrs.Projections;
-using Atc.Cosmos.EventStore.Cqrs.Tests.Mocks;
-using Atc.Test;
-using FluentAssertions;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Tests.DependencyInjection.Internal;
 
-public class ProjectionBuilderTests
+public sealed class ProjectionBuilderTests
 {
     [Theory, AutoNSubstituteData]
     internal void Should_Set_Name(
@@ -15,9 +8,13 @@ public class ProjectionBuilderTests
         ProjectionOptions options,
         ProjectionBuilder sut)
     {
+        // Arrange
         sut.WithJobName(name);
+
+        // Act
         sut.Build<TestProjection>(options);
 
+        // Assert
         options.Name.Should().Be(name);
     }
 
@@ -25,10 +22,13 @@ public class ProjectionBuilderTests
     internal void ShouldThrow_When_Projection_IsMissing_ProjectionFilter(
         ProjectionOptions options,
         ProjectionBuilder sut)
-        => FluentActions
-            .Invoking(() => sut.Build<TestProjectionMissingFilterAttribute>(options))
-            .Should()
-            .ThrowExactly<ArgumentException>();
+    {
+        // Act
+        var act = () => sut.Build<TestProjectionMissingFilterAttribute>(options);
+
+        // Assert
+        act.Should().ThrowExactly<InvalidOperationException>();
+    }
 
     [Theory, AutoNSubstituteData]
     internal void Should_Set_ExceptionHandler(
@@ -36,9 +36,13 @@ public class ProjectionBuilderTests
         ProjectionOptions options,
         ProjectionBuilder sut)
     {
+        // Arrange
         sut.WithExceptionHandler(handler);
+
+        // Act
         sut.Build<TestProjection>(options);
 
+        // Assert
         options.ExceptionHandler.Should().Be(handler);
     }
 
@@ -47,8 +51,10 @@ public class ProjectionBuilderTests
         ProjectionOptions options,
         ProjectionBuilder sut)
     {
+        // Act
         sut.Build<TestProjection>(options);
 
+        // Assert
         options.ExceptionHandler.Should().NotBeNull();
     }
 
@@ -58,9 +64,13 @@ public class ProjectionBuilderTests
         ProjectionOptions options,
         ProjectionBuilder sut)
     {
+        // Arrange
         sut.WithProjectionStartsFrom(startFrom);
+
+        // Act
         sut.Build<TestProjection>(options);
 
+        // Assert
         options.StartsFrom.Should().Be(startFrom);
     }
 
@@ -69,8 +79,10 @@ public class ProjectionBuilderTests
         ProjectionOptions options,
         ProjectionBuilder sut)
     {
+        // Act
         sut.Build<TestProjection>(options);
 
+        // Assert
         options.StartsFrom.Should().Be(SubscriptionStartOptions.FromBegining);
     }
 
@@ -80,9 +92,13 @@ public class ProjectionBuilderTests
         ProjectionOptions options,
         ProjectionBuilder sut)
     {
+        // Arrange
         sut.WithPollingInterval(pollingInterval);
+
+        // Act
         sut.Build<TestProjection>(options);
 
+        // Assert
         options.PollingInterval.Should().Be(pollingInterval);
     }
 }
