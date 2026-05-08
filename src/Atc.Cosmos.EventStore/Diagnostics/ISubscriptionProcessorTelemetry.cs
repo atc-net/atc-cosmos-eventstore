@@ -6,9 +6,7 @@ public interface ISubscriptionProcessorTelemetry
         Exception exception,
         ConsumerGroup consumerGroup);
 
-    void SubscriptionStarted(
-        ConsumerGroup consumerGroup);
+    void SubscriptionStarted(ConsumerGroup consumerGroup);
 
-    void SubscriptionStopped(
-        ConsumerGroup consumerGroup);
+    void SubscriptionStopped(ConsumerGroup consumerGroup);
 }

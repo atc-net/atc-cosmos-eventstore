@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace Atc.Cosmos.EventStore;
 
 public static class EventStoreDiagnostics

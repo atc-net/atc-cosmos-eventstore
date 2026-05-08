@@ -1,7 +1,3 @@
-using System.Reflection;
-using Atc.Cosmos.EventStore.Cqrs.Projections;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Atc.Cosmos.EventStore.Cqrs.DependencyInjection.Internal;
 
 internal class ProjectionBuilder : IProjectionBuilder
@@ -37,14 +33,16 @@ internal class ProjectionBuilder : IProjectionBuilder
         return this;
     }
 
-    public IProjectionBuilder WithExceptionHandler(ProcessExceptionHandler handler)
+    public IProjectionBuilder WithExceptionHandler(
+        ProcessExceptionHandler handler)
     {
         this.exceptionHandler = handler;
 
         return this;
     }
 
-    public IProjectionBuilder WithProjectionStartsFrom(SubscriptionStartOptions startFrom)
+    public IProjectionBuilder WithProjectionStartsFrom(
+        SubscriptionStartOptions startFrom)
     {
         this.startFrom = startFrom;
 
@@ -71,7 +69,7 @@ internal class ProjectionBuilder : IProjectionBuilder
         SetFiltersFromProjection<TProjection>();
         if (filters.Count == 0)
         {
-            throw new ArgumentException(
+            throw new InvalidOperationException(
                 $"Please provide a filter for type {typeof(TProjection)}");
         }
 

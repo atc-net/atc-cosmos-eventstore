@@ -1,5 +1,3 @@
-using Microsoft.Azure.Cosmos;
-
 namespace Atc.Cosmos.EventStore.Cosmos;
 
 public interface IEventStoreInitializer
@@ -8,6 +6,5 @@ public interface IEventStoreInitializer
         ThroughputProperties throughputProperties,
         CancellationToken cancellationToken);
 
-    void CreateEventStore(
-        ThroughputProperties throughputProperties);
+    void CreateEventStore(ThroughputProperties throughputProperties);
 }

@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace Atc.Cosmos.EventStore.Diagnostics;
 
 public class SubscriptionProcessorTelemetry : ISubscriptionProcessorTelemetry
@@ -13,13 +11,12 @@ public class SubscriptionProcessorTelemetry : ISubscriptionProcessorTelemetry
         activity?.RecordException(exception);
     }
 
-    public void SubscriptionStarted(
-        ConsumerGroup consumerGroup)
+    public void SubscriptionStarted(ConsumerGroup consumerGroup)
     {
         using var activity = EventStoreDiagnostics.Source.StartActivity(
             name: $"Subscription [{consumerGroup.Name}] started",
             kind: ActivityKind.Consumer,
-            tags: new Dictionary<string, object?>
+            tags: new Dictionary<string, object?>(StringComparer.Ordinal)
             {
                 { EventStoreDiagnostics.TagAttributes.SubscriptionName, consumerGroup.Name },
                 { EventStoreDiagnostics.TagAttributes.SubscriptionInstance, consumerGroup.Instance },
@@ -28,8 +25,7 @@ public class SubscriptionProcessorTelemetry : ISubscriptionProcessorTelemetry
             });
     }
 
-    public void SubscriptionStopped(
-        ConsumerGroup consumerGroup)
+    public void SubscriptionStopped(ConsumerGroup consumerGroup)
     {
         using var activity = EventStoreDiagnostics.Source.StartActivity(
             name: $"Subscription [{consumerGroup.Name}] stopped",

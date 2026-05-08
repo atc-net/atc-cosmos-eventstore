@@ -1,6 +1,3 @@
-using Atc.Cosmos.EventStore.Cosmos;
-using Microsoft.Azure.Cosmos;
-
 namespace Atc.Cosmos.EventStore.InMemory;
 
 internal class InMemoryStoreInitializer : IEventStoreInitializer
@@ -10,6 +7,8 @@ internal class InMemoryStoreInitializer : IEventStoreInitializer
         // No initialization required for in-memory store.
     }
 
-    public Task CreateEventStoreAsync(ThroughputProperties throughputProperties, CancellationToken cancellationToken)
+    public Task CreateEventStoreAsync(
+        ThroughputProperties throughputProperties,
+        CancellationToken cancellationToken)
         => Task.CompletedTask;
 }

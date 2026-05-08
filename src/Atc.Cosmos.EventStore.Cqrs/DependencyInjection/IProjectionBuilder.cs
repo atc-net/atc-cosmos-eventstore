@@ -1,5 +1,3 @@
-using Atc.Cosmos.EventStore;
-
 namespace Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
@@ -33,7 +31,8 @@ public interface IProjectionBuilder
     /// </summary>
     /// <param name="startFrom">Projection start options.</param>
     /// <returns>Reference to this <see cref="IProjectionBuilder"/> instance.</returns>
-    IProjectionBuilder WithProjectionStartsFrom(SubscriptionStartOptions startFrom);
+    IProjectionBuilder WithProjectionStartsFrom(
+        SubscriptionStartOptions startFrom);
 
     /// <summary>
     /// Set the polling interval for the projection.

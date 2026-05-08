@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace Atc.Cosmos.EventStore.Events;
 
 internal class EventDocument<T> : EventDocument
@@ -9,7 +7,9 @@ internal class EventDocument<T> : EventDocument
     {
     }
 
-    public EventDocument(T data, EventMetadata properties)
+    public EventDocument(
+        T data,
+        EventMetadata properties)
         : base()
     {
         TypedData = data;
@@ -22,7 +22,7 @@ internal class EventDocument<T> : EventDocument
     [JsonIgnore]
     public override object Data
     {
-        get { return TypedData; }
-        set { TypedData = (T)value; }
+        get => TypedData;
+        set => TypedData = (T)value;
     }
 }

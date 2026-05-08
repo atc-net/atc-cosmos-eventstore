@@ -1,8 +1,3 @@
-using System.Text.Json.Serialization;
-using Atc.Cosmos.EventStore.Converters;
-using Azure.Core;
-using Microsoft.Azure.Cosmos;
-
 namespace Atc.Cosmos.EventStore;
 
 public class EventStoreClientOptions

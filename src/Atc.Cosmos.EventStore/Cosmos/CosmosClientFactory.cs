@@ -1,7 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-using Microsoft.Azure.Cosmos;
-using Microsoft.Extensions.Options;
-
 namespace Atc.Cosmos.EventStore.Cosmos;
 
 internal sealed class CosmosClientFactory : ICosmosClientFactory, IDisposable
@@ -12,6 +8,10 @@ internal sealed class CosmosClientFactory : ICosmosClientFactory, IDisposable
     [SuppressMessage(
         "Critical Vulnerability",
         "S4830:Server certificates should be verified during SSL/TLS connections",
+        Justification = "This is only allowed when running against cosmos emulator")]
+    [SuppressMessage(
+        "Security",
+        "MA0039:Do not write your own certificate validation method",
         Justification = "This is only allowed when running against cosmos emulator")]
     public CosmosClientFactory(
         IOptions<EventStoreClientOptions> options,

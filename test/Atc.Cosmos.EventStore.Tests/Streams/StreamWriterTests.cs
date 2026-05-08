@@ -1,14 +1,6 @@
-using Atc.Cosmos.EventStore.Streams;
-using Atc.Test;
-using AutoFixture.AutoNSubstitute;
-using AutoFixture.Xunit2;
-using FluentAssertions;
-using NSubstitute;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Streams;
 
-public class StreamWriterTests
+public sealed class StreamWriterTests
 {
     [Theory, AutoNSubstituteData]
     internal async Task Should_Read_Metadata_From_StreamId(
@@ -18,6 +10,7 @@ public class StreamWriterTests
         IReadOnlyList<object> events,
         CancellationToken cancellationToken)
     {
+        // Act
         await sut.WriteAsync(
             streamId,
             events,
@@ -25,6 +18,7 @@ public class StreamWriterTests
             options: null,
             cancellationToken: cancellationToken);
 
+        // Assert
         _ = metadataReader
             .Received()
             .GetAsync(
@@ -42,10 +36,12 @@ public class StreamWriterTests
         StreamMetadata expected,
         CancellationToken cancellationToken)
     {
+        // Arrange
         metadataReader
             .GetAsync(default, default)
             .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(expected));
 
+        // Act
         await sut.WriteAsync(
             streamId,
             events,
@@ -53,6 +49,7 @@ public class StreamWriterTests
             options: null,
             cancellationToken: cancellationToken);
 
+        // Assert
         validator
             .Received()
             .Validate(
@@ -70,10 +67,12 @@ public class StreamWriterTests
         StreamMetadata expected,
         CancellationToken cancellationToken)
     {
+        // Arrange
         metadataReader
             .GetAsync(default, default)
             .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(expected));
 
+        // Act
         await sut.WriteAsync(
             streamId,
             events,
@@ -81,6 +80,7 @@ public class StreamWriterTests
             options: null,
             cancellationToken: cancellationToken);
 
+        // Assert
         eventConverter
             .Received()
             .FromEvents(
@@ -98,6 +98,7 @@ public class StreamWriterTests
         StreamMetadata metadata,
         CancellationToken cancellationToken)
     {
+        // Arrange
         eventWriter
             .WriteAsync(default, default)
             .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(metadata));
@@ -107,6 +108,7 @@ public class StreamWriterTests
             metadata.Timestamp,
             metadata.State);
 
+        // Act
         var result = await sut.WriteAsync(
             streamId,
             events,
@@ -114,6 +116,7 @@ public class StreamWriterTests
             options: null,
             cancellationToken: cancellationToken);
 
+        // Assert
         result
             .Should()
             .BeEquivalentTo(expected);

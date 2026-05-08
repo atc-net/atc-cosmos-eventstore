@@ -1,14 +1,6 @@
-using Atc.Cosmos.EventStore.Cosmos;
-using Atc.Cosmos.EventStore.Events;
-using Atc.Test;
-using FluentAssertions;
-using Microsoft.Azure.Cosmos;
-using NSubstitute;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Cosmos;
 
-public class CosmosStreamIteratorTests
+public sealed class CosmosStreamIteratorTests
 {
     private readonly FeedResponse<EventDocument> feedResponse;
     private readonly FeedIterator<EventDocument> feedIterator;
@@ -21,7 +13,7 @@ public class CosmosStreamIteratorTests
     private QueryDefinition query = new("SELECT * FROM c");
     private QueryRequestOptions options = new();
 
-    public class TestEvent
+    public sealed class TestEvent
     {
         public string Name { get; set; } = string.Empty;
     }
@@ -76,8 +68,10 @@ public class CosmosStreamIteratorTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Act
         var received = await ReadStream(streamId, StreamVersion.Any, null, cancellationToken);
 
+        // Assert
         received
             .Should()
             .BeEquivalentTo(expectedEvents);
@@ -88,8 +82,10 @@ public class CosmosStreamIteratorTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Act
         await ReadStream(streamId, StreamVersion.Any, null, cancellationToken);
 
+        // Assert
         options
             .PartitionKey
             .Should()
@@ -101,8 +97,10 @@ public class CosmosStreamIteratorTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Act
         await ReadStream(streamId, StreamVersion.Any, null, cancellationToken);
 
+        // Assert
         query
             .QueryText
             .Should()
@@ -122,8 +120,10 @@ public class CosmosStreamIteratorTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Act
         await ReadStream(streamId, 10, null, cancellationToken);
 
+        // Assert
         query
             .QueryText
             .Should()
@@ -147,12 +147,14 @@ public class CosmosStreamIteratorTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Act
         await ReadStream(
             streamId,
             10,
             new StreamReadFilter { IncludeEvents = new EventName[] { "evt1" } },
             cancellationToken);
 
+        // Assert
         query
             .QueryText
             .Should()
@@ -180,12 +182,14 @@ public class CosmosStreamIteratorTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Act
         await ReadStream(
             streamId,
             10,
             new StreamReadFilter { IncludeEvents = new EventName[] { "evt1", "evt2", "evt3" } },
             cancellationToken);
 
+        // Assert
         query
             .QueryText
             .Should()

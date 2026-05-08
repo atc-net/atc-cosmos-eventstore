@@ -1,6 +1,3 @@
-using System.Text;
-using Microsoft.Azure.Cosmos;
-
 namespace Atc.Cosmos.EventStore.Cosmos;
 
 public static class CosmosStreamQueryBuilder
@@ -10,7 +7,7 @@ public static class CosmosStreamQueryBuilder
         StreamVersion fromVersion,
         StreamReadFilter? filter)
     {
-        var parameters = new Dictionary<string, object>();
+        var parameters = new Dictionary<string, object>(StringComparer.Ordinal);
         var query = new StringBuilder();
         query.Append("SELECT * FROM e WHERE e.pk = @partitionKey ");
         parameters["@partitionKey"] = streamId.Value;

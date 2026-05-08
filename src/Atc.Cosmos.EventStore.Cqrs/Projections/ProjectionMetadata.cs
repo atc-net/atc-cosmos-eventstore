@@ -1,5 +1,3 @@
-using Atc.Cosmos.EventStore.Cqrs.Internal;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Projections;
 
 public class ProjectionMetadata<TProjection> :

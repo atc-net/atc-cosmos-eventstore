@@ -1,8 +1,3 @@
-using System.Net;
-using Atc.Cosmos.EventStore.Events;
-using Atc.Cosmos.EventStore.Streams;
-using Microsoft.Azure.Cosmos;
-
 namespace Atc.Cosmos.EventStore.Cosmos;
 
 internal class CosmosMetadataReader : IStreamMetadataReader

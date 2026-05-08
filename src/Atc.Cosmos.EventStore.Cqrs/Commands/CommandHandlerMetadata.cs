@@ -1,5 +1,3 @@
-using Atc.Cosmos.EventStore.Cqrs.Internal;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Commands;
 
 internal class CommandHandlerMetadata<TCommand, THandler> :

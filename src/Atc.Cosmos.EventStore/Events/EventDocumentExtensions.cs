@@ -1,5 +1,3 @@
-using Atc.Cosmos.EventStore.Cosmos;
-
 namespace Atc.Cosmos.EventStore.Events;
 
 internal static class EventDocumentExtensions

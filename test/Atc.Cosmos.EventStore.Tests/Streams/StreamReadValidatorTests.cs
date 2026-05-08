@@ -1,12 +1,6 @@
-using Atc.Cosmos.EventStore.Streams;
-using Atc.Test;
-using FluentAssertions;
-using NSubstitute;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Streams;
 
-public class StreamReadValidatorTests
+public sealed class StreamReadValidatorTests
 {
     [Theory]
     [InlineAutoNSubstituteData(StreamState.Closed, StreamVersion.StartOfStreamValue, 1)]
@@ -34,6 +28,7 @@ public class StreamReadValidatorTests
         StreamReadValidator sut,
         IStreamMetadata metadata)
     {
+        // Arrange
         metadata
             .State
             .Returns(streamState);
@@ -41,10 +36,11 @@ public class StreamReadValidatorTests
             .Version
             .Returns(actualVersion);
 
-        FluentActions.Invoking(
-            () => sut.Validate(metadata, expectedVersion))
-            .Should()
-            .Throw<Exception>();
+        // Act
+        var act = () => sut.Validate(metadata, expectedVersion);
+
+        // Assert
+        act.Should().Throw<Exception>();
     }
 
     [Theory]
@@ -79,6 +75,7 @@ public class StreamReadValidatorTests
         StreamReadValidator sut,
         IStreamMetadata metadata)
     {
+        // Arrange
         metadata
             .State
             .Returns(streamState);
@@ -86,9 +83,10 @@ public class StreamReadValidatorTests
             .Version
             .Returns(actualVersion);
 
-        FluentActions.Invoking(
-            () => sut.Validate(metadata, expectedVersion))
-            .Should()
-            .NotThrow();
+        // Act
+        var act = () => sut.Validate(metadata, expectedVersion);
+
+        // Assert
+        act.Should().NotThrow();
     }
 }

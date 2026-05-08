@@ -5,7 +5,9 @@ namespace Atc.Cosmos.EventStore.Streams.Validators;
 /// </summary>
 internal class StreamExpectedVersionValidator : IStreamValidator
 {
-    public void Validate(IStreamMetadata metadata, StreamVersion version)
+    public void Validate(
+        IStreamMetadata metadata,
+        StreamVersion version)
     {
         if (version == StreamVersion.Any || version == StreamVersion.NotEmpty)
         {

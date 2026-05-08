@@ -1,16 +1,6 @@
-using Atc.Cosmos.EventStore.Cosmos;
-using Atc.Test;
-using AutoFixture.AutoNSubstitute;
-using AutoFixture.Xunit2;
-using FluentAssertions;
-using Microsoft.Azure.Cosmos;
-using Microsoft.Extensions.Options;
-using NSubstitute;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Cosmos;
 
-public class CosmosContainerProviderTests
+public sealed class CosmosContainerProviderTests
 {
     [Theory, AutoNSubstituteData]
     internal void Should_Provide_StreamContainer(
@@ -19,6 +9,7 @@ public class CosmosContainerProviderTests
         [Substitute] IOptions<EventStoreClientOptions> options,
         [Substitute] Container container)
     {
+        // Arrange
         options
             .Value
             .Returns(new EventStoreClientOptions());
@@ -28,13 +19,13 @@ public class CosmosContainerProviderTests
         cosmosFactory
             .GetClient()
             .Returns(cosmosClient);
-
         var sut = new CosmosContainerProvider(cosmosFactory, options);
 
-        sut.GetStreamContainer()
-            .Should()
-            .Be(container);
+        // Act
+        var result = sut.GetStreamContainer();
 
+        // Assert
+        result.Should().Be(container);
         cosmosClient
             .Received(1)
             .GetContainer(
@@ -49,6 +40,7 @@ public class CosmosContainerProviderTests
         [Substitute] IOptions<EventStoreClientOptions> options,
         [Substitute] Container container)
     {
+        // Arrange
         options
             .Value
             .Returns(new EventStoreClientOptions());
@@ -58,13 +50,13 @@ public class CosmosContainerProviderTests
         cosmosFactory
             .GetClient()
             .Returns(cosmosClient);
-
         var sut = new CosmosContainerProvider(cosmosFactory, options);
 
-        sut.GetSubscriptionContainer()
-            .Should()
-            .Be(container);
+        // Act
+        var result = sut.GetSubscriptionContainer();
 
+        // Assert
+        result.Should().Be(container);
         cosmosClient
             .Received(1)
             .GetContainer(
@@ -79,6 +71,7 @@ public class CosmosContainerProviderTests
         [Substitute] IOptions<EventStoreClientOptions> options,
         [Substitute] Container container)
     {
+        // Arrange
         options
             .Value
             .Returns(new EventStoreClientOptions());
@@ -88,13 +81,13 @@ public class CosmosContainerProviderTests
         cosmosFactory
             .GetClient()
             .Returns(cosmosClient);
-
         var sut = new CosmosContainerProvider(cosmosFactory, options);
 
-        sut.GetIndexContainer()
-            .Should()
-            .Be(container);
+        // Act
+        var result = sut.GetIndexContainer();
 
+        // Assert
+        result.Should().Be(container);
         cosmosClient
             .Received(1)
             .GetContainer(

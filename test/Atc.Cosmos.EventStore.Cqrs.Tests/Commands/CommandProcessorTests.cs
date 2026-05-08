@@ -1,18 +1,9 @@
-using System.Collections.ObjectModel;
-using Atc.Cosmos.EventStore.Cqrs.Commands;
-using Atc.Cosmos.EventStore.Cqrs.Tests.Mocks;
-using Atc.Test;
-using AutoFixture.Xunit2;
-using FluentAssertions;
-using NSubstitute;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Tests.Commands;
 
-public class CommandProcessorTests
+public sealed class CommandProcessorTests
 {
     [Theory, AutoNSubstituteData]
-    internal async Task Should_Exeute_State_Projector(
+    internal async Task Should_Execute_State_Projector(
         [Frozen] ICommandHandlerFactory commandHandlerFactory,
         [Frozen] IStateProjector<MockCommand> stateProjector,
         CommandProcessor<MockCommand> sut,

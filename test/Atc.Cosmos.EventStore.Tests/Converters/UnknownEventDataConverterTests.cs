@@ -1,13 +1,6 @@
-using System.Text.Json;
-using Atc.Cosmos.EventStore.Converters;
-using Atc.Cosmos.EventStore.Tests.Fakes;
-using Atc.Test;
-using FluentAssertions;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Converters;
 
-public class UnknownEventDataConverterTests
+public sealed class UnknownEventDataConverterTests
 {
     private readonly JsonDocument doc = JsonDocument.Parse(JsonSerializer.Serialize(new EventOne("name", 42)));
 
@@ -16,26 +9,38 @@ public class UnknownEventDataConverterTests
         IEventMetadata metadata,
         string expected,
         UnknownEventDataConverter sut)
-        => sut
+    {
+        // Act
+        var result = sut
             .Convert(
                 metadata,
                 doc.RootElement,
                 new JsonSerializerOptions(),
-                () => expected)
+                () => expected);
+
+        // Assert
+        result
             .Should()
             .Be(expected);
+    }
 
     [Theory, AutoNSubstituteData]
     internal void Should_Return_UnknownEvent_When_Value_IsNot_Converted(
         IEventMetadata metadata,
         UnknownEventDataConverter sut)
-        => sut
+    {
+        // Act
+        var result = sut
             .Convert(
                 metadata,
                 doc.RootElement,
                 new JsonSerializerOptions(),
-                () => null)
+                () => null);
+
+        // Assert
+        result
             .Should()
             .BeEquivalentTo(
                 new UnknownEvent(doc.RootElement.GetRawText()));
+    }
 }

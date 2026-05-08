@@ -1,8 +1,3 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Atc.Cosmos.EventStore.Events;
-using Atc.Cosmos.EventStore.Streams;
-
 namespace Atc.Cosmos.EventStore.Converters;
 
 /// <summary>
@@ -12,8 +7,7 @@ internal class EventDocumentConverter : JsonConverter<EventDocument>
 {
     private readonly EventDataConverterPipeline pipeline;
 
-    public EventDocumentConverter(
-        EventDataConverterPipeline pipeline)
+    public EventDocumentConverter(EventDataConverterPipeline pipeline)
         => this.pipeline = pipeline;
 
     public override EventDocument Read(
@@ -32,7 +26,7 @@ internal class EventDocumentConverter : JsonConverter<EventDocument>
         if (jsonDocument.RootElement.TryGetProperty(EventMetadataNames.Id, out var id)
             && id.GetString() == StreamMetadata.StreamMetadataId)
         {
-            return default!;
+            return null!;
         }
 
         if (jsonDocument.RootElement.TryGetProperty(EventMetadataNames.Properties, out var properties))
@@ -50,7 +44,7 @@ internal class EventDocumentConverter : JsonConverter<EventDocument>
         return new EventDocument<object>(
             new FaultedEvent(
                 jsonDocument.RootElement.GetRawText(),
-                null),
+                Exception: null),
             new EventMetadata());
     }
 

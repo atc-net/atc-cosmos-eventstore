@@ -1,14 +1,6 @@
-using Atc.Cosmos.EventStore.Events;
-using Atc.Cosmos.EventStore.Streams;
-using Atc.Test;
-using AutoFixture;
-using FluentAssertions;
-using NSubstitute;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Events;
 
-public class EventBatchProducerTests
+public sealed class EventBatchProducerTests
 {
     private readonly IDateTimeProvider dateTimeProvider;
     private readonly IEventNameProvider nameProvider;
@@ -21,7 +13,7 @@ public class EventBatchProducerTests
     private readonly EventDocument convertedEvent;
     private readonly StreamMetadata convertedMetadata;
 
-    public class TestEvent
+    public sealed class TestEvent
     {
         public string Id { get; set; }
     }
@@ -63,15 +55,16 @@ public class EventBatchProducerTests
     }
 
     [Theory, AutoNSubstituteData]
-    internal void Can_Convert_One_Event(
-        EventBatchProducer sut)
+    internal void Can_Convert_One_Event(EventBatchProducer sut)
     {
-        var batch = sut.FromEvents(
+        // Act
+        var result = sut.FromEvents(
             new[] { @event },
             metadata,
             options);
 
-        batch
+        // Assert
+        result
             .Documents
             .Should()
             .HaveCount(1);
@@ -84,12 +77,14 @@ public class EventBatchProducerTests
         TestEvent event3,
         EventBatchProducer sut)
     {
-        var batch = sut.FromEvents(
+        // Act
+        var result = sut.FromEvents(
             new[] { event1, event2, event3 },
             metadata,
             options);
 
-        batch
+        // Assert
+        result
             .Documents
             .Should()
             .HaveCount(3);
@@ -97,66 +92,99 @@ public class EventBatchProducerTests
 
     [Fact]
     public void Should_Have_NextVersion()
-        => convertedEvent
-            .Properties
-            .Version
+    {
+        // Act
+        var result = convertedEvent.Properties.Version;
+
+        // Assert
+        result
             .Should()
             .Be(metadata.Version.Value + 1);
+    }
 
     [Fact]
     public void Id_Should_Be_PropertyVersion()
-        => convertedEvent
-            .Id
+    {
+        // Act
+        var result = convertedEvent.Id;
+
+        // Assert
+        result
             .Should()
             .Be($"{(long)convertedEvent.Properties.Version}");
+    }
 
     [Fact]
     public void PartitionKey_Should_Be_StreamId()
-        => convertedEvent
-            .PartitionKey
+    {
+        // Act
+        var result = convertedEvent.PartitionKey;
+
+        // Assert
+        result
             .Should()
             .Be(convertedEvent.Properties.StreamId.Value);
+    }
 
     [Fact]
     public void Should_Set_StreamId()
-        => convertedEvent
-            .Properties
-            .StreamId
+    {
+        // Act
+        var result = convertedEvent.Properties.StreamId;
+
+        // Assert
+        result
             .Should()
             .Be(metadata.StreamId);
+    }
 
     [Fact]
     public void Should_Have_Event_Object_Set_As_Data()
-        => convertedEvent
-            .Data
+    {
+        // Act
+        var result = convertedEvent.Data;
+
+        // Assert
+        result
             .Should()
             .Be(@event);
+    }
 
     [Fact]
     public void Should_Properties()
-        => convertedEvent
-            .Properties
+    {
+        // Act
+        var result = convertedEvent.Properties;
+
+        // Assert
+        result
             .Should()
             .NotBeNull();
+    }
 
     [Fact]
     public void Should_Have_Properties_CausationId_From_Options()
-        => convertedEvent
-            .Properties
-            .CausationId
+    {
+        // Act
+        var result = convertedEvent.Properties.CausationId;
+
+        // Assert
+        result
             .Should()
             .Be(options.CausationId);
+    }
 
     [Theory, AutoNSubstituteData]
-    internal void Should_Allow_Null_CausationId(
-        EventBatchProducer sut)
+    internal void Should_Allow_Null_CausationId(EventBatchProducer sut)
     {
-        var batch = sut.FromEvents(
+        // Act
+        var result = sut.FromEvents(
             new[] { @event },
             metadata,
             options: null);
 
-        batch
+        // Assert
+        result
             .Documents
             .First()
             .Properties
@@ -167,22 +195,27 @@ public class EventBatchProducerTests
 
     [Fact]
     public void Should_Have_Properties_CorrelationId_From_Options()
-        => convertedEvent
-            .Properties
-            .CorrelationId
+    {
+        // Act
+        var result = convertedEvent.Properties.CorrelationId;
+
+        // Assert
+        result
             .Should()
             .Be(options.CorrelationId);
+    }
 
     [Theory, AutoNSubstituteData]
-    internal void Should_Allow_Null_CorrelationId(
-        EventBatchProducer sut)
+    internal void Should_Allow_Null_CorrelationId(EventBatchProducer sut)
     {
-        var batch = sut.FromEvents(
+        // Act
+        var result = sut.FromEvents(
             new[] { @event },
             metadata,
             options: null);
 
-        batch
+        // Assert
+        result
             .Documents
             .First()
             .Properties
@@ -193,38 +226,55 @@ public class EventBatchProducerTests
 
     [Fact]
     public void Should_Set_Timestamp()
-        => convertedEvent
-            .Properties
-            .Timestamp
+    {
+        // Act
+        var result = convertedEvent.Properties.Timestamp;
+
+        // Assert
+        result
             .Should()
             .Be(expectedTimestamp);
+    }
 
     [Fact]
     public void Should_Set_Name()
-        => convertedEvent
-            .Properties
-            .Name
+    {
+        // Act
+        var result = convertedEvent.Properties.Name;
+
+        // Assert
+        result
             .Should()
             .Be(expectedName);
+    }
 
     [Fact]
     public void Should_Have_Metadata_State_Active()
-        => convertedMetadata
-            .State
+    {
+        // Act
+        var result = convertedMetadata.State;
+
+        // Assert
+        result
             .Should()
             .Be(StreamState.Active);
+    }
 
     [Theory, AutoNSubstituteData]
     internal void Throws_If_Limit_Exceeded(
         IReadOnlyCollection<TestEvent> events,
         EventBatchProducer sut)
     {
-        sut.Invoking(
-                x => x
-                    .FromEvents(
-                        Enumerable.Repeat(events, 100).ToList(),
-                        metadata,
-                        options))
+        // Act
+        var act = sut.Invoking(
+            x => x
+                .FromEvents(
+                    Enumerable.Repeat(events, 100).ToList(),
+                    metadata,
+                    options));
+
+        // Assert
+        act
             .Should()
             .ThrowExactly<InvalidOperationException>();
     }

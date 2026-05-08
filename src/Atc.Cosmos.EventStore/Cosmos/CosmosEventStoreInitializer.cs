@@ -1,6 +1,3 @@
-using Microsoft.Azure.Cosmos;
-using Microsoft.Extensions.Options;
-
 namespace Atc.Cosmos.EventStore.Cosmos;
 
 internal class CosmosEventStoreInitializer : IEventStoreInitializer
@@ -43,7 +40,8 @@ internal class CosmosEventStoreInitializer : IEventStoreInitializer
              .ConfigureAwait(continueOnCapturedContext: false);
     }
 
-    private Task CreateEventStoreContainerAsync(CancellationToken cancellationToken)
+    private Task CreateEventStoreContainerAsync(
+        CancellationToken cancellationToken)
     {
         var containerOptions = new ContainerProperties
         {
@@ -76,7 +74,8 @@ internal class CosmosEventStoreInitializer : IEventStoreInitializer
                 cancellationToken: cancellationToken);
     }
 
-    private Task CreateSubscriptionContainerAsync(CancellationToken cancellationToken)
+    private Task CreateSubscriptionContainerAsync(
+        CancellationToken cancellationToken)
     {
         var containerOptions = new ContainerProperties
         {

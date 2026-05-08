@@ -1,13 +1,10 @@
-using System.Diagnostics;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Diagnostics;
 
 internal sealed class CommandActivity : ICommandActivity
 {
     private readonly Activity? activity;
 
-    public CommandActivity(
-        Activity? activity)
+    public CommandActivity(Activity? activity)
         => this.activity = activity;
 
     public void Changed()

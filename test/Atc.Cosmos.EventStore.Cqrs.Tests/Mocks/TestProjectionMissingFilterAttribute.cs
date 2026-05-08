@@ -2,8 +2,7 @@ namespace Atc.Cosmos.EventStore.Cqrs.Tests.Mocks;
 
 internal sealed class TestProjectionMissingFilterAttribute : IProjection
 {
-    public Task CompleteAsync(
-        CancellationToken cancellationToken)
+    public Task CompleteAsync(CancellationToken cancellationToken)
         => throw new NotImplementedException();
 
     public Task<ProjectionAction> FailedAsync(

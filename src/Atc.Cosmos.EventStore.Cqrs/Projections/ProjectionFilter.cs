@@ -9,13 +9,13 @@ internal class ProjectionFilter
     {
         validators = filter
             .Split(
-                new[] { EventStreamId.PartSeperator },
+                [EventStreamId.PartSeperator],
                 StringSplitOptions.RemoveEmptyEntries)
             .Select(p => (p == "*" || p == "**")
                 ? CreateEvaluateAll()
                 : CreateEvaluation(p))
             .ToArray();
-        endsOnAcceptAll = filter.EndsWith("**");
+        endsOnAcceptAll = filter.EndsWith("**", StringComparison.Ordinal);
     }
 
     public bool Evaluate(StreamId streamId)

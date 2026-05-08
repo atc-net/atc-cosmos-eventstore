@@ -1,10 +1,3 @@
-using Atc.Cosmos.EventStore.Cosmos;
-using Atc.Cosmos.EventStore.Events;
-using Atc.Cosmos.EventStore.InMemory;
-using Atc.Cosmos.EventStore.Streams;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-
 namespace Atc.Cosmos.EventStore.DependencyInjection;
 
 public sealed class EventStoreOptionsBuilder
@@ -53,7 +46,8 @@ public sealed class EventStoreOptionsBuilder
         return this;
     }
 
-    public EventStoreOptionsBuilder UseEvents(Action<IEventCatalogBuilder> configure)
+    public EventStoreOptionsBuilder UseEvents(
+        Action<IEventCatalogBuilder> configure)
     {
         var builder = new EventCatalogBuilder();
 

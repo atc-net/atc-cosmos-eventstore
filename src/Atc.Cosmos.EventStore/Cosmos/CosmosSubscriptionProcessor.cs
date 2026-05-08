@@ -1,6 +1,3 @@
-using Atc.Cosmos.EventStore.Diagnostics;
-using Microsoft.Azure.Cosmos;
-
 namespace Atc.Cosmos.EventStore.Cosmos;
 
 internal sealed class CosmosSubscriptionProcessor :

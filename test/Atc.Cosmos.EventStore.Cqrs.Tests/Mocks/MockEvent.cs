@@ -1,6 +1,6 @@
 ﻿namespace Atc.Cosmos.EventStore.Cqrs.Tests.Mocks;
 
-public class MockEvent : IEvent
+public sealed class MockEvent : IEvent
 {
     public object Data { get; set; }
 

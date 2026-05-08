@@ -1,5 +1,3 @@
-using System.Reflection;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Internal;
 
 public abstract class ConsumeEventMetadata
@@ -7,8 +5,7 @@ public abstract class ConsumeEventMetadata
     private readonly Dictionary<Type, MethodInfo> consumeEvents;
     private readonly bool canConsumeAnyEvent;
 
-    protected ConsumeEventMetadata(
-        Type type)
+    protected ConsumeEventMetadata(Type type)
     {
         consumeEvents = type
             .GetInterfaces()
@@ -78,7 +75,8 @@ public abstract class ConsumeEventMetadata
         }
     }
 
-    private static bool ImplementsConsumeEventInterfaces(Type genericTypeDefinition)
+    private static bool ImplementsConsumeEventInterfaces(
+        Type genericTypeDefinition)
         => genericTypeDefinition == typeof(IConsumeEvent<>)
         || genericTypeDefinition == typeof(IConsumeEventAsync<>);
 

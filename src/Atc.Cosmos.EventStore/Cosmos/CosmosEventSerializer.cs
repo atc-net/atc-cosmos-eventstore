@@ -1,11 +1,8 @@
-using System.Diagnostics.CodeAnalysis;
+#pragma warning disable ATC220 // Using directives should be moved to GlobalUsings.cs
+#pragma warning disable ATC221 // Using directives should be moved to GlobalUsings.cs
 using System.IO;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Atc.Cosmos.EventStore.Converters;
-using Atc.Cosmos.EventStore.Events;
-using Microsoft.Azure.Cosmos;
-using Microsoft.Extensions.Options;
+#pragma warning restore ATC221
+#pragma warning restore ATC220
 
 namespace Atc.Cosmos.EventStore.Cosmos;
 

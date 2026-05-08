@@ -1,7 +1,3 @@
-using System.Runtime.CompilerServices;
-using Atc.Cosmos.EventStore.Streams;
-using Microsoft.Azure.Cosmos;
-
 namespace Atc.Cosmos.EventStore.Cosmos;
 
 internal class CosmosStreamIndexReader : IStreamIndexReader
@@ -37,7 +33,8 @@ internal class CosmosStreamIndexReader : IStreamIndexReader
         }
     }
 
-    private static QueryRequestOptions GetRequestOptions(PartitionKey partitionKey)
+    private static QueryRequestOptions GetRequestOptions(
+        PartitionKey partitionKey)
         => new() { PartitionKey = partitionKey, };
 
     private static QueryDefinition GetQuery(
@@ -54,7 +51,9 @@ internal class CosmosStreamIndexReader : IStreamIndexReader
              .WithParameter("@createdAfter", createdAfter)
          : new QueryDefinition("SELECT * FROM c");
 
-    private static QueryDefinition GetFilterQuery(string filter, DateTimeOffset? createdAfter)
+    private static QueryDefinition GetFilterQuery(
+        string filter,
+        DateTimeOffset? createdAfter)
         => createdAfter is not null
          ? new QueryDefinition(
             "SELECT * FROM c WHERE c.id LIKE @filter AND c.timestamp > @createdAfter")

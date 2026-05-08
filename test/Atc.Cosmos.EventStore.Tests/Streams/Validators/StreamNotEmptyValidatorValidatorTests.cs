@@ -1,12 +1,6 @@
-using Atc.Cosmos.EventStore.Streams.Validators;
-using Atc.Test;
-using FluentAssertions;
-using NSubstitute;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Streams.Validators;
 
-public class StreamNotEmptyValidatorValidatorTests
+public sealed class StreamNotEmptyValidatorValidatorTests
 {
     [Theory]
     [InlineAutoNSubstituteData(1, StreamState.Active)]
@@ -24,6 +18,7 @@ public class StreamNotEmptyValidatorValidatorTests
         IStreamMetadata metadata,
         StreamNotEmptyValidator sut)
     {
+        // Arrange
         metadata
             .State
             .Returns(state);
@@ -31,10 +26,11 @@ public class StreamNotEmptyValidatorValidatorTests
             .Version
             .Returns(version);
 
-        FluentActions.Invoking(
-            () => sut.Validate(metadata, StreamVersion.NotEmptyValue))
-            .Should()
-            .NotThrow();
+        // Act
+        var act = () => sut.Validate(metadata, StreamVersion.NotEmptyValue);
+
+        // Assert
+        act.Should().NotThrow();
     }
 
     [Theory]
@@ -47,6 +43,7 @@ public class StreamNotEmptyValidatorValidatorTests
         IStreamMetadata metadata,
         StreamNotEmptyValidator sut)
     {
+        // Arrange
         metadata
             .State
             .Returns(state);
@@ -54,9 +51,10 @@ public class StreamNotEmptyValidatorValidatorTests
             .Version
             .Returns(version);
 
-        FluentActions.Invoking(
-            () => sut.Validate(metadata, StreamVersion.NotEmptyValue))
-            .Should()
-            .Throw<StreamVersionConflictException>();
+        // Act
+        var act = () => sut.Validate(metadata, StreamVersion.NotEmptyValue);
+
+        // Assert
+        act.Should().Throw<StreamVersionConflictException>();
     }
 }

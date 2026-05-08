@@ -8,7 +8,7 @@ public static class ConsumeEventMetadataTestSpec
     public record NotConsumedEvent();
 #pragma warning restore S2094 // Classes should not be empty
 
-    public class ConsumesOneEvent
+    public sealed class ConsumesOneEvent
         : IConsumeEvent<ConsumedEvent>
     {
         public EventMetadata? MetadataConsumed { get; set; }
@@ -24,7 +24,7 @@ public static class ConsumeEventMetadataTestSpec
         }
     }
 
-    public class ConsumesOneEventAsync
+    public sealed class ConsumesOneEventAsync
         : IConsumeEventAsync<ConsumedEvent>
     {
         public EventMetadata? MetadataConsumed { get; set; }
@@ -43,7 +43,7 @@ public static class ConsumeEventMetadataTestSpec
         }
     }
 
-    public class ConsumesAnyEvent
+    public sealed class ConsumesAnyEvent
         : IConsumeAnyEvent
     {
         public EventMetadata? MetadataConsumed { get; set; }
@@ -59,7 +59,7 @@ public static class ConsumeEventMetadataTestSpec
         }
     }
 
-    public class ConsumesAnyEventAsync
+    public sealed class ConsumesAnyEventAsync
         : IConsumeAnyEventAsync
     {
         public EventMetadata? MetadataConsumed { get; set; }

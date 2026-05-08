@@ -1,18 +1,6 @@
-using System.Net;
-using Atc.Cosmos.EventStore.Cosmos;
-using Atc.Cosmos.EventStore.Events;
-using Atc.Cosmos.EventStore.Streams;
-using Atc.Test;
-using AutoFixture;
-using FluentAssertions;
-using Microsoft.Azure.Cosmos;
-using NSubstitute;
-using NSubstitute.ExceptionExtensions;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Cosmos;
 
-public class CosmosMetadataReaderTests
+public sealed class CosmosMetadataReaderTests
 {
     private readonly ItemResponse<StreamMetadata> itemResponse;
     private readonly Container container;
@@ -58,8 +46,10 @@ public class CosmosMetadataReaderTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Act
         await sut.GetAsync(streamId, cancellationToken);
 
+        // Assert
         _ = container
             .Received()
             .ReadItemAsync<StreamMetadata>(
@@ -74,8 +64,10 @@ public class CosmosMetadataReaderTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Act
         await sut.GetAsync(streamId, cancellationToken);
 
+        // Assert
         _ = container
             .Received()
             .ReadItemAsync<StreamMetadata>(
@@ -90,11 +82,13 @@ public class CosmosMetadataReaderTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Act
         var metadata = await sut
             .GetAsync(
                 streamId,
                 cancellationToken);
 
+        // Assert
         metadata
             .ETag
             .Should()
@@ -106,11 +100,13 @@ public class CosmosMetadataReaderTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Act
         var metadata = await sut
             .GetAsync(
                 streamId,
                 cancellationToken);
 
+        // Assert
         metadata
             .Should()
             .BeEquivalentTo(expectedMetadata);
@@ -122,15 +118,18 @@ public class CosmosMetadataReaderTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Arrange
         container
             .ReadItemAsync<StreamMetadata>(default, default, default, default)
             .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.NotFound, 0, "a", 1));
 
+        // Act
         var metadata = await sut
             .GetAsync(
                 streamId,
                 cancellationToken);
 
+        // Assert
         metadata
             .State
             .Should()
@@ -143,15 +142,18 @@ public class CosmosMetadataReaderTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Arrange
         container
             .ReadItemAsync<StreamMetadata>(default, default, default, default)
             .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.NotFound, 0, "a", 1));
 
+        // Act
         var metadata = await sut
             .GetAsync(
                 streamId,
                 cancellationToken);
 
+        // Assert
         metadata
             .Version
             .Should()
@@ -164,15 +166,18 @@ public class CosmosMetadataReaderTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Arrange
         container
             .ReadItemAsync<StreamMetadata>(default, default, default, default)
             .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.NotFound, 0, "a", 1));
 
+        // Act
         var metadata = await sut
             .GetAsync(
                 streamId,
                 cancellationToken);
 
+        // Assert
         ((StreamMetadata)metadata)
             .Id
             .Should()
@@ -185,15 +190,18 @@ public class CosmosMetadataReaderTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Arrange
         container
             .ReadItemAsync<StreamMetadata>(default, default, default, default)
             .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.NotFound, 0, "a", 1));
 
+        // Act
         var metadata = await sut
             .GetAsync(
                 streamId,
                 cancellationToken);
 
+        // Assert
         ((StreamMetadata)metadata)
             .PartitionKey
             .Should()
@@ -206,15 +214,18 @@ public class CosmosMetadataReaderTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Arrange
         container
             .ReadItemAsync<StreamMetadata>(default, default, default, default)
             .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.NotFound, 0, "a", 1));
 
+        // Act
         var metadata = await sut
             .GetAsync(
                 streamId,
                 cancellationToken);
 
+        // Assert
         metadata
             .Timestamp
             .Should()

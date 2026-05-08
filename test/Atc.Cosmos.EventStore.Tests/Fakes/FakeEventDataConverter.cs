@@ -1,12 +1,8 @@
-﻿using System.Text.Json;
-using Atc.Cosmos.EventStore.Converters;
+﻿namespace Atc.Cosmos.EventStore.Tests.Fakes;
 
-namespace Atc.Cosmos.EventStore.Tests.Fakes;
-
-public class FakeEventDataConverter : IEventDataConverter
+public sealed class FakeEventDataConverter : IEventDataConverter
 {
-    public FakeEventDataConverter(
-        string val)
+    public FakeEventDataConverter(string val)
         => Val = val;
 
     public string Val { get; }

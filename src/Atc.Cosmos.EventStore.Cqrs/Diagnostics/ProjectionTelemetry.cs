@@ -1,16 +1,13 @@
-using System.Diagnostics;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Diagnostics;
 
 public class ProjectionTelemetry : IProjectionTelemetry
 {
-    public void ProjectionSkipped(
-        string projectionName)
+    public void ProjectionSkipped(string projectionName)
     {
         using var x = EventStoreDiagnostics.Source.StartActivity(
             name: $"Projection {projectionName} skipped as no events passed projection filter",
             kind: ActivityKind.Internal,
-            tags: new Dictionary<string, object?>
+            tags: new Dictionary<string, object?>(StringComparer.Ordinal)
             {
                 { EventStoreDiagnostics.TagAttributes.SubscriptionName, projectionName },
             });
@@ -23,7 +20,7 @@ public class ProjectionTelemetry : IProjectionTelemetry
         var activity = EventStoreDiagnostics.Source.StartActivity(
             name: $"Projection batch {projectionName} started",
             kind: ActivityKind.Internal,
-            tags: new Dictionary<string, object?>
+            tags: new Dictionary<string, object?>(StringComparer.Ordinal)
             {
                 { EventStoreDiagnostics.TagAttributes.SubscriptionName, projectionName },
                 { EventStoreDiagnostics.TagAttributes.SubscriptionEventCount, count },

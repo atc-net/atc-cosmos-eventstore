@@ -1,21 +1,20 @@
-using System.Diagnostics.CodeAnalysis;
-using Atc.Test;
-using AutoFixture.Xunit2;
-using FluentAssertions;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests;
 
-public class StreamIdTests
+public sealed class StreamIdTests
 {
     [Theory, AutoNSubstituteData]
     public void Should_Be_Constructed_With_Id(
         [Frozen] string id,
         StreamId sut)
-        => sut
-            .Value
+    {
+        // Act
+        var result = sut.Value;
+
+        // Assert
+        result
             .Should()
             .Be(id);
+    }
 
     [Theory, AutoNSubstituteData]
     [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "Needed by test")]
@@ -24,49 +23,83 @@ public class StreamIdTests
         [Frozen] string id, // The same id will be injected into both left and right.
         StreamId left,
         StreamId right)
-        => (left == right)
+    {
+        // Act
+        var result = left == right;
+
+        // Assert
+        result
             .Should()
             .BeTrue();
+    }
 
     [Theory, AutoNSubstituteData]
     public void Should_Be_EqualTo_Using_String_On_LeftSide(
         [Frozen] string id,
         StreamId right)
-        => (id == right)
+    {
+        // Act
+        var result = id == right;
+
+        // Assert
+        result
             .Should()
             .BeTrue();
+    }
 
     [Theory, AutoNSubstituteData]
     public void Should_Be_EqualTo_Using_String_On_RightSide(
         [Frozen] string id,
         StreamId left)
-        => (left == id)
+    {
+        // Act
+        var result = left == id;
+
+        // Assert
+        result
             .Should()
             .BeTrue();
+    }
 
     [Theory, AutoNSubstituteData]
     public void Should_Support_Explicit_String_Overload(
         [Frozen] string id,
         StreamId sut)
-        => ((string)sut)
+    {
+        // Act
+        var result = (string)sut;
+
+        // Assert
+        result
             .Should()
             .Be(id);
+    }
 
     [Theory, AutoNSubstituteData]
     public void Should_Support_Getting_StreamId_As_String(
         [Frozen] string id,
         StreamId sut)
-        => StreamId
-            .FromStreamId(sut)
+    {
+        // Act
+        var result = StreamId.FromStreamId(sut);
+
+        // Assert
+        result
             .Should()
             .Be(id);
+    }
 
     [Theory, AutoNSubstituteData]
     public void Should_Support_Getting_StreamId_Using_String(
         [Frozen] string id,
         StreamId sut)
-        => StreamId
-            .ToStreamId(id)
+    {
+        // Act
+        var result = StreamId.ToStreamId(id);
+
+        // Assert
+        result
             .Should()
             .BeEquivalentTo(sut);
+    }
 }

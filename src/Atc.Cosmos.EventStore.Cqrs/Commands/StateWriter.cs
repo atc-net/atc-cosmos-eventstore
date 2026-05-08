@@ -1,5 +1,3 @@
-using Atc.Cosmos.EventStore.Cqrs.Diagnostics;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Commands;
 
 internal class StateWriter<TCommand> : IStateWriter<TCommand>

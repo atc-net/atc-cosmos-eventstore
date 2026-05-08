@@ -1,16 +1,6 @@
-using Atc.Cosmos.EventStore.Cosmos;
-using Atc.Cosmos.EventStore.Events;
-using Atc.Cosmos.EventStore.Streams;
-using Atc.Test;
-using AutoFixture;
-using FluentAssertions;
-using Microsoft.Azure.Cosmos;
-using NSubstitute;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Cosmos;
 
-public class CosmosBatchWriterTests
+public sealed class CosmosBatchWriterTests
 {
     private readonly TransactionalBatchOperationResult<StreamMetadata> operationResponse;
     private readonly Container container;
@@ -81,8 +71,10 @@ public class CosmosBatchWriterTests
         StreamBatch streamBatch,
         CancellationToken cancellationToken)
     {
+        // Act
         await sut.WriteAsync(streamBatch, cancellationToken);
 
+        // Assert
         _ = container
             .Received()
             .CreateTransactionalBatch(
@@ -94,8 +86,10 @@ public class CosmosBatchWriterTests
         StreamBatch streamBatch,
         CancellationToken cancellationToken)
     {
+        // Act
         await sut.WriteAsync(streamBatch, cancellationToken);
 
+        // Assert
         _ = transactionBatch
             .Received()
             .UpsertItem<StreamMetadata>(
@@ -108,8 +102,10 @@ public class CosmosBatchWriterTests
         StreamBatch streamBatch,
         CancellationToken cancellationToken)
     {
+        // Act
         await sut.WriteAsync(streamBatch, cancellationToken);
 
+        // Assert
         _ = transactionBatch
             .Received(streamBatch.Documents.Count)
             .CreateItem<EventDocument>(
@@ -118,16 +114,20 @@ public class CosmosBatchWriterTests
     }
 
     [Theory, AutoNSubstituteData]
-    internal async Task Should_Throw_When_ExecutionFails(
+    internal Task Should_Throw_When_ExecutionFails(
         StreamBatch streamBatch,
         CancellationToken cancellationToken)
     {
+        // Arrange
         expectedTransactionResponse
             .IsSuccessStatusCode
             .Returns(returnThis: false);
 
-        await FluentActions
-            .Awaiting(() => sut.WriteAsync(streamBatch, cancellationToken))
+        // Act
+        var act = () => sut.WriteAsync(streamBatch, cancellationToken);
+
+        // Assert
+        return act
             .Should()
             .ThrowAsync<StreamWriteConflictException>();
     }

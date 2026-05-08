@@ -1,11 +1,13 @@
 #nullable enable
 namespace Atc.Cosmos.EventStore.Cqrs.Tests.Functional;
 
-internal class FakeDatabase
+internal sealed class FakeDatabase
 {
-    private readonly Dictionary<string, object> storage = new();
+    private readonly Dictionary<string, object> storage = new(StringComparer.Ordinal);
 
-    public void Save(string key, object value)
+    public void Save(
+        string key,
+        object value)
     {
         storage[key] = value;
     }

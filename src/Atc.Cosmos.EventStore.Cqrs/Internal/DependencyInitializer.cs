@@ -4,8 +4,7 @@ internal class DependencyInitializer : IDependencyInitializer
 {
     private readonly Task initializer;
 
-    public DependencyInitializer(
-        Func<Task> task)
+    public DependencyInitializer(Func<Task> task)
         => initializer = task();
 
     public Task EnsureInitializeAsync()

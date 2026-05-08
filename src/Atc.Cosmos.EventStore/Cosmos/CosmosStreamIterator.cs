@@ -1,16 +1,10 @@
-using System.Runtime.CompilerServices;
-using Atc.Cosmos.EventStore.Events;
-using Atc.Cosmos.EventStore.Streams;
-using Microsoft.Azure.Cosmos;
-
 namespace Atc.Cosmos.EventStore.Cosmos;
 
 internal class CosmosStreamIterator : IStreamIterator
 {
     private readonly IEventStoreContainerProvider containerProvider;
 
-    public CosmosStreamIterator(
-        IEventStoreContainerProvider containerProvider)
+    public CosmosStreamIterator(IEventStoreContainerProvider containerProvider)
         => this.containerProvider = containerProvider;
 
     public async IAsyncEnumerable<IEvent> ReadAsync(

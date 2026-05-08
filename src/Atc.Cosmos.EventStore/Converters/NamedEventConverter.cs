@@ -1,6 +1,3 @@
-using System.Text.Json;
-using Atc.Cosmos.EventStore.Events;
-
 namespace Atc.Cosmos.EventStore.Converters;
 
 /// <summary>
@@ -10,8 +7,7 @@ internal class NamedEventConverter : IEventDataConverter
 {
     private readonly IEventTypeProvider typeProvider;
 
-    public NamedEventConverter(
-        IEventTypeProvider typeProvider)
+    public NamedEventConverter(IEventTypeProvider typeProvider)
         => this.typeProvider = typeProvider;
 
     public object? Convert(

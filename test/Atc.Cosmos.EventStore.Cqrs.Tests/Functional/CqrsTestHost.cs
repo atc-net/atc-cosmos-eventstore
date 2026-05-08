@@ -1,14 +1,8 @@
-﻿using Atc.Cosmos.EventStore.Streams;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Tests.Functional;
 
 #nullable enable
 
-public class CqrsTestHost : IAsyncDisposable
+public sealed class CqrsTestHost : IAsyncDisposable
 {
     private readonly WebApplication host;
 
@@ -19,15 +13,11 @@ public class CqrsTestHost : IAsyncDisposable
 
     public IServiceProvider Services => host.Services;
 
-    public async Task StartAsync()
-    {
-        await host.StartAsync();
-    }
+    public Task StartAsync()
+        => host.StartAsync();
 
-    public async Task StopAsync()
-    {
-        await host.StopAsync();
-    }
+    public Task StopAsync()
+        => host.StopAsync();
 
     public async ValueTask DisposeAsync()
     {

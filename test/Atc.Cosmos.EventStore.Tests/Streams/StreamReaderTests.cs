@@ -1,14 +1,6 @@
-using Atc.Cosmos.EventStore.Streams;
-using Atc.Test;
-using AutoFixture.AutoNSubstitute;
-using AutoFixture.Xunit2;
-using FluentAssertions;
-using NSubstitute;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Streams;
 
-public class StreamReaderTests
+public sealed class StreamReaderTests
 {
     [Theory, AutoNSubstituteData]
     internal async Task Should_Read_Metadata_From_StreamId(

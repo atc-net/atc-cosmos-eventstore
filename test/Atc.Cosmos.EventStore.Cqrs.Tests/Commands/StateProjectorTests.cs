@@ -1,16 +1,6 @@
-﻿using Atc.Cosmos.EventStore.Cqrs.Commands;
-using Atc.Cosmos.EventStore.Cqrs.Tests.Mocks;
-using Atc.Cosmos.EventStore.Streams;
-using Atc.Test;
-using AutoFixture.AutoNSubstitute;
-using AutoFixture.Xunit2;
-using FluentAssertions;
-using NSubstitute;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Tests.Commands;
 
-public class StateProjectorTests
+public sealed class StateProjectorTests
 {
     [Theory, AutoNSubstituteData]
     internal async Task Should_Check_If_Handler_Consumes_Events(
@@ -279,7 +269,8 @@ public class StateProjectorTests
     }
 
 #pragma warning disable CS1998 // Mark method as async
-    private static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(IEnumerable<T> enumerable)
+    private static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(
+        IEnumerable<T> enumerable)
 #pragma warning restore CS1998 // Mark method as async
     {
         foreach (var item in enumerable)

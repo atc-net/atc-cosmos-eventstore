@@ -1,11 +1,6 @@
-using Atc.Cosmos.EventStore.Events;
-using Atc.Test;
-using FluentAssertions;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Streams.Tests;
 
-public class StreamBatchTests
+public sealed class StreamBatchTests
 {
     [Theory]
     [InlineAutoNSubstituteData]
@@ -13,7 +8,10 @@ public class StreamBatchTests
         StreamMetadata metadata,
         List<EventDocument> events)
     {
+        // Act
         var sut = new StreamBatch(metadata, events);
+
+        // Assert
         sut.Should().NotBeNull();
         sut.Metadata.Should().BeEquivalentTo(metadata);
         sut.Documents.Should().BeEquivalentTo(events);
@@ -25,9 +23,12 @@ public class StreamBatchTests
         StreamMetadata metadata,
         List<EventDocument> events)
     {
-        var action = () => new StreamBatch(
+        // Act
+        var act = () => new StreamBatch(
             metadata,
             Enumerable.Repeat(events[0], 100).ToList());
-        action.Should().Throw<InvalidOperationException>();
+
+        // Assert
+        act.Should().Throw<InvalidOperationException>();
     }
 }

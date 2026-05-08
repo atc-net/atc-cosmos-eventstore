@@ -1,6 +1,3 @@
-using Microsoft.Azure.Cosmos;
-using Microsoft.Extensions.Options;
-
 namespace Atc.Cosmos.EventStore.Cosmos;
 
 internal class CosmosContainerProvider : IEventStoreContainerProvider

@@ -1,21 +1,10 @@
-using System.Reflection;
-using Atc.Cosmos.EventStore.Cosmos;
-using Atc.Cosmos.EventStore.Cqrs.Commands;
-using Atc.Cosmos.EventStore.Cqrs.Internal;
-using Atc.Cosmos.EventStore.Cqrs.Projections;
-using Atc.Cosmos.EventStore.DependencyInjection;
-using Microsoft.Azure.Cosmos;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-
 namespace Atc.Cosmos.EventStore.Cqrs.DependencyInjection.Internal;
 
 internal class EventStoreCqrsBuilder : IEventStoreCqrsBuilder
 {
     private readonly EventStoreOptionsBuilder builder;
 
-    public EventStoreCqrsBuilder(
-        EventStoreOptionsBuilder builder)
+    public EventStoreCqrsBuilder(EventStoreOptionsBuilder builder)
         => this.builder = builder;
 
     public IEventStoreCqrsBuilder AddCommandsFromAssembly<TAssembly>()
@@ -26,11 +15,11 @@ internal class EventStoreCqrsBuilder : IEventStoreCqrsBuilder
             .Where(t => !t.IsAbstract)
             .SelectMany(t => t
                 .GetInterfaces()
-                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition().Equals(typeof(ICommandHandler<>)))
-                .Select(i => new
+                .Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(ICommandHandler<>))
+                .Select(x => new
                 {
                     CommandHandlerType = t,
-                    CommandType = i.GetGenericArguments()[0],
+                    CommandType = x.GetGenericArguments()[0],
                 }))
             .Select(t => typeof(EventStoreCqrsBuilder)
                 .GetRuntimeMethods()

@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace Atc.Cosmos.EventStore.Converters;
+﻿namespace Atc.Cosmos.EventStore.Converters;
 
 internal class EventDataConverterExecutor : IEventDataConverterPipelineExecutor
 {

@@ -1,6 +1,3 @@
-using Atc.Cosmos.EventStore.Cosmos;
-using Atc.Cosmos.EventStore.Streams;
-
 namespace Atc.Cosmos.EventStore.Events;
 
 internal class EventBatchProducer : IEventBatchProducer

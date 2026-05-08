@@ -1,14 +1,6 @@
-using Atc.Cosmos.EventStore.Streams;
-using Atc.Test;
-using AutoFixture.AutoNSubstitute;
-using AutoFixture.Xunit2;
-using FluentAssertions;
-using NSubstitute;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Streams;
 
-public class StreamInfoReaderTests
+public sealed class StreamInfoReaderTests
 {
     [Theory, AutoNSubstituteData]
     internal async Task Should_Convert_Into_StreamResponse(
@@ -18,29 +10,20 @@ public class StreamInfoReaderTests
         StreamMetadata expectedMetadata,
         CancellationToken cancellationToken)
     {
+        // Arrange
         metadataReader
             .GetAsync(default, cancellationToken)
             .ReturnsForAnyArgs(expectedMetadata);
 
+        // Act
         var info = await sut
             .ReadAsync(streamId, cancellationToken);
 
-        info
-            .State
-            .Should()
-            .Be(expectedMetadata.State);
-        info
-            .StreamId
-            .Should()
-            .Be(expectedMetadata.StreamId);
-        info
-            .Timestamp
-            .Should()
-            .Be(expectedMetadata.Timestamp);
-        info
-            .Version
-            .Should()
-            .Be(expectedMetadata.Version);
+        // Assert
+        info.State.Should().Be(expectedMetadata.State);
+        info.StreamId.Should().Be(expectedMetadata.StreamId);
+        info.Timestamp.Should().Be(expectedMetadata.Timestamp);
+        info.Version.Should().Be(expectedMetadata.Version);
     }
 
     [Theory, AutoNSubstituteData]
@@ -51,13 +34,16 @@ public class StreamInfoReaderTests
         StreamMetadata expectedMetadata,
         CancellationToken cancellationToken)
     {
+        // Arrange
         metadataReader
             .GetAsync(default, cancellationToken)
             .ReturnsForAnyArgs(expectedMetadata);
 
+        // Act
         await sut
             .ReadAsync(streamId, cancellationToken);
 
+        // Assert
         _ = metadataReader
                 .Received(1)
                 .GetAsync(

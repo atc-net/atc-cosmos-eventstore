@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Options;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Projections;
 
 internal class ProjectionOptionsFactory : IProjectionOptionsFactory

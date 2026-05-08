@@ -1,5 +1,3 @@
-using System.Text.Json;
-
 namespace Atc.Cosmos.EventStore.Converters;
 
 internal class EventDataConverterPipeline

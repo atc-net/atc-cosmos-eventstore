@@ -1,12 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Atc.Cosmos.EventStore.Cosmos;
-using Atc.Cosmos.EventStore.Streams;
-using Microsoft.Azure.Cosmos;
-using StreamState = Atc.Cosmos.EventStore.StreamState;
-
-namespace Atc.Cosmos.EventStore.Cqrs.Tests;
-
-#nullable enable
+namespace Atc.Cosmos.EventStore.Cqrs.Tests.Functional;
 
 /// <summary>
 /// A working in-memory implementation of Atc.Cosmos.EventStore.IEventStoreClient.
@@ -123,8 +115,10 @@ public sealed class InMemoryEventStoreClient(IStreamReadValidator readValidator)
     }
 
     /// <inheritdoc />
-    public Task DeleteSubscriptionAsync(ConsumerGroup consumerGroup, CancellationToken cancellationToken = default) =>
-        Task.CompletedTask;
+    public Task DeleteSubscriptionAsync(
+        ConsumerGroup consumerGroup,
+        CancellationToken cancellationToken = default)
+        => Task.CompletedTask;
 
     /// <inheritdoc />
     public IAsyncEnumerable<IStreamIndex> QueryStreamsAsync(
@@ -157,8 +151,10 @@ public sealed class InMemoryEventStoreClient(IStreamReadValidator readValidator)
         throw new NotImplementedException();
 
     /// <inheritdoc />
-    public Task DeleteStreamAsync(StreamId streamId, CancellationToken cancellationToken = default) =>
-        throw new NotImplementedException();
+    public Task DeleteStreamAsync(
+        StreamId streamId,
+        CancellationToken cancellationToken = default)
+        => throw new NotImplementedException();
 
     private sealed record InMemoryStreamSubscription(
         ProcessEventsHandler EventsHandler,
@@ -183,7 +179,8 @@ public sealed class InMemoryEventStoreClient(IStreamReadValidator readValidator)
             DateTimeOffset.UtcNow,
             StreamVersion.ToStreamVersion(currentVersion));
 
-        public IReadOnlyList<InMemoryEvent> AddEvents(IEnumerable<object> events)
+        public IReadOnlyList<InMemoryEvent> AddEvents(
+            IEnumerable<object> events)
         {
             var wrappedEvents = events.Select(e => new InMemoryEvent
             {
@@ -204,24 +201,24 @@ public sealed class InMemoryEventStoreClient(IStreamReadValidator readValidator)
 
     private sealed class InMemoryEvent : IEvent
     {
-        required public object Data { get; init; }
+        public required object Data { get; init; }
 
-        required public IEventMetadata Metadata { get; init; }
+        public required IEventMetadata Metadata { get; init; }
     }
 
     private sealed class InMemoryEventMetadata : IEventMetadata
     {
-        required public string Name { get; init; }
+        public required string Name { get; init; }
 
         public string? CorrelationId { get; init; }
 
         public string? CausationId { get; init; }
 
-        required public StreamId StreamId { get; init; }
+        public required StreamId StreamId { get; init; }
 
         public DateTimeOffset Timestamp { get; init; }
 
-        required public StreamVersion Version { get; init; }
+        public required StreamVersion Version { get; init; }
     }
 
     private sealed record InMemoryStreamMetadata(
@@ -238,10 +235,10 @@ public sealed class InMemoryEventStoreClient(IStreamReadValidator readValidator)
 public sealed class NoOpEventStoreInitializer : IEventStoreInitializer
 {
     /// <inheritdoc />
-    public Task CreateEventStoreAsync(ThroughputProperties throughputProperties, CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
+    public Task CreateEventStoreAsync(
+        ThroughputProperties throughputProperties,
+        CancellationToken cancellationToken)
+        => Task.CompletedTask;
 
     /// <inheritdoc />
     public void CreateEventStore(ThroughputProperties throughputProperties)

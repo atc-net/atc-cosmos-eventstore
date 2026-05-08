@@ -1,10 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Tests.Functional;
 
 [Trait("Category", "Functional")]
-public class ProjectionTests : IAsyncLifetime
+public sealed class ProjectionTests : IAsyncLifetime
 {
     private CqrsTestHost host = null!;
 
@@ -22,10 +19,10 @@ public class ProjectionTests : IAsyncLifetime
         Assert.Equal(tick, storedTick);
     }
 
-    public async Task InitializeAsync()
+    public Task InitializeAsync()
     {
         host = new CqrsTestHost();
-        await host.StartAsync();
+        return host.StartAsync();
     }
 
     public async Task DisposeAsync()

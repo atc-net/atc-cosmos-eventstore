@@ -1,6 +1,6 @@
 ﻿namespace Atc.Cosmos.EventStore.Cqrs.Tests.Mocks;
 
-public class MockEventMetadata : IEventMetadata
+public sealed class MockEventMetadata : IEventMetadata
 {
     public string EventId { get; set; }
 

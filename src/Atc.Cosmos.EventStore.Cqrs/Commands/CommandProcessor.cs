@@ -1,5 +1,3 @@
-using Atc.Cosmos.EventStore.Cqrs.Diagnostics;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Commands;
 
 internal class CommandProcessor<TCommand> : ICommandProcessor<TCommand>
@@ -22,6 +20,10 @@ internal class CommandProcessor<TCommand> : ICommandProcessor<TCommand>
         this.handlerFactory = handlerFactory;
     }
 
+    [SuppressMessage(
+        "AsyncUsage",
+        "AsyncFixer01:Unnecessary async/await usage",
+        Justification = "Library code: keeping async/await with ConfigureAwait(false) to avoid SynchronizationContext capture in callers.")]
     public async ValueTask<CommandResult> ExecuteAsync(
         TCommand command,
         CancellationToken cancellationToken)
@@ -31,7 +33,8 @@ internal class CommandProcessor<TCommand> : ICommandProcessor<TCommand>
                 cancellationToken)
             .ConfigureAwait(false);
 
-    private static ResultType GetResultType(StreamVersionConflictException versionConflict)
+    private static ResultType GetResultType(
+        StreamVersionConflictException versionConflict)
         => versionConflict.Reason switch
         {
             StreamConflictReason.StreamIsEmpty => ResultType.NotFound,
@@ -52,52 +55,16 @@ internal class CommandProcessor<TCommand> : ICommandProcessor<TCommand>
         using var activity = telemetry.CommandStarted(command);
         try
         {
-            var handler = handlerFactory.Create<TCommand>();
-
-            // Read and project events to aggregate (command handler).
-            var state = await stateProjector
-                .ProjectAsync(command, handler, cancellationToken)
+            return await ExecuteCoreAsync(command, activity, cancellationToken)
                 .ConfigureAwait(false);
-
-            // Execute command on aggregate.
-            var context = new CommandContext(state.Version);
-            await handler
-                .ExecuteAsync(command, context, cancellationToken)
-                .ConfigureAwait(false);
-
-            if (context.Events.Count == 0)
-            {
-                activity.NotModified();
-
-                // Command did not yield any events
-                return new CommandResult(
-                    state.Id,
-                    state.Version,
-                    ResultType.NotModified,
-                    context.ResponseObject);
-            }
-
-            // Write context to stream.
-            var result = await stateWriter
-                .WriteEventAsync(command, context.Events, cancellationToken)
-                .ConfigureAwait(false);
-
-            activity.Changed();
-
-            return new CommandResult(
-                command.GetEventStreamId(),
-                result.Version,
-                ResultType.Changed,
-                context.ResponseObject);
         }
         catch (StreamWriteConflictException conflict)
         {
             reruns--;
             if (reruns > 0)
             {
-                return await
-                    SafeExecuteAsync(command, reruns, cancellationToken)
-                   .ConfigureAwait(false);
+                return await SafeExecuteAsync(command, reruns, cancellationToken)
+                    .ConfigureAwait(false);
             }
 
             activity.Conflict();
@@ -116,5 +83,49 @@ internal class CommandProcessor<TCommand> : ICommandProcessor<TCommand>
                 versionConflict.Version,
                 GetResultType(versionConflict));
         }
+    }
+
+    private async ValueTask<CommandResult> ExecuteCoreAsync(
+        TCommand command,
+        ICommandActivity activity,
+        CancellationToken cancellationToken)
+    {
+        var handler = handlerFactory.Create<TCommand>();
+
+        // Read and project events to aggregate (command handler).
+        var state = await stateProjector
+            .ProjectAsync(command, handler, cancellationToken)
+            .ConfigureAwait(false);
+
+        // Execute command on aggregate.
+        var context = new CommandContext(state.Version);
+        await handler
+            .ExecuteAsync(command, context, cancellationToken)
+            .ConfigureAwait(false);
+
+        if (context.Events.Count == 0)
+        {
+            activity.NotModified();
+
+            // Command did not yield any events
+            return new CommandResult(
+                state.Id,
+                state.Version,
+                ResultType.NotModified,
+                context.ResponseObject);
+        }
+
+        // Write context to stream.
+        var result = await stateWriter
+            .WriteEventAsync(command, context.Events, cancellationToken)
+            .ConfigureAwait(false);
+
+        activity.Changed();
+
+        return new CommandResult(
+            command.GetEventStreamId(),
+            result.Version,
+            ResultType.Changed,
+            context.ResponseObject);
     }
 }
