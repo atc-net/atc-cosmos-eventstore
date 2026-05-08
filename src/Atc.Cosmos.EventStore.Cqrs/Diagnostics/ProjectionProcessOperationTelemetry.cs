@@ -1,6 +1,3 @@
-using System.Diagnostics;
-using Atc.Cosmos.EventStore.Diagnostics;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Diagnostics;
 
 internal sealed class ProjectionProcessOperationTelemetry
@@ -8,8 +5,7 @@ internal sealed class ProjectionProcessOperationTelemetry
 {
     private readonly Activity? activity;
 
-    public ProjectionProcessOperationTelemetry(
-        Activity? activity)
+    public ProjectionProcessOperationTelemetry(Activity? activity)
         => this.activity = activity;
 
     public void Dispose()
@@ -21,8 +17,7 @@ internal sealed class ProjectionProcessOperationTelemetry
         activity?.Stop();
     }
 
-    public void ProjectionFailed(
-        Exception exception)
+    public void ProjectionFailed(Exception exception)
     {
         activity?.RecordException(exception);
         activity?.Stop();

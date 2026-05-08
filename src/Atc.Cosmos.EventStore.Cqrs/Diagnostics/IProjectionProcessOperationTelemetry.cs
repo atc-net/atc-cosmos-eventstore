@@ -6,6 +6,5 @@ public interface IProjectionProcessOperationTelemetry : IDisposable
 
     void ProjectionCompleted();
 
-    void ProjectionFailed(
-        Exception exception);
+    void ProjectionFailed(Exception exception);
 }
