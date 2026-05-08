@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Diagnostics;
 
 public sealed class CommandProjectionActivity
@@ -7,8 +5,7 @@ public sealed class CommandProjectionActivity
 {
     private readonly Activity? activity;
 
-    public CommandProjectionActivity(
-        Activity? activity)
+    public CommandProjectionActivity(Activity? activity)
         => this.activity = activity;
 
     public void Completed(StreamVersion version)

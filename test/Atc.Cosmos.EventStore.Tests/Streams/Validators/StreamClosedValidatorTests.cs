@@ -1,12 +1,6 @@
-using Atc.Cosmos.EventStore.Streams.Validators;
-using Atc.Test;
-using FluentAssertions;
-using NSubstitute;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Streams.Validators;
 
-public class StreamClosedValidatorTests
+public sealed class StreamClosedValidatorTests
 {
     [Theory, AutoNSubstituteData]
     internal void Should_Validate_When_Stream_IsNew(
@@ -14,14 +8,16 @@ public class StreamClosedValidatorTests
         StreamVersion version,
         StreamClosedValidator sut)
     {
+        // Arrange
         metadata
             .State
             .Returns(StreamState.New);
 
-        FluentActions.Invoking(
-            () => sut.Validate(metadata, version))
-            .Should()
-            .NotThrow();
+        // Act
+        var act = () => sut.Validate(metadata, version);
+
+        // Assert
+        act.Should().NotThrow();
     }
 
     [Theory, AutoNSubstituteData]
@@ -30,14 +26,16 @@ public class StreamClosedValidatorTests
         StreamVersion version,
         StreamClosedValidator sut)
     {
+        // Arrange
         metadata
             .State
             .Returns(StreamState.Active);
 
-        FluentActions.Invoking(
-            () => sut.Validate(metadata, version))
-            .Should()
-            .NotThrow();
+        // Act
+        var act = () => sut.Validate(metadata, version);
+
+        // Assert
+        act.Should().NotThrow();
     }
 
     [Theory, AutoNSubstituteData]
@@ -46,13 +44,15 @@ public class StreamClosedValidatorTests
         StreamVersion version,
         StreamClosedValidator sut)
     {
+        // Arrange
         metadata
             .State
             .Returns(StreamState.Closed);
 
-        FluentActions.Invoking(
-            () => sut.Validate(metadata, version))
-            .Should()
-            .Throw<StreamClosedException>();
+        // Act
+        var act = () => sut.Validate(metadata, version);
+
+        // Assert
+        act.Should().Throw<StreamClosedException>();
     }
 }

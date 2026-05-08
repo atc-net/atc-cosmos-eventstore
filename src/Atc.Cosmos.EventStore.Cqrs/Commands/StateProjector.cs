@@ -1,6 +1,3 @@
-using Atc.Cosmos.EventStore.Cqrs.Diagnostics;
-using Atc.Cosmos.EventStore.Streams;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Commands;
 
 internal class StateProjector<TCommand> : IStateProjector<TCommand>

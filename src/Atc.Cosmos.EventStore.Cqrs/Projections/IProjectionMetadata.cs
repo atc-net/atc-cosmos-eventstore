@@ -2,11 +2,9 @@ namespace Atc.Cosmos.EventStore.Cqrs.Projections;
 
 public interface IProjectionMetadata
 {
-    bool CanConsumeEvent(
-        IEvent evt);
+    bool CanConsumeEvent(IEvent evt);
 
-    bool CanConsumeOneOrMoreEvents(
-        IEnumerable<IEvent> events);
+    bool CanConsumeOneOrMoreEvents(IEnumerable<IEvent> events);
 
     bool IsNotConsumingEvents();
 

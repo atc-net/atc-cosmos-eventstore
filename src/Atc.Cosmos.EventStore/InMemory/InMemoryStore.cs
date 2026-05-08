@@ -1,8 +1,3 @@
-using System.Collections.Concurrent;
-using Atc.Cosmos.EventStore.Cosmos;
-using Atc.Cosmos.EventStore.Events;
-using Atc.Cosmos.EventStore.Streams;
-
 namespace Atc.Cosmos.EventStore.InMemory;
 
 internal class InMemoryStore :
@@ -18,8 +13,7 @@ internal class InMemoryStore :
 {
     private readonly IDateTimeProvider dateTimeProvider;
 
-    public InMemoryStore(
-        IDateTimeProvider dateTimeProvider)
+    public InMemoryStore(IDateTimeProvider dateTimeProvider)
     {
         this.dateTimeProvider = dateTimeProvider;
     }
@@ -70,7 +64,9 @@ internal class InMemoryStore :
         CancellationToken cancellationToken)
         => throw new NotImplementedException();
 
-    public Task DeleteAsync(StreamId streamId, CancellationToken cancellationToken)
+    public Task DeleteAsync(
+        StreamId streamId,
+        CancellationToken cancellationToken)
         => throw new NotImplementedException();
 
     public Task WriteAsync(
@@ -81,7 +77,7 @@ internal class InMemoryStore :
         CancellationToken cancellationToken)
     {
         Checkpoints
-            .GetOrAdd(streamId, new ConcurrentDictionary<string, CheckpointDocument>())
+            .GetOrAdd(streamId, new ConcurrentDictionary<string, CheckpointDocument>(StringComparer.Ordinal))
             .AddOrUpdate(
                 name,
                 static (key, arg) => new CheckpointDocument(key, arg.streamId, arg.streamVersion, arg.currentTime, arg.state),

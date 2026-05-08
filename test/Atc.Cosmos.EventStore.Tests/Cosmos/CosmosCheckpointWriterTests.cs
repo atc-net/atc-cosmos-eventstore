@@ -1,14 +1,6 @@
-using Atc.Cosmos.EventStore.Cosmos;
-using Atc.Cosmos.EventStore.Events;
-using Atc.Test;
-using AutoFixture;
-using Microsoft.Azure.Cosmos;
-using NSubstitute;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Cosmos;
 
-public class CosmosCheckpointWriterTests
+public sealed class CosmosCheckpointWriterTests
 {
     private readonly ItemResponse<CheckpointDocument<string>> itemResponse;
     private readonly Container container;
@@ -55,6 +47,7 @@ public class CosmosCheckpointWriterTests
         string state,
         CancellationToken cancellationToken)
     {
+        // Act
         await sut.WriteAsync(
             name,
             streamId,
@@ -62,6 +55,7 @@ public class CosmosCheckpointWriterTests
             state,
             cancellationToken);
 
+        // Assert
         _ = container
             .Received()
             .UpsertItemAsync<CheckpointDocument>(
@@ -79,6 +73,7 @@ public class CosmosCheckpointWriterTests
         string state,
         CancellationToken cancellationToken)
     {
+        // Arrange
         var expectedDocument = new CheckpointDocument(
             name,
             streamId,
@@ -86,6 +81,7 @@ public class CosmosCheckpointWriterTests
             dateTimeProvider.GetDateTime(),
             state);
 
+        // Act
         await sut.WriteAsync(
             name,
             streamId,
@@ -93,6 +89,7 @@ public class CosmosCheckpointWriterTests
             state,
             cancellationToken);
 
+        // Assert
         _ = container
             .Received()
             .UpsertItemAsync<CheckpointDocument>(
@@ -110,6 +107,7 @@ public class CosmosCheckpointWriterTests
         string state,
         CancellationToken cancellationToken)
     {
+        // Act
         await sut.WriteAsync(
             name,
             streamId,
@@ -117,6 +115,7 @@ public class CosmosCheckpointWriterTests
             state,
             cancellationToken);
 
+        // Assert
         _ = container
             .Received()
             .UpsertItemAsync<CheckpointDocument>(

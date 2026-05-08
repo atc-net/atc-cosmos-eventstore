@@ -1,13 +1,6 @@
-using System.Text.Json;
-using Atc.Cosmos.EventStore.Converters;
-using Atc.Cosmos.EventStore.Tests.Fakes;
-using Atc.Test;
-using FluentAssertions;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Converters;
 
-public class FaultedEventDataConverterTests
+public sealed class FaultedEventDataConverterTests
 {
     private readonly JsonDocument doc = JsonDocument.Parse(JsonSerializer.Serialize(new EventOne("name", 42)));
 
@@ -16,29 +9,41 @@ public class FaultedEventDataConverterTests
         IEventMetadata metadata,
         string expected,
         FaultedEventDataConverter sut)
-        => sut
+    {
+        // Act
+        var result = sut
             .Convert(
                 metadata,
                 doc.RootElement,
                 new JsonSerializerOptions(),
-                () => expected)
+                () => expected);
+
+        // Assert
+        result
             .Should()
             .Be(expected);
+    }
 
     [Theory, AutoNSubstituteData]
     internal void Should_Return_FaultedEvent_When_Exception_IsThrown(
         IEventMetadata metadata,
         KeyNotFoundException exception,
         FaultedEventDataConverter sut)
-        => sut
+    {
+        // Act
+        var result = sut
             .Convert(
                 metadata,
                 doc.RootElement,
                 new JsonSerializerOptions(),
-                () => throw exception)
+                () => throw exception);
+
+        // Assert
+        result
             .Should()
             .BeEquivalentTo(
                 new FaultedEvent(
                     doc.RootElement.GetRawText(),
                     exception));
+    }
 }

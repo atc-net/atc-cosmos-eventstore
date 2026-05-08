@@ -2,11 +2,9 @@
 
 public interface IProjectionBatchTelemetry : IDisposable
 {
-    IProjectionProcessOperationTelemetry StartProjection(
-        StreamId streamId);
+    IProjectionProcessOperationTelemetry StartProjection(StreamId streamId);
 
     void BatchCompleted();
 
-    void BatchFailed(
-        Exception exception);
+    void BatchFailed(Exception exception);
 }

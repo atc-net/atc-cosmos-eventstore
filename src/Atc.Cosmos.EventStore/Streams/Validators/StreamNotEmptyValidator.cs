@@ -5,7 +5,9 @@ namespace Atc.Cosmos.EventStore.Streams.Validators;
 /// </summary>
 internal class StreamNotEmptyValidator : IStreamValidator
 {
-    public void Validate(IStreamMetadata metadata, StreamVersion version)
+    public void Validate(
+        IStreamMetadata metadata,
+        StreamVersion version)
     {
         // Pass validation if the required version is not NotEmpty.
         if (version != StreamVersion.NotEmpty)

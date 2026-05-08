@@ -1,12 +1,10 @@
-using Atc.Cosmos.EventStore.Cqrs;
-
 namespace Microsoft.Extensions.DependencyInjection;
 
 public interface IEventStoreCqrsBuilder
 {
     IEventStoreCqrsBuilder AddInitialization(
         int throughput,
-        Func<IServiceProvider, Task>? additionInitialization = default);
+        Func<IServiceProvider, Task>? additionInitialization = null);
 
     IEventStoreCqrsBuilder AddCommandsFromAssembly<TAssembly>();
 
@@ -16,6 +14,6 @@ public interface IEventStoreCqrsBuilder
 
     IEventStoreCqrsBuilder AddProjectionJob<TProjection>(
         string name,
-        Action<IProjectionBuilder>? configure = default)
+        Action<IProjectionBuilder>? configure = null)
         where TProjection : class, IProjection;
 }

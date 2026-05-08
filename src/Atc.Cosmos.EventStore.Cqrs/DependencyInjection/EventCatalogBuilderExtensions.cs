@@ -1,6 +1,3 @@
-using System.Reflection;
-using Atc.Cosmos.EventStore.Cqrs;
-
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class EventCatalogBuilderExtensions
@@ -12,7 +9,8 @@ public static class EventCatalogBuilderExtensions
     /// <typeparam name="T">Use this type to identify the assembly to scan.</typeparam>
     /// <param name="builder">Catalog build to add events to.</param>
     /// <returns>Builder.</returns>
-    public static IEventCatalogBuilder FromAssembly<T>(this IEventCatalogBuilder builder)
+    public static IEventCatalogBuilder FromAssembly<T>(
+        this IEventCatalogBuilder builder)
     {
         var types = typeof(T)
             .Assembly
@@ -36,7 +34,8 @@ public static class EventCatalogBuilderExtensions
     /// <typeparam name="T">Use this types namespace.</typeparam>
     /// <param name="builder">Catalog build to add events to.</param>
     /// <returns>Builder.</returns>
-    public static IEventCatalogBuilder FromNamespace<T>(this IEventCatalogBuilder builder)
+    public static IEventCatalogBuilder FromNamespace<T>(
+        this IEventCatalogBuilder builder)
     {
         var ns = typeof(T)
             .Namespace;
@@ -68,7 +67,8 @@ public static class EventCatalogBuilderExtensions
     /// <param name="builder">Catalog to add type to.</param>
     /// <returns>Builder.</returns>
     /// <exception cref="ArgumentException">If type is not decorated with <see cref="StreamEventAttribute"/>.</exception>
-    public static IEventCatalogBuilder FromType<T>(this IEventCatalogBuilder builder)
+    public static IEventCatalogBuilder FromType<T>(
+        this IEventCatalogBuilder builder)
     {
         var name = typeof(T)
             .GetCustomAttribute<StreamEventAttribute>()

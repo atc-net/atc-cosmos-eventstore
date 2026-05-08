@@ -1,16 +1,6 @@
-using System.Net;
-using Atc.Cosmos.EventStore.Cosmos;
-using Atc.Test;
-using AutoFixture;
-using FluentAssertions;
-using Microsoft.Azure.Cosmos;
-using NSubstitute;
-using NSubstitute.ExceptionExtensions;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Cosmos;
 
-public class CosmosCheckpointReaderTests
+public sealed class CosmosCheckpointReaderTests
 {
     private readonly ItemResponse<CheckpointDocument<string>> itemResponse;
     private readonly Container container;
@@ -28,7 +18,7 @@ public class CosmosCheckpointReaderTests
 
         container = Substitute.For<Container>();
         container
-            .ReadItemAsync<CheckpointDocument<string>>(default, default, default, default)
+            .ReadItemAsync<CheckpointDocument<string>>(id: null, partitionKey: default, requestOptions: null, CancellationToken.None)
             .ReturnsForAnyArgs(itemResponse);
 
         containerProvider = Substitute.For<IEventStoreContainerProvider>();
@@ -45,9 +35,11 @@ public class CosmosCheckpointReaderTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Act
         await sut
             .ReadAsync<string>(name, streamId, cancellationToken);
 
+        // Assert
         containerProvider
             .Received(1)
             .GetIndexContainer();
@@ -59,9 +51,11 @@ public class CosmosCheckpointReaderTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Act
         await sut
             .ReadAsync<string>(name, streamId, cancellationToken);
 
+        // Assert
         _ = container
             .Received(1)
             .ReadItemAsync<CheckpointDocument<string>>(
@@ -77,9 +71,11 @@ public class CosmosCheckpointReaderTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Act
         await sut
             .ReadAsync<string>(name, streamId, cancellationToken);
 
+        // Assert
         _ = container
             .Received(1)
             .ReadItemAsync<CheckpointDocument<string>>(
@@ -96,15 +92,18 @@ public class CosmosCheckpointReaderTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Arrange
         container
             .ReadItemAsync<CheckpointDocument<string>>(default, default, default, default)
             .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.NotFound, 0, "a", 1));
 
+        // Act
         var checkpoint = await sut.ReadAsync<string>(
             name,
             streamId,
             cancellationToken);
 
+        // Assert
         checkpoint
             .Should()
             .BeNull();
@@ -112,17 +111,21 @@ public class CosmosCheckpointReaderTests
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
-    public async Task Should_Propergate_CosmosException_When_StatusCode_IsNot_NotFound(
+    public Task Should_Propergate_CosmosException_When_StatusCode_IsNot_NotFound(
         string name,
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Arrange
         container
             .ReadItemAsync<CheckpointDocument<string>>(default, default, default, default)
             .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.TooManyRequests, 0, "a", 1));
 
-        await FluentActions
-            .Awaiting(() => sut.ReadAsync<string>(name, streamId, cancellationToken))
+        // Act
+        var act = () => sut.ReadAsync<string>(name, streamId, cancellationToken);
+
+        // Assert
+        return act
             .Should()
             .ThrowAsync<CosmosException>();
     }
@@ -133,11 +136,13 @@ public class CosmosCheckpointReaderTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Act
         var checkpoint = await sut.ReadAsync<string>(
             name,
             streamId,
             cancellationToken);
 
+        // Assert
         checkpoint
             .Should()
             .BeEquivalentTo(

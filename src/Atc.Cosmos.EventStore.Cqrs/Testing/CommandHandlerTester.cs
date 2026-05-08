@@ -1,7 +1,3 @@
-using Atc.Cosmos.EventStore.Cqrs.Commands;
-using Atc.Cosmos.EventStore.Cqrs.Internal;
-using Atc.Cosmos.EventStore.Events;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Testing;
 
 internal class CommandHandlerTester<TCommand> :
@@ -30,8 +26,7 @@ internal class CommandHandlerTester<TCommand> :
     private Func<Task<object[]>> eventsProvider = EmptyEventStreamAsync;
     private TCommand? command;
 
-    public CommandHandlerTester(
-        ICommandHandler<TCommand> handler)
+    public CommandHandlerTester(ICommandHandler<TCommand> handler)
     {
         this.handler = handler;
         this.handlerMetadata = new TestMetadata(handler);
@@ -45,8 +40,7 @@ internal class CommandHandlerTester<TCommand> :
         return this;
     }
 
-    public ICommandThen WhenExecuting(
-        TCommand command)
+    public ICommandThen WhenExecuting(TCommand command)
     {
         this.command = command;
 
@@ -100,7 +94,8 @@ internal class CommandHandlerTester<TCommand> :
     private static Task<object[]> EmptyEventStreamAsync()
         => Task.FromResult<object[]>(Array.Empty<string>());
 
-    private async Task<CommandContext> ExecuteAsync(CancellationToken cancellationToken)
+    private async Task<CommandContext> ExecuteAsync(
+        CancellationToken cancellationToken)
     {
         var version = 1;
         foreach (var evt in await eventsProvider().ConfigureAwait(false))

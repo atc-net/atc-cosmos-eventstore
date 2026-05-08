@@ -1,6 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Text.Json;
-
 namespace Atc.Cosmos.EventStore.Converters;
 
 /// <summary>

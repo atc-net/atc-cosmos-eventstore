@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace Atc.Cosmos.EventStore;
 
 /// <summary>
@@ -17,7 +15,9 @@ public sealed class StreamClosedException : EventStoreException
         StreamId = streamId;
     }
 
-    public StreamClosedException(StreamId streamId, Exception innerException)
+    public StreamClosedException(
+        StreamId streamId,
+        Exception innerException)
         : base(MessageText, innerException)
     {
         StreamId = streamId;

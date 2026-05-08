@@ -1,19 +1,18 @@
-using System.Text.Json.Serialization;
-using Atc.Cosmos.EventStore.Streams;
-using Microsoft.Azure.Cosmos;
-
 namespace Atc.Cosmos.EventStore.Cosmos;
 
 internal class CosmosSubscriptionRemover : IStreamSubscriptionRemover
 {
     private readonly IEventStoreContainerProvider containerProvider;
 
-    public CosmosSubscriptionRemover(IEventStoreContainerProvider containerProvider)
+    public CosmosSubscriptionRemover(
+        IEventStoreContainerProvider containerProvider)
     {
         this.containerProvider = containerProvider;
     }
 
-    public async Task DeleteAsync(ConsumerGroup consumerGroup, CancellationToken cancellationToken)
+    public async Task DeleteAsync(
+        ConsumerGroup consumerGroup,
+        CancellationToken cancellationToken)
     {
         var resultSet = containerProvider
             .GetSubscriptionContainer()
@@ -26,13 +25,13 @@ internal class CosmosSubscriptionRemover : IStreamSubscriptionRemover
             var registrations = await resultSet
                 .ReadNextAsync(cancellationToken)
                 .ConfigureAwait(false);
-            foreach (var registration in registrations)
+            foreach (var id in registrations.Select(r => r.Id))
             {
                 await containerProvider
                     .GetSubscriptionContainer()
                     .DeleteItemAsync<object>(
-                        registration.Id,
-                        new PartitionKey(registration.Id),
+                        id,
+                        new PartitionKey(id),
                         cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             }

@@ -1,10 +1,8 @@
-﻿using Atc.Cosmos.EventStore.Cqrs.Internal;
-using Atc.Cosmos.EventStore.Cqrs.Tests.Mocks;
 using static Atc.Cosmos.EventStore.Cqrs.Tests.Internal.ConsumeEventMetadataTestSpec;
 
 namespace Atc.Cosmos.EventStore.Cqrs.Tests.Internal;
 
-public class ConsumeEventMetadataFixture<TProjection> :
+public sealed class ConsumeEventMetadataFixture<TProjection> :
     ConsumeEventMetadata
     where TProjection : class, new()
 {

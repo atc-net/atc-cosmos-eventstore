@@ -1,12 +1,6 @@
-using Atc.Cosmos.EventStore.Cosmos;
-using Atc.Test;
-using Microsoft.Azure.Cosmos;
-using NSubstitute;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Cosmos;
 
-public class CosmosDeleterTests
+public sealed class CosmosDeleterTests
 {
     private readonly ResponseMessage responseMessage;
     private readonly Container container;
@@ -36,10 +30,12 @@ public class CosmosDeleterTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Act
         await sut.DeleteAsync(
             streamId,
             cancellationToken);
 
+        // Assert
         _ = container
             .Received()
             .DeleteAllItemsByPartitionKeyStreamAsync(

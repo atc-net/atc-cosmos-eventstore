@@ -1,14 +1,10 @@
-using System.Diagnostics;
-using Atc.Cosmos.EventStore.Diagnostics;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Diagnostics;
 
 public sealed class ProjectionBatchTelemetry : IProjectionBatchTelemetry
 {
     private readonly Activity? activity;
 
-    public ProjectionBatchTelemetry(
-        Activity? activity)
+    public ProjectionBatchTelemetry(Activity? activity)
         => this.activity = activity;
 
     public void Dispose()
@@ -20,7 +16,7 @@ public sealed class ProjectionBatchTelemetry : IProjectionBatchTelemetry
         var newActivity = EventStoreDiagnostics.Source.StartActivity(
             name: $"Projection started [{streamId.Value}]",
             kind: ActivityKind.Internal,
-            tags: new Dictionary<string, object?>
+            tags: new Dictionary<string, object?>(StringComparer.Ordinal)
             {
                 { EventStoreDiagnostics.TagAttributes.StreamId, streamId.Value },
             });
@@ -34,8 +30,7 @@ public sealed class ProjectionBatchTelemetry : IProjectionBatchTelemetry
         activity?.Stop();
     }
 
-    public void BatchFailed(
-        Exception exception)
+    public void BatchFailed(Exception exception)
     {
         activity?.RecordException(exception);
         activity?.Stop();

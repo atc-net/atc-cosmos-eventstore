@@ -1,6 +1,3 @@
-using Atc.Cosmos.EventStore.Streams;
-using Microsoft.Azure.Cosmos;
-
 namespace Atc.Cosmos.EventStore.Cosmos;
 
 internal class CosmosDeleter : IStreamDeleter

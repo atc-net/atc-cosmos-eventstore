@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace Atc.Cosmos.EventStore;
 
 public struct StreamId : IEquatable<StreamId>
@@ -29,17 +27,19 @@ public struct StreamId : IEquatable<StreamId>
     public static string FromStreamId(StreamId streamId)
         => streamId.Value;
 
-    public static bool Equals(StreamId left, StreamId right)
+    public static bool Equals(
+        StreamId left,
+        StreamId right)
         => left.Equals(right);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public override bool Equals(object? obj)
         => obj is StreamId id && Equals(id);
 
     public bool Equals(StreamId other)
         => string.Equals(Value, other.Value, StringComparison.Ordinal);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public override int GetHashCode()
         => HashCode.Combine(Value);
 }

@@ -1,12 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Tests.Functional;
 
 #nullable enable
 
 [Trait("Category", "Functional")]
-public class CommandHandlerTests : IAsyncLifetime
+public sealed class CommandHandlerTests : IAsyncLifetime
 {
     private CqrsTestHost host = null!;
 
@@ -72,10 +69,10 @@ public class CommandHandlerTests : IAsyncLifetime
         Assert.Equal(ResultType.NotFound, result.Result);
     }
 
-    public async Task InitializeAsync()
+    public Task InitializeAsync()
     {
         host = new CqrsTestHost();
-        await host.StartAsync();
+        return host.StartAsync();
     }
 
     public async Task DisposeAsync()

@@ -1,18 +1,16 @@
-using Atc.Cosmos.EventStore.Events;
-using Atc.Test;
-using FluentAssertions;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Commands.Tests;
 
-public class CommandContextTests
+public sealed class CommandContextTests
 {
     [Theory, AutoNSubstituteData]
     internal void EventsShouldReturnEmptyList_WhenNoEventsAdded(
         CommandContext sut)
     {
-        var actual = sut.Events;
-        actual.Should().BeEmpty();
+        // Act
+        var result = sut.Events;
+
+        // Assert
+        result.Should().BeEmpty();
     }
 
     [Theory, AutoNSubstituteData]
@@ -20,7 +18,10 @@ public class CommandContextTests
         CommandContext sut,
         object eventData)
     {
+        // Act
         sut.AddEvent(eventData);
+
+        // Assert
         sut.Events.Should().Contain(eventData);
     }
 
@@ -29,13 +30,16 @@ public class CommandContextTests
         CommandContext sut,
         object eventData)
     {
+        // Arrange
         for (int i = 0; i < CommandContext.EventLimit; i++)
         {
             sut.AddEvent(eventData);
         }
 
-        sut.Invoking(c => c.AddEvent(new object()))
-            .Should()
-            .Throw<InvalidOperationException>();
+        // Act
+        var act = () => sut.AddEvent(new object());
+
+        // Assert
+        act.Should().Throw<InvalidOperationException>();
     }
 }

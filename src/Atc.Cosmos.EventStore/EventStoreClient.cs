@@ -1,6 +1,3 @@
-using Atc.Cosmos.EventStore.Events;
-using Atc.Cosmos.EventStore.Streams;
-
 namespace Atc.Cosmos.EventStore;
 
 internal class EventStoreClient : IEventStoreClient

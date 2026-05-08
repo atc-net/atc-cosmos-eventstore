@@ -2,5 +2,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public interface IEventCatalogBuilder
 {
-    IEventCatalogBuilder FromType(string name, Type type);
+    IEventCatalogBuilder FromType(
+        string name,
+        Type type);
 }

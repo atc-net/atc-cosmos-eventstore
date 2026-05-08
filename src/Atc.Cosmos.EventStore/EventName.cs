@@ -30,7 +30,9 @@ public struct EventName : IEquatable<EventName>
     public static EventName ToEventName(string eventName)
         => new(eventName);
 
-    public static bool Equals(EventName left, EventName right)
+    public static bool Equals(
+        EventName left,
+        EventName right)
         => left.Equals(right);
 
     public override bool Equals(object? obj)

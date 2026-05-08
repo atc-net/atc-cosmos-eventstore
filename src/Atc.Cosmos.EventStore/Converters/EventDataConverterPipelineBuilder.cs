@@ -1,10 +1,8 @@
-using System.Collections.ObjectModel;
-
 namespace Atc.Cosmos.EventStore.Converters;
 
 internal class EventDataConverterPipelineBuilder
 {
-    private readonly Collection<IEventDataConverter> converters = new();
+    private readonly Collection<IEventDataConverter> converters = [];
 
     public EventDataConverterPipelineBuilder AddConverter(
         IEventDataConverter converter)
@@ -28,6 +26,7 @@ internal class EventDataConverterPipelineBuilder
     public EventDataConverterPipeline Build()
     {
         IEventDataConverterPipelineExecutor? pipeline = null;
+
         foreach (var converter in converters.Reverse())
         {
             pipeline = new EventDataConverterExecutor(converter, pipeline);

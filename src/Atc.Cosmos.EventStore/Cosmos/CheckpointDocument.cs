@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace Atc.Cosmos.EventStore.Cosmos;
 
 internal record CheckpointDocument(

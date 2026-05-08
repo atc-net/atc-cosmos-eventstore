@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-
 namespace Atc.Cosmos.EventStore.Streams;
 
 internal class StreamReader : IStreamReader

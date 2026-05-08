@@ -1,11 +1,3 @@
-using Atc.Cosmos.EventStore.Cqrs;
-using Atc.Cosmos.EventStore.Cqrs.Commands;
-using Atc.Cosmos.EventStore.Cqrs.DependencyInjection.Internal;
-using Atc.Cosmos.EventStore.Cqrs.Diagnostics;
-using Atc.Cosmos.EventStore.Cqrs.Projections;
-using Atc.Cosmos.EventStore.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class EventStoreOptionsBuilderExtensions

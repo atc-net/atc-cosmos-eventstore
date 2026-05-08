@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace Atc.Cosmos.EventStore;
 
 public struct SubscriptionStartOptions : IEquatable<SubscriptionStartOptions>
@@ -25,8 +23,7 @@ public struct SubscriptionStartOptions : IEquatable<SubscriptionStartOptions>
     {
     }
 
-    internal SubscriptionStartOptions(
-        DateTime startFrom)
+    internal SubscriptionStartOptions(DateTime startFrom)
         => StartFrom = startFrom.ToUniversalTime();
 
     public DateTime StartFrom { get; }
@@ -48,14 +45,14 @@ public struct SubscriptionStartOptions : IEquatable<SubscriptionStartOptions>
     public static bool operator !=(SubscriptionStartOptions left, SubscriptionStartOptions right)
         => !(left == right);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public override bool Equals(object? obj)
         => obj is SubscriptionStartOptions option && Equals(option);
 
     public bool Equals(SubscriptionStartOptions other)
         => StartFrom == other.StartFrom;
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public override int GetHashCode()
         => HashCode.Combine(StartFrom);
 }

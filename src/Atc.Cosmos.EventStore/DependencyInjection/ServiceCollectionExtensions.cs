@@ -1,11 +1,3 @@
-using Atc.Cosmos.EventStore;
-using Atc.Cosmos.EventStore.Cosmos;
-using Atc.Cosmos.EventStore.DependencyInjection;
-using Atc.Cosmos.EventStore.Diagnostics;
-using Atc.Cosmos.EventStore.Events;
-using Atc.Cosmos.EventStore.Streams;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions

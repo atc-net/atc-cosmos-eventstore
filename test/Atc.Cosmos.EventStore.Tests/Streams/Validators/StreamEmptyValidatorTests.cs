@@ -1,26 +1,22 @@
-using Atc.Cosmos.EventStore.Streams.Validators;
-using Atc.Test;
-using FluentAssertions;
-using NSubstitute;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Streams.Validators;
 
-public class StreamEmptyValidatorTests
+public sealed class StreamEmptyValidatorTests
 {
     [Theory, AutoNSubstituteData]
     internal void Should_Validate_When_Expected_Version_IsNot_StartOfStream(
         IStreamMetadata metadata,
         StreamEmptyValidator sut)
     {
+        // Arrange
         metadata
             .State
             .Returns(StreamState.Active);
 
-        FluentActions.Invoking(
-            () => sut.Validate(metadata, StreamVersion.Any))
-            .Should()
-            .NotThrow();
+        // Act
+        var act = () => sut.Validate(metadata, StreamVersion.Any);
+
+        // Assert
+        act.Should().NotThrow();
     }
 
     [Theory, AutoNSubstituteData]
@@ -28,6 +24,7 @@ public class StreamEmptyValidatorTests
         IStreamMetadata metadata,
         StreamEmptyValidator sut)
     {
+        // Arrange
         metadata
             .State
             .Returns(StreamState.Active);
@@ -35,10 +32,11 @@ public class StreamEmptyValidatorTests
             .Version
             .Returns(StreamVersion.FromStreamVersion(1));
 
-        FluentActions.Invoking(
-            () => sut.Validate(metadata, StreamVersion.StartOfStream))
-            .Should()
-            .Throw<StreamVersionConflictException>();
+        // Act
+        var act = () => sut.Validate(metadata, StreamVersion.StartOfStream);
+
+        // Assert
+        act.Should().Throw<StreamVersionConflictException>();
     }
 
     [Theory, AutoNSubstituteData]
@@ -46,6 +44,7 @@ public class StreamEmptyValidatorTests
         IStreamMetadata metadata,
         StreamEmptyValidator sut)
     {
+        // Arrange
         metadata
             .State
             .Returns(StreamState.Active);
@@ -53,9 +52,10 @@ public class StreamEmptyValidatorTests
             .Version
             .Returns(StreamVersion.StartOfStream);
 
-        FluentActions.Invoking(
-            () => sut.Validate(metadata, StreamVersion.StartOfStream))
-            .Should()
-            .NotThrow();
+        // Act
+        var act = () => sut.Validate(metadata, StreamVersion.StartOfStream);
+
+        // Assert
+        act.Should().NotThrow();
     }
 }

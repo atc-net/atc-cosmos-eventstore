@@ -1,7 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-using Atc.Cosmos.EventStore.Cqrs.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Projections;
 
 internal class ProjectionProcessor<TProjection> : IProjectionProcessor<TProjection>

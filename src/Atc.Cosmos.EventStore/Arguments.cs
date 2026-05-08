@@ -1,18 +1,18 @@
-using System.Diagnostics;
-
 namespace Atc.Cosmos.EventStore;
 
 [DebuggerStepThrough]
 internal static class Arguments
 {
-    internal static IReadOnlyCollection<object> EnsureNoNullValues(IReadOnlyCollection<object> events, string argumentName)
+    internal static IReadOnlyCollection<object> EnsureNoNullValues(
+        IReadOnlyCollection<object> events,
+        string argumentName)
     {
         if (events is null)
         {
             throw new ArgumentNullException(argumentName);
         }
 
-        if (events.Any(e => e is null))
+        if (events.Any(x => x is null))
         {
             throw new ArgumentException("Null values not allowed", argumentName);
         }
@@ -20,27 +20,19 @@ internal static class Arguments
         return events;
     }
 
-    internal static object EnsureNotNull(object argumentValue, string argumentName)
-    {
-        if (argumentValue is null)
-        {
-            throw new ArgumentNullException(argumentName);
-        }
+    internal static object EnsureNotNull(
+        object argumentValue,
+        string argumentName)
+        => argumentValue ?? throw new ArgumentNullException(argumentName);
 
-        return argumentValue;
-    }
+    internal static T EnsureNotNull<T>(
+        T? argumentValue,
+        string argumentName)
+        => argumentValue ?? throw new ArgumentNullException(argumentName);
 
-    internal static T EnsureNotNull<T>(T? argumentValue, string argumentName)
-    {
-        if (argumentValue is null)
-        {
-            throw new ArgumentNullException(argumentName);
-        }
-
-        return argumentValue;
-    }
-
-    internal static StreamVersion EnsureValueRange(StreamVersion streamVersion, string argumentName)
+    internal static StreamVersion EnsureValueRange(
+        StreamVersion streamVersion,
+        string argumentName)
     {
         if (streamVersion < StreamVersion.NotEmpty)
         {

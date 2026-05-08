@@ -1,16 +1,6 @@
-using System.Collections.ObjectModel;
-using Atc.Cosmos.EventStore.Cosmos;
-using Atc.Cosmos.EventStore.Streams;
-using Atc.Test;
-using AutoFixture.AutoNSubstitute;
-using AutoFixture.Xunit2;
-using FluentAssertions;
-using NSubstitute;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests;
 
-public class EventStoreClientTests
+public sealed class EventStoreClientTests
 {
     [Theory, AutoNSubstituteData]
     internal async Task Should_DeleteSubscription(
@@ -19,10 +9,12 @@ public class EventStoreClientTests
         ConsumerGroup consumerGroup,
         CancellationToken cancellationToken)
     {
+        // Act
         await sut.DeleteSubscriptionAsync(
             consumerGroup,
             cancellationToken: cancellationToken);
 
+        // Assert
         _ = remover
                 .Received(1)
                 .DeleteAsync(
@@ -34,10 +26,15 @@ public class EventStoreClientTests
     internal Task Should_Throw_On_DeleteSubscription_When_ConsumerGroup_IsNull(
         EventStoreClient sut,
         CancellationToken cancellationToken)
-        => FluentActions
-            .Awaiting(() => sut.DeleteSubscriptionAsync(null, cancellationToken))
+    {
+        // Act
+        var act = () => sut.DeleteSubscriptionAsync(null, cancellationToken);
+
+        // Assert
+        return act
             .Should()
             .ThrowAsync<ArgumentNullException>();
+    }
 
     [Theory, AutoNSubstituteData]
     internal async Task Should_Return_Info_On_GetStreamInfo(
@@ -47,14 +44,17 @@ public class EventStoreClientTests
         IStreamMetadata expectedResult,
         CancellationToken cancellationToken)
     {
+        // Arrange
         reader
             .ReadAsync(default, default)
             .ReturnsForAnyArgs(expectedResult);
 
+        // Act
         var info = await sut.GetStreamInfoAsync(
             streamId,
             cancellationToken: cancellationToken);
 
+        // Assert
         info
             .Should()
             .Be(expectedResult);
@@ -69,54 +69,63 @@ public class EventStoreClientTests
         StreamResponse expected,
         CancellationToken cancellationToken)
     {
+        // Arrange
         writer
             .WriteAsync(default, default, default, default, default)
             .ReturnsForAnyArgs(Task.FromResult<StreamResponse>(expected));
 
+        // Act
         var result = await sut.WriteToStreamAsync(
             streamId,
             events,
             StreamVersion.StartOfStream,
             cancellationToken: cancellationToken);
 
+        // Assert
         result
             .Should()
             .BeEquivalentTo(expected);
     }
 
     [Theory, AutoNSubstituteData]
-    internal async Task Should_Throw_InvalidOperationException(
+    internal Task Should_Throw_InvalidOperationException(
         EventStoreClient sut,
         StreamId streamId,
         IReadOnlyList<object> events,
         CancellationToken cancellationToken)
     {
-        await sut
-            .Invoking(
-                c => c.WriteToStreamAsync(
-                    streamId,
-                    Enumerable.Repeat(events[0], CosmosConstants.BatchLimit).ToList(),
-                    StreamVersion.StartOfStream,
-                    cancellationToken: cancellationToken))
+        // Act
+        var act = () => sut.WriteToStreamAsync(
+            streamId,
+            Enumerable.Repeat(events[0], CosmosConstants.BatchLimit).ToList(),
+            StreamVersion.StartOfStream,
+            cancellationToken: cancellationToken);
+
+        // Assert
+        return act
             .Should()
             .ThrowExactlyAsync<InvalidOperationException>();
     }
 
     [Theory, AutoNSubstituteData]
-    internal async Task Should_Throw_When_EventsList_Contains_NullObject(
+    internal Task Should_Throw_When_EventsList_Contains_NullObject(
         EventStoreClient sut,
         StreamId streamId,
         Collection<object> events,
         CancellationToken cancellationToken)
     {
+        // Arrange
         events.Add(null);
 
-        await FluentActions
-            .Awaiting(() => sut.WriteToStreamAsync(
-                streamId,
-                events,
-                StreamVersion.StartOfStream,
-                cancellationToken: cancellationToken))
+        // Act
+        var act = () => sut.WriteToStreamAsync(
+            streamId,
+            events,
+            StreamVersion.StartOfStream,
+            cancellationToken: cancellationToken);
+
+        // Assert
+        return act
             .Should()
             .ThrowAsync<ArgumentException>();
     }
@@ -131,6 +140,7 @@ public class EventStoreClientTests
         object state,
         CancellationToken cancellationToken)
     {
+        // Act
         await sut.SetStreamCheckpointAsync(
             name,
             streamId,
@@ -138,6 +148,7 @@ public class EventStoreClientTests
             state,
             cancellationToken);
 
+        // Assert
         _ = writer
                 .Received(1)
                 .WriteAsync(
@@ -154,10 +165,15 @@ public class EventStoreClientTests
         StreamId streamId,
         StreamVersion streamVersion,
         CancellationToken cancellationToken)
-        => FluentActions
-            .Awaiting(() => sut.SetStreamCheckpointAsync(null, streamId, streamVersion, null, cancellationToken))
+    {
+        // Act
+        var act = () => sut.SetStreamCheckpointAsync(null, streamId, streamVersion, null, cancellationToken);
+
+        // Assert
+        return act
             .Should()
             .ThrowAsync<ArgumentNullException>();
+    }
 
     [Theory, AutoNSubstituteData]
     internal async Task Should_GetStreamCheckpoint_With_State(
@@ -168,22 +184,24 @@ public class EventStoreClientTests
         Checkpoint<string> expectedCheckpoint,
         CancellationToken cancellationToken)
     {
+        // Arrange
         reader
             .ReadAsync<string>(default, default, default)
             .ReturnsForAnyArgs(expectedCheckpoint);
 
+        // Act
         var checkpoint = await sut.GetStreamCheckpointAsync<string>(
             name,
             streamId,
             cancellationToken);
 
+        // Assert
         _ = reader
                 .Received(1)
                 .ReadAsync<string>(
                     name,
                     streamId,
                     cancellationToken);
-
         checkpoint
             .Should()
             .Be(expectedCheckpoint);
@@ -194,10 +212,15 @@ public class EventStoreClientTests
         EventStoreClient sut,
         StreamId streamId,
         CancellationToken cancellationToken)
-        => FluentActions
-            .Awaiting(() => sut.GetStreamCheckpointAsync<string>(null, streamId, cancellationToken))
+    {
+        // Act
+        var act = () => sut.GetStreamCheckpointAsync<string>(null, streamId, cancellationToken);
+
+        // Assert
+        return act
             .Should()
             .ThrowAsync<ArgumentNullException>();
+    }
 
     [Theory, AutoNSubstituteData]
     internal async Task Should_GetStreamCheckpoint_Without_State(
@@ -208,15 +231,18 @@ public class EventStoreClientTests
         Checkpoint<object> expectedCheckpoint,
         CancellationToken cancellationToken)
     {
+        // Arrange
         reader
             .ReadAsync<object>(default, default, default)
             .ReturnsForAnyArgs(expectedCheckpoint);
 
+        // Act
         var checkpoint = await sut.GetStreamCheckpointAsync(
             name,
             streamId,
             cancellationToken);
 
+        // Assert
         checkpoint
             .Should()
             .Be(expectedCheckpoint);
@@ -227,10 +253,15 @@ public class EventStoreClientTests
         EventStoreClient sut,
         StreamId streamId,
         CancellationToken cancellationToken)
-        => FluentActions
-            .Awaiting(() => sut.GetStreamCheckpointAsync(null, streamId, cancellationToken))
+    {
+        // Act
+        var act = () => sut.GetStreamCheckpointAsync(null, streamId, cancellationToken);
+
+        // Assert
+        return act
             .Should()
             .ThrowAsync<ArgumentNullException>();
+    }
 
     [Theory, AutoNSubstituteData]
     internal async Task Should_DeleteStream(
@@ -239,10 +270,12 @@ public class EventStoreClientTests
         StreamId streamId,
         CancellationToken cancellationToken)
     {
+        // Act
         await sut.DeleteStreamAsync(
             streamId,
             cancellationToken: cancellationToken);
 
+        // Assert
         _ = deleter
             .Received(1)
             .DeleteAsync(

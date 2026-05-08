@@ -1,16 +1,6 @@
-using System.Text.Json;
-using Atc.Cosmos.EventStore.Converters;
-using Atc.Cosmos.EventStore.Events;
-using Atc.Cosmos.EventStore.Tests.Fakes;
-using Atc.Test;
-using AutoFixture.Xunit2;
-using FluentAssertions;
-using NSubstitute;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests.Converters;
 
-public class NamedEventConverterTests
+public sealed class NamedEventConverterTests
 {
     private readonly JsonDocument doc = JsonDocument.Parse(JsonSerializer.Serialize(new EventOne("name", 42)));
 
@@ -21,16 +11,21 @@ public class NamedEventConverterTests
         string expected,
         NamedEventConverter sut)
     {
+        // Arrange
         typeProvider
             .GetEventType(default)
             .ReturnsForAnyArgs((Type)null);
 
-        sut
+        // Act
+        var result = sut
             .Convert(
                 metadata,
                 doc.RootElement,
                 new JsonSerializerOptions(),
-                () => expected)
+                () => expected);
+
+        // Assert
+        result
             .Should()
             .Be(expected);
     }
@@ -41,16 +36,21 @@ public class NamedEventConverterTests
         IEventMetadata metadata,
         NamedEventConverter sut)
     {
+        // Arrange
         typeProvider
             .GetEventType(metadata.Name)
             .ReturnsForAnyArgs(typeof(EventOne));
 
-        sut
+        // Act
+        var result = sut
             .Convert(
                 metadata,
                 doc.RootElement,
                 new JsonSerializerOptions(),
-                () => null)
+                () => null);
+
+        // Assert
+        result
             .Should()
             .BeEquivalentTo(
                 new EventOne("name", 42));

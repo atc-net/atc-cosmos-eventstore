@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace Atc.Cosmos.EventStore.Streams;
 
 internal class StreamIndex : IStreamIndex

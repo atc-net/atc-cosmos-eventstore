@@ -1,20 +1,22 @@
-﻿namespace Atc.Cosmos.EventStore.Cqrs.Tests.Functional;
+namespace Atc.Cosmos.EventStore.Cqrs.Tests.Functional;
 
 [ProjectionFilter("*")]
-internal class TimeProjection(FakeDatabase fakeDatabase) : IConsumeEvent<TimeTickedEvent>, IProjection
+internal sealed class TimeProjection(FakeDatabase fakeDatabase) : IConsumeEvent<TimeTickedEvent>, IProjection
 {
-    private long lastTick = 0;
+    private long lastTick;
 
-    public void Consume(TimeTickedEvent evt, EventMetadata metadata)
+    public void Consume(
+        TimeTickedEvent evt,
+        EventMetadata metadata)
     {
         lastTick = evt.TickValue;
     }
 
-    public Task InitializeAsync(EventStreamId id, CancellationToken cancellationToken)
-    {
-        // Here we could read latest "snapshot/view" value from DB
-        return Task.CompletedTask;
-    }
+    // Here we could read latest "snapshot/view" value from DB
+    public Task InitializeAsync(
+        EventStreamId id,
+        CancellationToken cancellationToken)
+        => Task.CompletedTask;
 
     public Task CompleteAsync(CancellationToken cancellationToken)
     {
@@ -24,31 +26,33 @@ internal class TimeProjection(FakeDatabase fakeDatabase) : IConsumeEvent<TimeTic
         return Task.CompletedTask;
     }
 
-    public Task<ProjectionAction> FailedAsync(Exception exception, CancellationToken cancellationToken)
-    {
-        return Task.FromResult(ProjectionAction.Continue);
-    }
+    public Task<ProjectionAction> FailedAsync(
+        Exception exception,
+        CancellationToken cancellationToken)
+        => Task.FromResult(ProjectionAction.Continue);
 }
 
 /// <summary>
 /// Queries all stored TimeTickedEvent.
 /// </summary>
-internal record QueryTimeTickCommand() : CommandBase<EventStreamId>(new EventStreamId("time"));
+internal sealed record QueryTimeTickCommand() : CommandBase<EventStreamId>(new EventStreamId("time"));
 
 /// <summary>
 /// Queries all stored TimeTickedEvent - at least one event must exist.
 /// </summary>
-internal record QueryExistingTimeTickCommand()
+internal sealed record QueryExistingTimeTickCommand()
     : CommandBase<EventStreamId>(new EventStreamId("time"), RequiredVersion: EventStreamVersion.Exists);
 
-internal class QueryTimeTickHandler :
+internal sealed class QueryTimeTickHandler :
     ICommandHandler<QueryTimeTickCommand>,
     ICommandHandler<QueryExistingTimeTickCommand>,
     IConsumeEvent<TimeTickedEvent>
 {
     private readonly List<(TimeTickedEvent Evt, EventMetadata Metadata)> events = new();
 
-    public void Consume(TimeTickedEvent evt, EventMetadata metadata)
+    public void Consume(
+        TimeTickedEvent evt,
+        EventMetadata metadata)
     {
         events.Add((evt, metadata));
     }
@@ -72,9 +76,9 @@ internal class QueryTimeTickHandler :
     }
 }
 
-internal record MakeTimeTickCommand(long Tick) : CommandBase<EventStreamId>(new EventStreamId("time"));
+internal sealed record MakeTimeTickCommand(long Tick) : CommandBase<EventStreamId>(new EventStreamId("time"));
 
-internal class MakeTimeTickCommandHandler : ICommandHandler<MakeTimeTickCommand>
+internal sealed class MakeTimeTickCommandHandler : ICommandHandler<MakeTimeTickCommand>
 {
     public ValueTask ExecuteAsync(
         MakeTimeTickCommand command,

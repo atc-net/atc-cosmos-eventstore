@@ -1,5 +1,3 @@
-using Atc.Cosmos.EventStore.Streams.Validators;
-
 namespace Atc.Cosmos.EventStore.Streams;
 
 internal class StreamReadValidator : IStreamReadValidator
@@ -11,7 +9,9 @@ internal class StreamReadValidator : IStreamReadValidator
         new StreamExpectedVersionValidator(),
     };
 
-    public void Validate(IStreamMetadata metadata, StreamVersion version)
+    public void Validate(
+        IStreamMetadata metadata,
+        StreamVersion version)
         => Array.ForEach(
             Validators,
             v => v.Validate(metadata, version));

@@ -10,8 +10,7 @@ public static class CommandContextExtensions
          ? context.OnAddEvent(eventProvider())
          : context;
 
-    public static ValueTask AsAsync(
-        this ICommandContext context)
+    public static ValueTask AsAsync(this ICommandContext context)
         => default; // default is a completed value task.
 
     private static ICommandContext OnAddEvent(

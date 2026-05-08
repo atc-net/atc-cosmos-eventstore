@@ -1,39 +1,55 @@
-using Atc.Test;
-using FluentAssertions;
-using Xunit;
-
 namespace Atc.Cosmos.EventStore.Tests;
 
-public class SubscriptionStartOptionsTests
+public sealed class SubscriptionStartOptionsTests
 {
     [Theory, AutoNSubstituteData]
     public void Should_Be_DefaultConstructed_With_StartFromBeginning(
         SubscriptionStartOptions sut)
-        => sut
+    {
+        // Act
+        var result = sut;
+
+        // Assert
+        result
             .Should()
             .Be(SubscriptionStartOptions.FromBegining);
+    }
 
     [Theory, AutoNSubstituteData]
     public void Should_Be_EqualTo(
         SubscriptionStartOptions left,
         SubscriptionStartOptions right)
-        => (left == right)
+    {
+        // Act
+        var result = left == right;
+
+        // Assert
+        result
             .Should()
             .BeTrue();
+    }
 
     [Theory, AutoNSubstituteData]
-    public void ShouldNot_Be_EqualTo(
-        SubscriptionStartOptions right)
-        => (SubscriptionStartOptions.FromDateTime(DateTime.Now) == right)
+    public void ShouldNot_Be_EqualTo(SubscriptionStartOptions right)
+    {
+        // Act
+        var result = SubscriptionStartOptions.FromDateTime(DateTime.Now) == right;
+
+        // Assert
+        result
             .Should()
             .BeFalse();
+    }
 
     [Theory, AutoNSubstituteData]
-    public void Should_Set_StartFrom_As_UniversalTime(
-        DateTime startFrom)
-        => SubscriptionStartOptions
-            .FromDateTime(startFrom)
-            .StartFrom
+    public void Should_Set_StartFrom_As_UniversalTime(DateTime startFrom)
+    {
+        // Act
+        var result = SubscriptionStartOptions.FromDateTime(startFrom).StartFrom;
+
+        // Assert
+        result
             .Should()
             .Be(startFrom.ToUniversalTime());
+    }
 }

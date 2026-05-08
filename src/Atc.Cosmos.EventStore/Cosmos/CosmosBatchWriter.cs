@@ -1,15 +1,10 @@
-using System.Net;
-using Atc.Cosmos.EventStore.Streams;
-using Microsoft.Azure.Cosmos;
-
 namespace Atc.Cosmos.EventStore.Cosmos;
 
 internal class CosmosBatchWriter : IStreamBatchWriter
 {
     private readonly IEventStoreContainerProvider containerProvider;
 
-    public CosmosBatchWriter(
-        IEventStoreContainerProvider containerProvider)
+    public CosmosBatchWriter(IEventStoreContainerProvider containerProvider)
     {
         this.containerProvider = containerProvider;
     }
@@ -43,7 +38,8 @@ internal class CosmosBatchWriter : IStreamBatchWriter
         return GetMetadataFromResponse(batchResponse);
     }
 
-    private static IStreamMetadata GetMetadataFromResponse(TransactionalBatchResponse response)
+    private static IStreamMetadata GetMetadataFromResponse(
+        TransactionalBatchResponse response)
     {
         var result = response.GetOperationResultAtIndex<StreamMetadata>(0);
         var metadata = result.Resource;
@@ -53,7 +49,9 @@ internal class CosmosBatchWriter : IStreamBatchWriter
         return metadata;
     }
 
-    private static void EnsureSuccess(TransactionalBatchResponse response, StreamMetadata metadata)
+    private static void EnsureSuccess(
+        TransactionalBatchResponse response,
+        StreamMetadata metadata)
     {
         if (!response.IsSuccessStatusCode)
         {

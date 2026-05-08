@@ -1,10 +1,10 @@
 namespace Atc.Cosmos.EventStore.Cqrs.Tests.Mocks;
 
-public class MockCommandHandler : ICommandHandler<MockCommand>
+public sealed class MockCommandHandler : ICommandHandler<MockCommand>
 {
     private List<IEvent> events = new();
 
-    public object ResponseObject { get; set; } = null;
+    public object? ResponseObject { get; set; }
 
     public void AddEventsToEmit(params IEvent[] eventsToEmit)
     {

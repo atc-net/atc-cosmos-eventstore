@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Projections;
 
 [SuppressMessage(

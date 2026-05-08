@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace Atc.Cosmos.EventStore;
 
 [SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "By Design")]
@@ -11,7 +9,9 @@ public class EventNotRegisteredException : EventStoreException
     {
     }
 
-    public EventNotRegisteredException(string message, Exception innerException)
+    public EventNotRegisteredException(
+        string message,
+        Exception innerException)
         : base(message, innerException)
     {
     }

@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace Atc.Cosmos.EventStore;
 
 /// <summary>
@@ -87,14 +85,14 @@ public struct StreamVersion : IComparable<StreamVersion>, IEquatable<StreamVersi
     public int CompareTo(StreamVersion other)
         => Value.CompareTo(other.Value);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public override bool Equals(object? obj)
         => obj is StreamVersion version && Equals(version);
 
     public bool Equals(StreamVersion other)
         => Value == other.Value;
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public override int GetHashCode()
         => HashCode.Combine(Value);
 }

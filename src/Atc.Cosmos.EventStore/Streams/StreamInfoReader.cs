@@ -4,8 +4,7 @@ internal class StreamInfoReader : IStreamInfoReader
 {
     private readonly IStreamMetadataReader metadataReader;
 
-    public StreamInfoReader(
-        IStreamMetadataReader metadataReader)
+    public StreamInfoReader(IStreamMetadataReader metadataReader)
         => this.metadataReader = metadataReader;
 
     public Task<IStreamMetadata> ReadAsync(

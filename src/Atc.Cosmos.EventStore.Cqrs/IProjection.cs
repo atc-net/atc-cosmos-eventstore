@@ -10,6 +10,5 @@ public interface IProjection
         EventStreamId id,
         CancellationToken cancellationToken);
 
-    Task CompleteAsync(
-        CancellationToken cancellationToken);
+    Task CompleteAsync(CancellationToken cancellationToken);
 }

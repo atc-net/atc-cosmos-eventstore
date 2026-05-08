@@ -1,11 +1,11 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
 namespace Atc.Cosmos.EventStore.Converters;
 
 internal class EventNameConverter : JsonConverter<EventName>
 {
-    public override EventName Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override EventName Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options)
     {
         var value = reader.GetString();
         if (value is null)
@@ -16,6 +16,9 @@ internal class EventNameConverter : JsonConverter<EventName>
         return value;
     }
 
-    public override void Write(Utf8JsonWriter writer, EventName value, JsonSerializerOptions options)
+    public override void Write(
+        Utf8JsonWriter writer,
+        EventName value,
+        JsonSerializerOptions options)
         => writer.WriteStringValue(value.Value);
 }

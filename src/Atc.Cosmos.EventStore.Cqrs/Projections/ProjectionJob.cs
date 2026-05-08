@@ -1,6 +1,3 @@
-using Atc.Cosmos.EventStore.Cqrs.Internal;
-using Microsoft.Extensions.Hosting;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Projections;
 
 internal class ProjectionJob<TProjection> :

@@ -1,7 +1,3 @@
-using Atc.Cosmos.EventStore.Diagnostics;
-using Atc.Cosmos.EventStore.Events;
-using Atc.Cosmos.EventStore.Streams;
-
 namespace Atc.Cosmos.EventStore.Cosmos;
 
 internal class CosmosSubscriptionFactory : IStreamSubscriptionFactory

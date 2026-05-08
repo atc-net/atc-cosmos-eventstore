@@ -1,17 +1,14 @@
-using System.Diagnostics;
-
 namespace Atc.Cosmos.EventStore.Cqrs.Diagnostics;
 
 public class CommandTelemetry : ICommandTelemetry
 {
-    public ICommandActivity CommandStarted<TCommand>(
-        TCommand command)
+    public ICommandActivity CommandStarted<TCommand>(TCommand command)
         where TCommand : ICommand
     {
         var activity = EventStoreDiagnostics.Source.StartActivity(
             name: $"Execute {typeof(TCommand).Name} {command.GetEventStreamId().Value}",
             kind: ActivityKind.Internal,
-            tags: new Dictionary<string, object?>
+            tags: new Dictionary<string, object?>(StringComparer.Ordinal)
             {
                 { EventStoreDiagnostics.TagAttributes.StreamId, command.GetEventStreamId().Value },
                 { EventStoreDiagnostics.TagAttributes.RequiredVersion, (long?)command.RequiredVersion },
@@ -41,7 +38,7 @@ public class CommandTelemetry : ICommandTelemetry
         var activity = EventStoreDiagnostics.Source.StartActivity(
             name: $"Write events to stream",
             kind: ActivityKind.Internal,
-            tags: new Dictionary<string, object?>
+            tags: new Dictionary<string, object?>(StringComparer.Ordinal)
             {
                 { EventStoreDiagnostics.TagAttributes.EventCount, count },
                 { EventStoreDiagnostics.TagAttributes.RequiredVersion, (long)version },

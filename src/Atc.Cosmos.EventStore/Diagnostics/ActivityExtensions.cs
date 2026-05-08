@@ -1,19 +1,21 @@
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-
 namespace Atc.Cosmos.EventStore.Diagnostics;
 
 public static class ActivityExtensions
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void RecordException(this Activity activity, Exception? ex)
+    public static void RecordException(
+        this Activity activity,
+        Exception? ex)
     {
         TagList tags = default(TagList);
         activity.RecordException(ex, in tags);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void RecordException(this Activity activity, Exception? ex, in TagList tags)
+    public static void RecordException(
+        this Activity activity,
+        Exception? ex,
+        in TagList tags)
     {
         if (ex == null || activity == null)
         {

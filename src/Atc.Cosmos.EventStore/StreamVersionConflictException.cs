@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace Atc.Cosmos.EventStore;
 
 [SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "By Design")]
