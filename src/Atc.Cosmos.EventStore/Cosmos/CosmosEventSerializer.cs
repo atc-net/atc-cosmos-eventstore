@@ -53,7 +53,7 @@ internal class CosmosEventSerializer : CosmosSerializer
 
         using (stream)
         {
-            if (stream.CanSeek && stream.Length == 0)
+            if (stream is { CanSeek: true, Length: 0 })
             {
                 return default;
             }
@@ -63,14 +63,22 @@ internal class CosmosEventSerializer : CosmosSerializer
                 return (T)(object)stream;
             }
 
-            // Response data from cosmos always comes as a memory stream.
-            // Note: This might change in v4, but so far it doesn't look like it.
-            if (stream is MemoryStream memoryStream && memoryStream.TryGetBuffer(out ArraySegment<byte> buffer))
+            // Fast path: response data from cosmos usually comes as a memory
+            // stream whose buffer can be read directly without copying.
+            if (stream is MemoryStream memoryStream && memoryStream.TryGetBuffer(out var buffer))
             {
                 return JsonSerializer.Deserialize<T>(buffer, jsonSerializerOptions);
             }
 
-            return default;
+            // The Cosmos SDK does not guarantee the response is a MemoryStream
+            // with a publicly visible buffer (this changed in newer SDK
+            // versions), so fall back to copying the stream into a buffer.
+            using var copy = new MemoryStream();
+            stream.CopyTo(copy);
+
+            return JsonSerializer.Deserialize<T>(
+                new ReadOnlySpan<byte>(copy.GetBuffer(), 0, (int)copy.Length),
+                jsonSerializerOptions);
         }
     }
 
