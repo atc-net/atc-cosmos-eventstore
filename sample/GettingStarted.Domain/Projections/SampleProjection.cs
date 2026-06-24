@@ -30,6 +30,7 @@ public class SampleProjection(
                new SampleReadModel
                {
                    Id = streamId.Id,
+                   PartitionKey = streamId.Id,
                };
     }
 
