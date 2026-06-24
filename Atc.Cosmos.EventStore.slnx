@@ -1,6 +1,9 @@
 <Solution>
   <Folder Name="/sample/">
     <Project Path="sample/GettingStarted/GettingStarted.csproj" />
+    <Project Path="sample/GettingStarted.AppHost/GettingStarted.AppHost.csproj" />
+    <Project Path="sample/GettingStarted.Domain/GettingStarted.Domain.csproj" />
+    <Project Path="sample/GettingStarted.WebApi/GettingStarted.WebApi.csproj" />
   </Folder>
   <Folder Name="/src/">
     <File Path="src/.editorconfig" />

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>GettingStarted</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Atc.Cosmos" Version="1.1.46" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.3" />
+    <!--<PackageReference Include="Atc.Cosmos.EventStore.Cqrs" Version="1.18.0" />-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Atc.Cosmos.EventStore.Cqrs\Atc.Cosmos.EventStore.Cqrs.csproj" />
+  </ItemGroup>
+
+</Project>
