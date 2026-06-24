@@ -330,7 +330,7 @@ public record CreateCommand(string Id, string Name, string Address)
     : CommandBase<SampleEventStreamId>(new SampleEventStreamId(Id));
 ```
 
-The base class implements `ICommand` and exposes properties the pipeline reads when processing the command: `EventStreamId` (computed from `TStreamId`), `RequiredVersion` (defaults to `Any`), `Behavior` (defaults to `OnConflict.Retry`), `BehaviorCount` (the retry cap), `CommandId`, and `CorrelationId`. Override any of them in the derived record when you need stricter behaviour — for example, a "create only" command sets `RequiredVersion` to `StartOfStream`.
+The base class implements `ICommand` and exposes properties the pipeline reads when processing the command: `EventStreamId` (computed from `TStreamId`), `RequiredVersion` (defaults to `Any`), `Behavior` (defaults to `OnConflict.Fail`), `BehaviorCount` (the retry cap when a retry mode is chosen), `CommandId`, and `CorrelationId`. Override any of them in the derived record when you need different behaviour — for example, a "create only" command sets `RequiredVersion` to `StartOfStream`, and an idempotent command typically sets `Behavior = OnConflict.RerunCommand`.
 
 ### Command Handlers
 
@@ -420,7 +420,7 @@ var result = await processor.ExecuteAsync(command, cancellationToken);
 
 ### Optimistic Concurrency and Conflict Resolution
 
-Two clients can send commands targeting the same stream at the same time. The library detects this via the stream metadata document's ETag (see [Stream Metadata](#stream-metadata)) and resolves it by retrying the losing command — without ever locking.
+Two clients can send commands targeting the same stream at the same time. The library detects this via the stream metadata document's ETag (see [Stream Metadata](#stream-metadata)) — it never locks.
 
 A conflict happens when:
 
@@ -430,14 +430,18 @@ A conflict happens when:
 
 How the pipeline reacts is controlled by the command's `Behavior` property:
 
-| `OnConflict` value | What the pipeline does on conflict                                                                            | When to use                                                                                |
-| ------------------ | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `Retry`            | Re-read the stream, *re-run state replay only* (not the full handler), and try the same write again.         | When the new events do not change what the handler would do (e.g. a pure append).          |
-| `RerunCommand`     | Re-read the stream, replay events, **and re-execute `ExecuteAsync` from scratch** with the same command data. | When the new events could change the handler's decision (e.g. duplicate detection, rules). |
+| `OnConflict` value | What the pipeline does on conflict                                                                                                  | When to use                                                                                                            |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `Fail` *(default)* | Surface the conflict. Returns `CommandResult.ResultType = Conflict`. The caller decides what to do.                                 | When the caller wants explicit control — e.g. retry policies live in the application, or conflicts must reach the user. |
+| `Retry`            | Retry the **same write** (same events, same expected version) up to `BehaviorCount` times. Does **not** re-read or re-run the handler. | Transient infrastructure failures (throttling, network blips), or appends with `RequiredVersion = Any` where a stale read isn't a problem. |
+| `RerunCommand`     | Throw away the handler, re-read the stream, replay all events into a fresh handler (now seeing the racer's events), call `ExecuteAsync` again, write. Up to `BehaviorCount` times. | When the handler's decision depends on stream state — typically anything with an idempotency check via `IConsumeEvent<TEvent>`. |
 
-Both modes retry up to `BehaviorCount` times before giving up and returning `CommandResult.ResultType = Conflict`. Choose `RerunCommand` when in doubt — it is the safer default — and only drop to `Retry` when you know the handler's decision is independent of intervening events.
+A simple example shows why the difference matters. Suppose `CreateCustomer` consumes `IConsumeEvent<CustomerCreated>` to skip its work if the customer already exists, and two clients race to create the same customer:
 
-Conflicts are an expected, normal outcome on hot streams; the library treats them as a routine part of the write path rather than an exception.
+- Under `Retry`, the losing command keeps re-attempting the same write with the same expected version. The expected version is now stale, so every retry fails. Result: `Conflict`.
+- Under `RerunCommand`, the losing command re-reads the stream, sees the `CustomerCreated` written by the winner, the idempotency guard kicks in, no events are queued, and the result is `NotModified`.
+
+`Retry` is therefore not a substitute for `RerunCommand`. Pick based on whether the handler's decision can change once it sees what the racer wrote.
 
 ## Projections
 
@@ -593,7 +597,41 @@ The same command, handler, and projection registrations work without changes, so
 
 ## Sample
 
-See the [GettingStarted sample](./sample/GettingStarted/) for a complete console application that wires up commands, handlers, and a projection, and walks the full event-sourced flow against a Cosmos DB instance.
+The `sample/` folder contains a complete end-to-end example, split across four projects so the same domain types drive both a console worker and an HTTP API:
+
+| Project                       | Role                                                                                                  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `GettingStarted.Domain`       | Class library containing the events, commands, handlers, projection, read model, and the shared `AddSampleEventStore` composition used by both apps. |
+| `GettingStarted`              | Console worker (`IHostedService`) that issues a sequence of commands on startup.                      |
+| `GettingStarted.WebApi`       | Minimal-API web service exposing `POST /customers`, `GET /customers/{id}`, `PUT /customers/{id}/name`, `DELETE /customers/{id}`. |
+| `GettingStarted.AppHost`      | [.NET Aspire](https://aspire.dev) AppHost that orchestrates the Web API and the console worker against a Cosmos DB Emulator. |
+
+Both apps share a single setup — `builder.Services.AddSampleEventStore(builder.Configuration)` — which wires up the Atc.Cosmos read-model store and the event store against the emulator.
+
+### Prerequisite: the Azure Cosmos DB Emulator
+
+The sample connects to the **locally-installed [Azure Cosmos DB Emulator](https://learn.microsoft.com/azure/cosmos-db/how-to-develop-emulator)** at `https://localhost:8081` (the apps fall back to that endpoint, using the well-known emulator key). **Start the emulator before launching the AppHost.**
+
+The AppHost deliberately does **not** provision a Cosmos emulator container. The cross-platform Linux *preview* emulator is feature-incomplete — its transactional-batch responses omit the written content, which makes event writes fail — so the sample relies on the full local emulator instead. If you point the sample at a different emulator instance, give it the endpoint and key via the `CosmosOptions__AccountEndpoint` / `CosmosOptions__AccountKey` environment variables (the same `CosmosOptions` configuration section the apps bind).
+
+Run the whole stack with the Aspire CLI:
+
+```bash
+aspire start --apphost sample/GettingStarted.AppHost
+```
+
+The Aspire dashboard (printed on startup) shows the Web API and the console worker:
+
+- The **Web API** starts automatically. The dashboard shows a **Scalar** link (served at `/scalar/v1`) — the easiest way to try the endpoints interactively. You can also use `curl`:
+
+  ```bash
+  curl -k -X POST https://localhost:<port>/customers -H "Content-Type: application/json" -d '{"name":"Alice","address":"1 Main St"}'
+  curl -k https://localhost:<port>/customers/<id>
+  ```
+
+- The **console worker** is registered with `WithExplicitStart()`, so it stays idle until you press **Start** in the dashboard — handy for demonstrating command issuance and projection updates on demand.
+
+> When opted into the preview emulator container (`--UseEmulatorContainer true`), its Data Explorer is surfaced on the dashboard and data persists in a volume across runs — but event writes currently fail against it, so it is only useful for inspecting read models.
 
 # Requirements
 
