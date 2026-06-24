@@ -1,0 +1,9 @@
+global using System.Text.Json.Serialization;
+global using Atc.Cosmos;
+global using Atc.Cosmos.EventStore.Cqrs;
+global using GettingStarted.Commands;
+global using GettingStarted.Projections;
+global using GettingStarted.WebApi;
+global using Microsoft.Azure.Cosmos;
+global using Microsoft.Extensions.DependencyInjection;
+global using Scalar.AspNetCore;

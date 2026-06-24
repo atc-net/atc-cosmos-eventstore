@@ -1,0 +1,13 @@
+global using System.Diagnostics.CodeAnalysis;
+global using System.Text.Json.Serialization;
+global using Atc.Cosmos;
+global using Atc.Cosmos.EventStore;
+global using Atc.Cosmos.EventStore.Cqrs;
+global using Atc.Cosmos.Internal;
+global using GettingStarted.Commands;
+global using GettingStarted.Configuration;
+global using GettingStarted.Events;
+global using GettingStarted.Projections;
+global using Microsoft.Azure.Cosmos;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.Options;

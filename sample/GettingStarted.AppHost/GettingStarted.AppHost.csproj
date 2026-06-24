@@ -1,0 +1,16 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.4.6">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>386fc7b9-dd4c-4e84-b7cb-fa830e0a4015</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GettingStarted.WebApi\GettingStarted.WebApi.csproj" AspireProjectMetadataTypeName="Api" />
+    <ProjectReference Include="..\GettingStarted\GettingStarted.csproj" AspireProjectMetadataTypeName="Console"  />
+  </ItemGroup>
+
+</Project>

@@ -39,3 +39,4 @@ dotnet_diagnostic.S1075.severity = none             # Refactor your code not to 
 ##########################################
 # Custom - Code Analyzers Rules
 ##########################################
+dotnet_diagnostic.MA0048.severity = none            # AppHost top-level Program.cs file name does not match a type name
