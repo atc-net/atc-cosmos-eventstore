@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>Atc.Cosmos.EventStore.Cqrs</PackageId>
-    <PackageTags>event store; cqrs; events; cosmos</PackageTags>
+    <PackageTags>event-store;cqrs;events;cosmos</PackageTags>
     <Description>CQRS implementation for Atc.Cosmos.EventStore</Description>
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

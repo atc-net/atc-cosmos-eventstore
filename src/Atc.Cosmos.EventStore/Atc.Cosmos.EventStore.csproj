@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>Atc.Cosmos.EventStore</PackageId>
-    <PackageTags>event store; cqrs; events; cosmos</PackageTags>
+    <PackageTags>event-store;cqrs;events;cosmos</PackageTags>
     <Description>Event store implementation for Azure Cosmos DB</Description>
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
