@@ -1,7 +1,5 @@
 namespace Atc.Cosmos.EventStore.Cqrs.Tests.Functional;
 
-#nullable enable
-
 [Trait("Category", "Functional")]
 public sealed class CommandHandlerTests : IAsyncLifetime
 {
@@ -40,6 +38,7 @@ public sealed class CommandHandlerTests : IAsyncLifetime
         {
             var tick = DateTime.UtcNow.Ticks;
             var commandProcessorFactory = host.Services.GetRequiredService<ICommandProcessorFactory>();
+
             _ = await commandProcessorFactory
                 .Create<MakeTimeTickCommand>()
                 .ExecuteAsync(new MakeTimeTickCommand(tick), CancellationToken.None);
@@ -69,14 +68,12 @@ public sealed class CommandHandlerTests : IAsyncLifetime
         Assert.Equal(ResultType.NotFound, result.Result);
     }
 
-    public Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         host = new CqrsTestHost();
-        return host.StartAsync();
+        await host.StartAsync();
     }
 
-    public async Task DisposeAsync()
-    {
-        await host.DisposeAsync();
-    }
+    public ValueTask DisposeAsync()
+        => host.DisposeAsync();
 }

@@ -43,9 +43,10 @@ public sealed class CosmosMetadataReaderTests
 
     [Theory, AutoNSubstituteData]
     public async Task Should_Use_StreamId_As_PartitionKey_When_ReadItem(
-        StreamId streamId,
-        CancellationToken cancellationToken)
+        StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Act
         await sut.GetAsync(streamId, cancellationToken);
 
@@ -61,9 +62,10 @@ public sealed class CosmosMetadataReaderTests
 
     [Theory, AutoNSubstituteData]
     public async Task Should_Use_Fixed_Value_As_Id_When_ReadItem(
-        StreamId streamId,
-        CancellationToken cancellationToken)
+        StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Act
         await sut.GetAsync(streamId, cancellationToken);
 
@@ -78,10 +80,10 @@ public sealed class CosmosMetadataReaderTests
     }
 
     [Theory, AutoNSubstituteData]
-    public async Task Should_Have_ETag_From_Response(
-        StreamId streamId,
-        CancellationToken cancellationToken)
+    public async Task Should_Have_ETag_From_Response(StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Act
         var metadata = await sut
             .GetAsync(
@@ -96,10 +98,10 @@ public sealed class CosmosMetadataReaderTests
     }
 
     [Theory, AutoNSubstituteData]
-    public async Task Should_Return_Response(
-        StreamId streamId,
-        CancellationToken cancellationToken)
+    public async Task Should_Return_Response(StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Act
         var metadata = await sut
             .GetAsync(
@@ -115,12 +117,13 @@ public sealed class CosmosMetadataReaderTests
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
     public async Task Should_Have_State_New_When_Document_IsNotFound(
-        StreamId streamId,
-        CancellationToken cancellationToken)
+        StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Arrange
         container
-            .ReadItemAsync<StreamMetadata>(default, default, default, default)
+            .ReadItemAsync<StreamMetadata>(default, default, default, cancellationToken)
             .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.NotFound, 0, "a", 1));
 
         // Act
@@ -139,12 +142,13 @@ public sealed class CosmosMetadataReaderTests
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
     public async Task Should_Have_StreamVersion_StartOfStream_When_Document_IsNotFound(
-        StreamId streamId,
-        CancellationToken cancellationToken)
+        StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Arrange
         container
-            .ReadItemAsync<StreamMetadata>(default, default, default, default)
+            .ReadItemAsync<StreamMetadata>(default, default, default, cancellationToken)
             .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.NotFound, 0, "a", 1));
 
         // Act
@@ -163,12 +167,13 @@ public sealed class CosmosMetadataReaderTests
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
     public async Task Should_Have_Correct_Id_When_Document_IsNotFound(
-        StreamId streamId,
-        CancellationToken cancellationToken)
+        StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Arrange
         container
-            .ReadItemAsync<StreamMetadata>(default, default, default, default)
+            .ReadItemAsync<StreamMetadata>(default, default, default, cancellationToken)
             .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.NotFound, 0, "a", 1));
 
         // Act
@@ -187,12 +192,13 @@ public sealed class CosmosMetadataReaderTests
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
     public async Task Should_Have_StreamId_As_PartitionKey_When_Document_IsNotFound(
-        StreamId streamId,
-        CancellationToken cancellationToken)
+        StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Arrange
         container
-            .ReadItemAsync<StreamMetadata>(default, default, default, default)
+            .ReadItemAsync<StreamMetadata>(default, default, default, cancellationToken)
             .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.NotFound, 0, "a", 1));
 
         // Act
@@ -211,12 +217,13 @@ public sealed class CosmosMetadataReaderTests
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
     public async Task Should_Have_Timestamp_When_Document_IsNotFound(
-        StreamId streamId,
-        CancellationToken cancellationToken)
+        StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Arrange
         container
-            .ReadItemAsync<StreamMetadata>(default, default, default, default)
+            .ReadItemAsync<StreamMetadata>(default, default, default, cancellationToken)
             .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.NotFound, 0, "a", 1));
 
         // Act

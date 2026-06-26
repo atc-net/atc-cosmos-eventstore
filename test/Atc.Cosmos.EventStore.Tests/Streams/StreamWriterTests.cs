@@ -7,9 +7,10 @@ public sealed class StreamWriterTests
         [Frozen, Substitute] IStreamMetadataReader metadataReader,
         StreamWriter sut,
         StreamId streamId,
-        IReadOnlyList<object> events,
-        CancellationToken cancellationToken)
+        IReadOnlyList<object> events)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Act
         await sut.WriteAsync(
             streamId,
@@ -33,12 +34,13 @@ public sealed class StreamWriterTests
         StreamWriter sut,
         StreamId streamId,
         IReadOnlyList<object> events,
-        StreamMetadata expected,
-        CancellationToken cancellationToken)
+        StreamMetadata expected)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Arrange
         metadataReader
-            .GetAsync(default, default)
+            .GetAsync(default, cancellationToken)
             .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(expected));
 
         // Act
@@ -64,12 +66,13 @@ public sealed class StreamWriterTests
         StreamWriter sut,
         StreamId streamId,
         IReadOnlyList<object> events,
-        StreamMetadata expected,
-        CancellationToken cancellationToken)
+        StreamMetadata expected)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Arrange
         metadataReader
-            .GetAsync(default, default)
+            .GetAsync(default, cancellationToken)
             .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(expected));
 
         // Act
@@ -95,12 +98,13 @@ public sealed class StreamWriterTests
         StreamWriter sut,
         StreamId streamId,
         IReadOnlyList<object> events,
-        StreamMetadata metadata,
-        CancellationToken cancellationToken)
+        StreamMetadata metadata)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Arrange
         eventWriter
-            .WriteAsync(default, default)
+            .WriteAsync(default, cancellationToken)
             .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(metadata));
         var expected = new StreamResponse(
             metadata.StreamId,

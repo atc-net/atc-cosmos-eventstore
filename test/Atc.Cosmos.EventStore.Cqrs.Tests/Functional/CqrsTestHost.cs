@@ -1,7 +1,5 @@
 namespace Atc.Cosmos.EventStore.Cqrs.Tests.Functional;
 
-#nullable enable
-
 public sealed class CqrsTestHost : IAsyncDisposable
 {
     private readonly WebApplication host;

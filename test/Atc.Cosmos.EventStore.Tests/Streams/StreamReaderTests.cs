@@ -8,11 +8,12 @@ public sealed class StreamReaderTests
         [Frozen, Substitute] IStreamIterator streamIterator,
         [Substitute] IAsyncEnumerable<IEvent> enumerable,
         StreamReader sut,
-        StreamId streamId,
-        CancellationToken cancellationToken)
+        StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         streamIterator
-            .ReadAsync(default, default, default, default)
+            .ReadAsync(default, default, default, cancellationToken)
             .ReturnsForAnyArgs(enumerable);
 
         await ReadStream(
@@ -41,15 +42,16 @@ public sealed class StreamReaderTests
         [Substitute] IAsyncEnumerable<IEvent> enumerable,
         StreamReader sut,
         StreamId streamId,
-        StreamMetadata streamMetadata,
-        CancellationToken cancellationToken)
+        StreamMetadata streamMetadata)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         metadataReader
-            .GetAsync(default, default)
+            .GetAsync(default, cancellationToken)
             .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(streamMetadata));
 
         streamIterator
-            .ReadAsync(default, default, default, default)
+            .ReadAsync(default, default, default, cancellationToken)
             .ReturnsForAnyArgs(enumerable);
 
         await ReadStream(
@@ -74,15 +76,16 @@ public sealed class StreamReaderTests
         StreamReader sut,
         StreamId streamId,
         StreamReadFilter filter,
-        StreamMetadata streamMetadata,
-        CancellationToken cancellationToken)
+        StreamMetadata streamMetadata)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         metadataReader
-            .GetAsync(default, default)
+            .GetAsync(default, cancellationToken)
             .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(streamMetadata));
 
         streamIterator
-            .ReadAsync(default, default, default, default)
+            .ReadAsync(default, default, default, cancellationToken)
             .ReturnsForAnyArgs(enumerable);
 
         await ReadStream(
@@ -111,19 +114,21 @@ public sealed class StreamReaderTests
         StreamId streamId,
         StreamMetadata streamMetadata,
         IEvent firstEvent,
-        IEvent secondEvent,
-        CancellationToken cancellationToken)
+        IEvent secondEvent)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
+        // Arrange
         metadataReader
-            .GetAsync(default, default)
+            .GetAsync(default, cancellationToken)
             .ReturnsForAnyArgs(Task.FromResult<IStreamMetadata>(streamMetadata));
 
         streamIterator
-            .ReadAsync(default, default, default, default)
+            .ReadAsync(default, default, default, cancellationToken)
             .ReturnsForAnyArgs(enumerable);
 
         enumerable
-            .GetAsyncEnumerator(default)
+            .GetAsyncEnumerator(cancellationToken)
             .ReturnsForAnyArgs(enumerator);
 
         enumerator

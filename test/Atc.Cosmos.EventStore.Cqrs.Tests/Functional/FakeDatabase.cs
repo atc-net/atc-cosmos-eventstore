@@ -1,4 +1,3 @@
-#nullable enable
 namespace Atc.Cosmos.EventStore.Cqrs.Tests.Functional;
 
 internal sealed class FakeDatabase
