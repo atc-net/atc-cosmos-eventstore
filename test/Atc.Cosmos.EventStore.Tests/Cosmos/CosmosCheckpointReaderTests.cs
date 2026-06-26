@@ -2,7 +2,6 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos;
 
 public sealed class CosmosCheckpointReaderTests
 {
-    private readonly ItemResponse<CheckpointDocument<string>> itemResponse;
     private readonly Container container;
     private readonly CheckpointDocument<string> expectedCheckpoint;
     private readonly IEventStoreContainerProvider containerProvider;
@@ -11,17 +10,21 @@ public sealed class CosmosCheckpointReaderTests
     public CosmosCheckpointReaderTests()
     {
         expectedCheckpoint = new Fixture().Create<CheckpointDocument<string>>();
-        itemResponse = Substitute.For<ItemResponse<CheckpointDocument<string>>>();
+
+        var itemResponse = Substitute.For<ItemResponse<CheckpointDocument<string>>>();
+
         itemResponse
             .Resource
             .Returns(expectedCheckpoint);
 
         container = Substitute.For<Container>();
+
         container
             .ReadItemAsync<CheckpointDocument<string>>(id: null, partitionKey: default, requestOptions: null, CancellationToken.None)
             .ReturnsForAnyArgs(itemResponse);
 
         containerProvider = Substitute.For<IEventStoreContainerProvider>();
+
         containerProvider
             .GetIndexContainer()
             .Returns(container, returnThese: null);
@@ -32,9 +35,10 @@ public sealed class CosmosCheckpointReaderTests
     [Theory, AutoNSubstituteData]
     public async Task Should_Read_From_Index_Container(
         string name,
-        StreamId streamId,
-        CancellationToken cancellationToken)
+        StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Act
         await sut
             .ReadAsync<string>(name, streamId, cancellationToken);
@@ -48,9 +52,10 @@ public sealed class CosmosCheckpointReaderTests
     [Theory, AutoNSubstituteData]
     public async Task Should_Use_Name_As_DocumentId(
         string name,
-        StreamId streamId,
-        CancellationToken cancellationToken)
+        StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Act
         await sut
             .ReadAsync<string>(name, streamId, cancellationToken);
@@ -68,9 +73,10 @@ public sealed class CosmosCheckpointReaderTests
     [Theory, AutoNSubstituteData]
     public async Task Should_Use_StreamId_As_PartitionKey(
         string name,
-        StreamId streamId,
-        CancellationToken cancellationToken)
+        StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Act
         await sut
             .ReadAsync<string>(name, streamId, cancellationToken);
@@ -85,16 +91,17 @@ public sealed class CosmosCheckpointReaderTests
                 cancellationToken);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
+    [SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
     public async Task Should_Return_Null_When_Document_IsNotFound(
         string name,
-        StreamId streamId,
-        CancellationToken cancellationToken)
+        StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Arrange
         container
-            .ReadItemAsync<CheckpointDocument<string>>(default, default, default, default)
+            .ReadItemAsync<CheckpointDocument<string>>(id: null, partitionKey: default, requestOptions: null, cancellationToken)
             .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.NotFound, 0, "a", 1));
 
         // Act
@@ -109,16 +116,17 @@ public sealed class CosmosCheckpointReaderTests
             .BeNull();
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
+    [SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
-    public Task Should_Propergate_CosmosException_When_StatusCode_IsNot_NotFound(
+    public Task Should_Propagate_CosmosException_When_StatusCode_IsNot_NotFound(
         string name,
-        StreamId streamId,
-        CancellationToken cancellationToken)
+        StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Arrange
         container
-            .ReadItemAsync<CheckpointDocument<string>>(default, default, default, default)
+            .ReadItemAsync<CheckpointDocument<string>>(id: null, partitionKey: default, requestOptions: null, cancellationToken)
             .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.TooManyRequests, 0, "a", 1));
 
         // Act
@@ -133,9 +141,10 @@ public sealed class CosmosCheckpointReaderTests
     [Theory, AutoNSubstituteData]
     public async Task Should_Return_Checkpoint(
         string name,
-        StreamId streamId,
-        CancellationToken cancellationToken)
+        StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Act
         var checkpoint = await sut.ReadAsync<string>(
             name,

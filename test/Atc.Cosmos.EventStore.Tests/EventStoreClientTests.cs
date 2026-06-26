@@ -6,9 +6,10 @@ public sealed class EventStoreClientTests
     internal async Task Should_DeleteSubscription(
         [Frozen] IStreamSubscriptionRemover remover,
         EventStoreClient sut,
-        ConsumerGroup consumerGroup,
-        CancellationToken cancellationToken)
+        ConsumerGroup consumerGroup)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Act
         await sut.DeleteSubscriptionAsync(
             consumerGroup,
@@ -24,9 +25,10 @@ public sealed class EventStoreClientTests
 
     [Theory, AutoNSubstituteData]
     internal Task Should_Throw_On_DeleteSubscription_When_ConsumerGroup_IsNull(
-        EventStoreClient sut,
-        CancellationToken cancellationToken)
+        EventStoreClient sut)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Act
         var act = () => sut.DeleteSubscriptionAsync(null, cancellationToken);
 
@@ -41,12 +43,13 @@ public sealed class EventStoreClientTests
         [Frozen] IStreamInfoReader reader,
         EventStoreClient sut,
         StreamId streamId,
-        IStreamMetadata expectedResult,
-        CancellationToken cancellationToken)
+        IStreamMetadata expectedResult)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Arrange
         reader
-            .ReadAsync(default, default)
+            .ReadAsync(default, cancellationToken)
             .ReturnsForAnyArgs(expectedResult);
 
         // Act
@@ -66,12 +69,13 @@ public sealed class EventStoreClientTests
         EventStoreClient sut,
         StreamId streamId,
         IReadOnlyList<object> events,
-        StreamResponse expected,
-        CancellationToken cancellationToken)
+        StreamResponse expected)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Arrange
         writer
-            .WriteAsync(default, default, default, default, default)
+            .WriteAsync(default, default, default, default, cancellationToken)
             .ReturnsForAnyArgs(Task.FromResult<StreamResponse>(expected));
 
         // Act
@@ -91,9 +95,10 @@ public sealed class EventStoreClientTests
     internal Task Should_Throw_InvalidOperationException(
         EventStoreClient sut,
         StreamId streamId,
-        IReadOnlyList<object> events,
-        CancellationToken cancellationToken)
+        IReadOnlyList<object> events)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Act
         var act = () => sut.WriteToStreamAsync(
             streamId,
@@ -111,9 +116,10 @@ public sealed class EventStoreClientTests
     internal Task Should_Throw_When_EventsList_Contains_NullObject(
         EventStoreClient sut,
         StreamId streamId,
-        Collection<object> events,
-        CancellationToken cancellationToken)
+        Collection<object> events)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Arrange
         events.Add(null);
 
@@ -137,9 +143,10 @@ public sealed class EventStoreClientTests
         string name,
         StreamId streamId,
         StreamVersion streamVersion,
-        object state,
-        CancellationToken cancellationToken)
+        object state)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Act
         await sut.SetStreamCheckpointAsync(
             name,
@@ -163,9 +170,10 @@ public sealed class EventStoreClientTests
     internal Task Should_Throw_On_SetStreamCheckpoint_When_Name_IsNull(
         EventStoreClient sut,
         StreamId streamId,
-        StreamVersion streamVersion,
-        CancellationToken cancellationToken)
+        StreamVersion streamVersion)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Act
         var act = () => sut.SetStreamCheckpointAsync(null, streamId, streamVersion, null, cancellationToken);
 
@@ -181,12 +189,13 @@ public sealed class EventStoreClientTests
         EventStoreClient sut,
         string name,
         StreamId streamId,
-        Checkpoint<string> expectedCheckpoint,
-        CancellationToken cancellationToken)
+        Checkpoint<string> expectedCheckpoint)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Arrange
         reader
-            .ReadAsync<string>(default, default, default)
+            .ReadAsync<string>(default, default, cancellationToken)
             .ReturnsForAnyArgs(expectedCheckpoint);
 
         // Act
@@ -210,9 +219,10 @@ public sealed class EventStoreClientTests
     [Theory, AutoNSubstituteData]
     internal Task Should_Throw_On_GetStreamCheckpoint_With_State_When_Name_IsNull(
         EventStoreClient sut,
-        StreamId streamId,
-        CancellationToken cancellationToken)
+        StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Act
         var act = () => sut.GetStreamCheckpointAsync<string>(null, streamId, cancellationToken);
 
@@ -228,12 +238,13 @@ public sealed class EventStoreClientTests
         EventStoreClient sut,
         string name,
         StreamId streamId,
-        Checkpoint<object> expectedCheckpoint,
-        CancellationToken cancellationToken)
+        Checkpoint<object> expectedCheckpoint)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Arrange
         reader
-            .ReadAsync<object>(default, default, default)
+            .ReadAsync<object>(default, default, cancellationToken)
             .ReturnsForAnyArgs(expectedCheckpoint);
 
         // Act
@@ -251,9 +262,10 @@ public sealed class EventStoreClientTests
     [Theory, AutoNSubstituteData]
     internal Task Should_Throw_On_GetStreamCheckpoint_Without_State_When_Name_IsNull(
         EventStoreClient sut,
-        StreamId streamId,
-        CancellationToken cancellationToken)
+        StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Act
         var act = () => sut.GetStreamCheckpointAsync(null, streamId, cancellationToken);
 
@@ -267,9 +279,10 @@ public sealed class EventStoreClientTests
     internal async Task Should_DeleteStream(
         [Frozen] IStreamDeleter deleter,
         EventStoreClient sut,
-        StreamId streamId,
-        CancellationToken cancellationToken)
+        StreamId streamId)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         // Act
         await sut.DeleteStreamAsync(
             streamId,

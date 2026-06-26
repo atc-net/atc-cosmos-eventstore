@@ -7,9 +7,10 @@ public sealed class StateProjectorTests
         [Frozen] ICommandHandlerMetadata<MockCommand> handlerMetadata,
         StateProjector<MockCommand> sut,
         MockCommand command,
-        ICommandHandler<MockCommand> handler,
-        CancellationToken cancellationToken)
+        ICommandHandler<MockCommand> handler)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         await sut.ProjectAsync(command, handler, cancellationToken);
 
         handlerMetadata.Received().IsNotConsumingEvents();
@@ -21,9 +22,10 @@ public sealed class StateProjectorTests
         [Frozen] IEventStoreClient eventStore,
         StateProjector<MockCommand> sut,
         MockCommand command,
-        ICommandHandler<MockCommand> handler,
-        CancellationToken cancellationToken)
+        ICommandHandler<MockCommand> handler)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         handlerMetadata
             .IsNotConsumingEvents()
             .ReturnsForAnyArgs(true);
@@ -44,14 +46,16 @@ public sealed class StateProjectorTests
         StateProjector<MockCommand> sut,
         StreamMetadata metadata,
         MockCommand command,
-        ICommandHandler<MockCommand> handler,
-        CancellationToken cancellationToken)
+        ICommandHandler<MockCommand> handler)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         handlerMetadata
             .IsNotConsumingEvents()
             .ReturnsForAnyArgs(true);
+
         eventStore
-            .GetStreamInfoAsync(default, default)
+            .GetStreamInfoAsync(default, cancellationToken)
             .ReturnsForAnyArgs(metadata);
 
         await sut.ProjectAsync(command, handler, cancellationToken);
@@ -71,15 +75,18 @@ public sealed class StateProjectorTests
         StateProjector<MockCommand> sut,
         StreamMetadata metadata,
         MockCommand command,
-        ICommandHandler<MockCommand> handler,
-        CancellationToken cancellationToken)
+        ICommandHandler<MockCommand> handler)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         command = command with { RequiredVersion = null };
+
         handlerMetadata
             .IsNotConsumingEvents()
             .ReturnsForAnyArgs(true);
+
         eventStore
-            .GetStreamInfoAsync(default, default)
+            .GetStreamInfoAsync(default, cancellationToken)
             .ReturnsForAnyArgs(metadata);
 
         await sut.ProjectAsync(command, handler, cancellationToken);
@@ -98,14 +105,15 @@ public sealed class StateProjectorTests
         StateProjector<MockCommand> sut,
         StreamMetadata metadata,
         MockCommand command,
-        ICommandHandler<MockCommand> handler,
-        CancellationToken cancellationToken)
+        ICommandHandler<MockCommand> handler)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         handlerMetadata
             .IsNotConsumingEvents()
             .ReturnsForAnyArgs(true);
         eventStore
-            .GetStreamInfoAsync(default, default)
+            .GetStreamInfoAsync(default, cancellationToken)
             .ReturnsForAnyArgs(metadata);
 
         var result = await sut.ProjectAsync(command, handler, cancellationToken);
@@ -126,14 +134,15 @@ public sealed class StateProjectorTests
         StateProjector<MockCommand> sut,
         StreamMetadata metadata,
         MockCommand command,
-        ICommandHandler<MockCommand> handler,
-        CancellationToken cancellationToken)
+        ICommandHandler<MockCommand> handler)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         handlerMetadata
             .IsNotConsumingEvents()
             .ReturnsForAnyArgs(true);
         eventStore
-            .GetStreamInfoAsync(default, default)
+            .GetStreamInfoAsync(default, cancellationToken)
             .ReturnsForAnyArgs(metadata);
 
         await sut.ProjectAsync(command, handler, cancellationToken);
@@ -141,10 +150,10 @@ public sealed class StateProjectorTests
         _ = eventStore
             .DidNotReceiveWithAnyArgs()
             .ReadFromStreamAsync(
-                default,
-                default,
-                default,
-                default);
+                streamId: default,
+                fromVersion: null,
+                filter: null,
+                cancellationToken);
     }
 
     [Theory, AutoNSubstituteData]
@@ -153,9 +162,10 @@ public sealed class StateProjectorTests
         [Frozen] IEventStoreClient eventStore,
         StateProjector<MockCommand> sut,
         MockCommand command,
-        ICommandHandler<MockCommand> handler,
-        CancellationToken cancellationToken)
+        ICommandHandler<MockCommand> handler)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         handlerMetadata
             .IsNotConsumingEvents()
             .ReturnsForAnyArgs(false);
@@ -176,9 +186,10 @@ public sealed class StateProjectorTests
         [Frozen] IEventStoreClient eventStore,
         StateProjector<MockCommand> sut,
         MockCommand command,
-        ICommandHandler<MockCommand> handler,
-        CancellationToken cancellationToken)
+        ICommandHandler<MockCommand> handler)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         command = command with { RequiredVersion = null };
         handlerMetadata
             .IsNotConsumingEvents()
@@ -201,19 +212,20 @@ public sealed class StateProjectorTests
         StateProjector<MockCommand> sut,
         ICollection<MockEvent> events,
         MockCommand command,
-        ICommandHandler<MockCommand> handler,
-        CancellationToken cancellationToken)
+        ICommandHandler<MockCommand> handler)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         command = command with { RequiredVersion = null };
         handlerMetadata
             .IsNotConsumingEvents()
             .ReturnsForAnyArgs(false);
         eventStore
             .ReadFromStreamAsync(
-                default,
-                default,
-                default,
-                default)
+                streamId: default,
+                fromVersion: null,
+                filter: null,
+                cancellationToken)
             .ReturnsForAnyArgs(ToAsyncEnumerable(events));
 
         await sut.ProjectAsync(command, handler, cancellationToken);
@@ -238,9 +250,10 @@ public sealed class StateProjectorTests
         MockEvent lastEvent,
         MockEventMetadata lastEventMetadata,
         MockCommand command,
-        ICommandHandler<MockCommand> handler,
-        CancellationToken cancellationToken)
+        ICommandHandler<MockCommand> handler)
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
         handlerMetadata
             .IsNotConsumingEvents()
             .ReturnsForAnyArgs(false);
@@ -248,10 +261,10 @@ public sealed class StateProjectorTests
         events.Add(lastEvent);
         eventStore
             .ReadFromStreamAsync(
-                default,
-                default,
-                default,
-                default)
+                streamId: default,
+                fromVersion: null,
+                filter: null,
+                cancellationToken)
             .ReturnsForAnyArgs(ToAsyncEnumerable(events));
 
         var result = await sut.ProjectAsync(

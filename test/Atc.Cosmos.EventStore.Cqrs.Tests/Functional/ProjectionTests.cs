@@ -19,14 +19,12 @@ public sealed class ProjectionTests : IAsyncLifetime
         Assert.Equal(tick, storedTick);
     }
 
-    public Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         host = new CqrsTestHost();
-        return host.StartAsync();
+        await host.StartAsync();
     }
 
-    public async Task DisposeAsync()
-    {
-        await host.DisposeAsync();
-    }
+    public ValueTask DisposeAsync()
+        => host.DisposeAsync();
 }
