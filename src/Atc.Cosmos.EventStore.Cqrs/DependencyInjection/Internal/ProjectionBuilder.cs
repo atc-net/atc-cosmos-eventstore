@@ -1,23 +1,13 @@
 namespace Atc.Cosmos.EventStore.Cqrs.DependencyInjection.Internal;
 
-internal class ProjectionBuilder : IProjectionBuilder
+internal class ProjectionBuilder(string name) : IProjectionBuilder
 {
-    private readonly List<ProjectionFilter> filters;
-    private ProcessExceptionHandler exceptionHandler;
-    private SubscriptionStartOptions startFrom;
-    private string name;
-    private TimeSpan pollingInterval;
-    private int maxItems;
-
-    public ProjectionBuilder(string name)
-    {
-        this.name = name;
-        filters = new List<ProjectionFilter>();
-        exceptionHandler = ProjectionOptions.EmptyExceptionHandler;
-        startFrom = SubscriptionStartOptions.FromBegining;
-        pollingInterval = TimeSpan.FromSeconds(1);
-        maxItems = 100;
-    }
+    private readonly List<ProjectionFilter> filters = [];
+    private ProcessExceptionHandler exceptionHandler = ProjectionOptions.EmptyExceptionHandler;
+    private SubscriptionStartOptions startFrom = SubscriptionStartOptions.FromBeginning;
+    private string name = name;
+    private TimeSpan pollingInterval = TimeSpan.FromSeconds(1);
+    private int maxItems = 100;
 
     public IProjectionBuilder WithFilter(string filter)
     {

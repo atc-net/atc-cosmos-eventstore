@@ -1,7 +1,7 @@
 namespace Atc.Cosmos.EventStore.Converters;
 
 /// <summary>
-/// Responsible for converting an event envelope to and from json without loosing underlying event type.
+/// Responsible for converting an event envelope to and from json without losing underlying event type.
 /// </summary>
 internal class EventDocumentConverter : JsonConverter<EventDocument>
 {

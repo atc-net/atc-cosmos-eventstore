@@ -12,7 +12,7 @@ public sealed class SubscriptionStartOptionsTests
         // Assert
         result
             .Should()
-            .Be(SubscriptionStartOptions.FromBegining);
+            .Be(SubscriptionStartOptions.FromBeginning);
     }
 
     [Theory, AutoNSubstituteData]

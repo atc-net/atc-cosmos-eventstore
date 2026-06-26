@@ -83,7 +83,7 @@ public sealed class ProjectionBuilderTests
         sut.Build<TestProjection>(options);
 
         // Assert
-        options.StartsFrom.Should().Be(SubscriptionStartOptions.FromBegining);
+        options.StartsFrom.Should().Be(SubscriptionStartOptions.FromBeginning);
     }
 
     [Theory, AutoNSubstituteData]
