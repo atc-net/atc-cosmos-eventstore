@@ -5,7 +5,7 @@ public class ConsumerGroup
     private const string DefaultInstance = ".default";
     private const int DefaultMaxItems = 100;
     private static readonly TimeSpan DefaultPollingInterval = TimeSpan.FromSeconds(1);
-    private static readonly SubscriptionStartOptions DefaultStartOptions = SubscriptionStartOptions.FromBegining;
+    private static readonly SubscriptionStartOptions DefaultStartOptions = SubscriptionStartOptions.FromBeginning;
 
     public ConsumerGroup(string name)
     {

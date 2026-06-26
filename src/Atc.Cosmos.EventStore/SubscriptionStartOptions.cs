@@ -1,20 +1,20 @@
 namespace Atc.Cosmos.EventStore;
 
-public struct SubscriptionStartOptions : IEquatable<SubscriptionStartOptions>
+public readonly struct SubscriptionStartOptions : IEquatable<SubscriptionStartOptions>
 {
     /// <summary>
     /// The first time the subscription is started, start receiving changes from the beginning of time.
     /// </summary>
     /// <remarks>
-    /// If the subscription has previous been started, it will resume from last checkpoint.
+    /// If the subscription has previously been started, it will resume from last checkpoint.
     /// </remarks>
-    public static readonly SubscriptionStartOptions FromBegining = new(DateTime.MinValue);
+    public static readonly SubscriptionStartOptions FromBeginning = new(DateTime.MinValue);
 
     /// <summary>
-    /// The first time the subscription is started, start receive changes from now.
+    /// The first time the subscription is started, start receiving changes from now.
     /// </summary>
     /// <remarks>
-    /// If the subscription has previous been started, it will resume from last checkpoint.
+    /// If the subscription has previously been started, it will resume from last checkpoint.
     /// </remarks>
     public static readonly SubscriptionStartOptions FromNowOrLastCheckpoint = new(DateTime.MaxValue);
 
@@ -29,10 +29,10 @@ public struct SubscriptionStartOptions : IEquatable<SubscriptionStartOptions>
     public DateTime StartFrom { get; }
 
     /// <summary>
-    /// Start to received changes from a given date time.
+    /// Start receiving changes from a given date time.
     /// </summary>
     /// <remarks>
-    /// If the subscription has previous been started, it will resume from last checkpoint.
+    /// If the subscription has previously been started, it will resume from last checkpoint.
     /// </remarks>
     /// <param name="startFromDate">Date and time to start receiving events from.</param>
     /// <returns>The subscription start options.</returns>

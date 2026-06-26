@@ -2,7 +2,7 @@ namespace Atc.Cosmos.EventStore.Cqrs;
 
 public class EventStreamId
 {
-    public const string PartSeperator = ".";
+    public const string PartSeparator = ".";
 
     public EventStreamId(params string[] parts)
     {
@@ -13,7 +13,7 @@ public class EventStreamId
 
         // Validate each part does not include char '.' or is "*"
         Parts = parts;
-        Value = string.Join(PartSeperator, parts);
+        Value = string.Join(PartSeparator, parts);
     }
 
     /// <summary>
@@ -35,5 +35,5 @@ public class EventStreamId
 
     public static EventStreamId FromStreamId(StreamId id)
         => new(
-            id.Value.Split(PartSeperator));
+            id.Value.Split(PartSeparator));
 }

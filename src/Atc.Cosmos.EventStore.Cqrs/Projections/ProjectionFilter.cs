@@ -9,7 +9,7 @@ internal class ProjectionFilter
     {
         validators = filter
             .Split(
-                [EventStreamId.PartSeperator],
+                [EventStreamId.PartSeparator],
                 StringSplitOptions.RemoveEmptyEntries)
             .Select(p => (p == "*" || p == "**")
                 ? CreateEvaluateAll()
