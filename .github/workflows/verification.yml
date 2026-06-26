@@ -33,18 +33,18 @@ jobs:
         with:
           setAllVars: true
 
-      - name: ⚙️ Setup dotnet 9.0.x
+      - name: ⚙️ Setup dotnet 10.0.x
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: '10.0.x'
 
       - name: 🛠️ Building libraries in release mode
         run: dotnet build -c release -p:ContinuousIntegrationBuild=true
 
       - name: 🧪 Run unit tests
         run: |
-          dotnet test ./test/Atc.Cosmos.EventStore.Tests/Atc.Cosmos.EventStore.Tests.csproj -c release --logger GitHubActions
-          dotnet test ./test/Atc.Cosmos.EventStore.Cqrs.Tests/Atc.Cosmos.EventStore.Cqrs.Tests.csproj -c release --logger GitHubActions
+          dotnet test ./test/Atc.Cosmos.EventStore.Tests/Atc.Cosmos.EventStore.Tests.csproj -c release
+          dotnet test ./test/Atc.Cosmos.EventStore.Cqrs.Tests/Atc.Cosmos.EventStore.Cqrs.Tests.csproj -c release
 
       - name: 🗳️ Pack libraries
         run: |
