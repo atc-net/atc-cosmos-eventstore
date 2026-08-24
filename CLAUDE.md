@@ -41,7 +41,7 @@ Integration tests (`Atc.Cosmos.EventStore.IntegrationTests`) require a Cosmos DB
 - Analyzers enforced: StyleCop, SonarAnalyzer, SecurityCodeScan, .NET Analyzers
 - Code style defined in `.editorconfig` (based on [atc-coding-rules](https://github.com/atc-net/atc-coding-rules))
 - Test projects use **xunit**, **FluentAssertions**, **NSubstitute** (via Atc.Test), and nullable `annotations` mode (not `enable`)
-- Versioning via **Nerdbank.GitVersioning** (`version.json`, base version 1.18)
+- Versioning via **release-please** (`release-please-config.json` + `.release-please-manifest.json`); each package versions independently, with the version stored in the project's own `Directory.Build.props` between `x-release-please-start-version` / `x-release-please-end` markers
 - Solution uses modern `.slnx` format
 
 ### System.IO Removal
@@ -140,7 +140,9 @@ sample/
 
 ## CI/CD
 
-- **verification.yml** — Builds, tests, and packs on PRs and pushes to main
-- **release-preview.yml** — Publishes preview packages after verification passes on main
-- **prepare-release.yml** — Creates release branch and PR to stable (manual trigger)
-- **release.yml** — Publishes to NuGet.org on merge to stable, creates GitHub release
+- **build.yml** — Builds and tests on PRs and pushes to main
+- **release-please.yml** — Runs release-please on pushes to main; maintains per-package release PRs and tags (`Atc.Cosmos.EventStore@vX.Y.Z`, `Atc.Cosmos.EventStore.Cqrs@vX.Y.Z`)
+- **atc-cosmos-eventstore.yml** — Publishes `Atc.Cosmos.EventStore` to NuGet.org on its release tag
+- **atc-cosmos-eventstore-cqrs.yml** — Publishes `Atc.Cosmos.EventStore.Cqrs` to NuGet.org on its release tag
+
+Commits must follow [Conventional Commits](https://www.conventionalcommits.org/) so release-please can generate changelogs (per-project `CHANGELOG.md` under `src/`) and version bumps.
