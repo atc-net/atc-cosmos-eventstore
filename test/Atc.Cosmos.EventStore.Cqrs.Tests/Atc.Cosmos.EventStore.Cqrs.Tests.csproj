@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="10.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="10.0.11" />
 
     <!-- Get the shared Microsoft.AspNetCore.App framework instead of referencing a bunch of MS.Ext.Hosting etc packages -->
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
