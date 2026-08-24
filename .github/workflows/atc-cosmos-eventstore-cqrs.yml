@@ -1,0 +1,42 @@
+name: Build & Publish Atc.Cosmos.EventStore.Cqrs
+
+on:
+  push:
+    tags: [ 'Atc.Cosmos.EventStore.Cqrs@v*.*.*' ]
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: 🛒 Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_PLEASE_PAT }}
+
+      - name: ⚙️ Setup dotnet 10.0.x
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: 🧹 Clean
+        run: dotnet clean -c Release && dotnet nuget locals all --clear
+
+      - name: 🔁 Restore packages
+        run: dotnet restore src/Atc.Cosmos.EventStore.Cqrs/Atc.Cosmos.EventStore.Cqrs.csproj
+
+      - name: 🛠️ Build library in release mode
+        run: dotnet build src/Atc.Cosmos.EventStore.Cqrs/Atc.Cosmos.EventStore.Cqrs.csproj -c Release --no-restore /p:UseSourceLink=true
+
+      - name: 🗳️ Pack library for release
+        run: dotnet pack src/Atc.Cosmos.EventStore.Cqrs/Atc.Cosmos.EventStore.Cqrs.csproj -c Release --no-restore -o ${GITHUB_WORKSPACE}/packages /p:PublicRelease=true
+
+      - name: 📦 Push package to NuGet
+        env:
+          NUGET_KEY: ${{ secrets.NUGET_KEY }}
+        run: |
+          dotnet nuget push ${GITHUB_WORKSPACE}/packages/Atc.Cosmos.EventStore.Cqrs*.nupkg -k "$NUGET_KEY" -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols
