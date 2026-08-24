@@ -2,7 +2,6 @@ namespace Atc.Cosmos.EventStore.Tests.Cosmos;
 
 public sealed class CosmosMetadataReaderTests
 {
-    private readonly ItemResponse<StreamMetadata> itemResponse;
     private readonly Container container;
     private readonly StreamMetadata expectedMetadata;
     private readonly DateTimeOffset expectedTimestamp;
@@ -10,23 +9,25 @@ public sealed class CosmosMetadataReaderTests
     private readonly IEventStoreContainerProvider containerProvider;
     private readonly IDateTimeProvider dateTimeProvider;
     private readonly CosmosMetadataReader sut;
+    private HttpStatusCode statusCode = HttpStatusCode.OK;
 
     public CosmosMetadataReaderTests()
     {
         expectedMetadata = new Fixture().Create<StreamMetadata>();
         expectedETag = new Fixture().Create<string>();
-        itemResponse = Substitute.For<ItemResponse<StreamMetadata>>();
-        itemResponse
-            .Resource
+
+        var serializer = Substitute.For<CosmosEventSerializer>(
+            Options.Create(new EventStoreClientOptions()),
+            Substitute.For<IEventTypeProvider>());
+
+        serializer
+            .FromStream<StreamMetadata>(Arg.Any<Stream>())
             .Returns(expectedMetadata);
-        itemResponse
-            .ETag
-            .Returns(expectedETag);
 
         container = Substitute.For<Container>();
         container
-            .ReadItemAsync<StreamMetadata>(default, default, default, default)
-            .ReturnsForAnyArgs(itemResponse);
+            .ReadItemStreamAsync(null, default, null, CancellationToken.None)
+            .ReturnsForAnyArgs(_ => CreateResponse());
 
         expectedTimestamp = DateTimeOffset.UtcNow;
         dateTimeProvider = Substitute.For<IDateTimeProvider>();
@@ -38,7 +39,8 @@ public sealed class CosmosMetadataReaderTests
         containerProvider
             .GetStreamContainer()
             .Returns(container, returnThese: null);
-        sut = new CosmosMetadataReader(containerProvider, dateTimeProvider);
+
+        sut = new CosmosMetadataReader(containerProvider, dateTimeProvider, serializer);
     }
 
     [Theory, AutoNSubstituteData]
@@ -53,7 +55,7 @@ public sealed class CosmosMetadataReaderTests
         // Assert
         _ = container
             .Received()
-            .ReadItemAsync<StreamMetadata>(
+            .ReadItemStreamAsync(
                 Arg.Any<string>(),
                 new PartitionKey(streamId.Value),
                 Arg.Any<ItemRequestOptions>(),
@@ -72,7 +74,7 @@ public sealed class CosmosMetadataReaderTests
         // Assert
         _ = container
             .Received()
-            .ReadItemAsync<StreamMetadata>(
+            .ReadItemStreamAsync(
                 StreamMetadata.StreamMetadataId,
                 Arg.Any<PartitionKey>(),
                 Arg.Any<ItemRequestOptions>(),
@@ -114,7 +116,24 @@ public sealed class CosmosMetadataReaderTests
             .BeEquivalentTo(expectedMetadata);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
+    [Theory, AutoNSubstituteData]
+    public Task Should_Propagate_CosmosException_When_StatusCode_IsNot_NotFound(
+        StreamId streamId)
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+
+        // Arrange
+        statusCode = HttpStatusCode.TooManyRequests;
+
+        // Act
+        var act = () => sut.GetAsync(streamId, cancellationToken);
+
+        // Assert
+        return act
+            .Should()
+            .ThrowAsync<CosmosException>();
+    }
+
     [Theory, AutoNSubstituteData]
     public async Task Should_Have_State_New_When_Document_IsNotFound(
         StreamId streamId)
@@ -122,9 +141,7 @@ public sealed class CosmosMetadataReaderTests
         var cancellationToken = TestContext.Current.CancellationToken;
 
         // Arrange
-        container
-            .ReadItemAsync<StreamMetadata>(default, default, default, cancellationToken)
-            .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.NotFound, 0, "a", 1));
+        statusCode = HttpStatusCode.NotFound;
 
         // Act
         var metadata = await sut
@@ -139,7 +156,6 @@ public sealed class CosmosMetadataReaderTests
             .Be(StreamState.New);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
     public async Task Should_Have_StreamVersion_StartOfStream_When_Document_IsNotFound(
         StreamId streamId)
@@ -147,9 +163,7 @@ public sealed class CosmosMetadataReaderTests
         var cancellationToken = TestContext.Current.CancellationToken;
 
         // Arrange
-        container
-            .ReadItemAsync<StreamMetadata>(default, default, default, cancellationToken)
-            .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.NotFound, 0, "a", 1));
+        statusCode = HttpStatusCode.NotFound;
 
         // Act
         var metadata = await sut
@@ -164,7 +178,6 @@ public sealed class CosmosMetadataReaderTests
             .Be(StreamVersion.StartOfStream);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
     public async Task Should_Have_Correct_Id_When_Document_IsNotFound(
         StreamId streamId)
@@ -172,9 +185,7 @@ public sealed class CosmosMetadataReaderTests
         var cancellationToken = TestContext.Current.CancellationToken;
 
         // Arrange
-        container
-            .ReadItemAsync<StreamMetadata>(default, default, default, cancellationToken)
-            .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.NotFound, 0, "a", 1));
+        statusCode = HttpStatusCode.NotFound;
 
         // Act
         var metadata = await sut
@@ -189,7 +200,6 @@ public sealed class CosmosMetadataReaderTests
             .Be(StreamMetadata.StreamMetadataId);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
     public async Task Should_Have_StreamId_As_PartitionKey_When_Document_IsNotFound(
         StreamId streamId)
@@ -197,9 +207,7 @@ public sealed class CosmosMetadataReaderTests
         var cancellationToken = TestContext.Current.CancellationToken;
 
         // Arrange
-        container
-            .ReadItemAsync<StreamMetadata>(default, default, default, cancellationToken)
-            .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.NotFound, 0, "a", 1));
+        statusCode = HttpStatusCode.NotFound;
 
         // Act
         var metadata = await sut
@@ -214,7 +222,6 @@ public sealed class CosmosMetadataReaderTests
             .Be(streamId.Value);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "NS5003:Synchronous exception thrown from async method.", Justification = "Reviewed")]
     [Theory, AutoNSubstituteData]
     public async Task Should_Have_Timestamp_When_Document_IsNotFound(
         StreamId streamId)
@@ -222,9 +229,7 @@ public sealed class CosmosMetadataReaderTests
         var cancellationToken = TestContext.Current.CancellationToken;
 
         // Arrange
-        container
-            .ReadItemAsync<StreamMetadata>(default, default, default, cancellationToken)
-            .ThrowsForAnyArgs(new CosmosException("error", HttpStatusCode.NotFound, 0, "a", 1));
+        statusCode = HttpStatusCode.NotFound;
 
         // Act
         var metadata = await sut
@@ -237,5 +242,17 @@ public sealed class CosmosMetadataReaderTests
             .Timestamp
             .Should()
             .Be(expectedTimestamp);
+    }
+
+    private ResponseMessage CreateResponse()
+    {
+        var response = new ResponseMessage(statusCode)
+        {
+            Content = new MemoryStream("{}"u8.ToArray()),
+        };
+
+        response.Headers.Add("etag", expectedETag);
+
+        return response;
     }
 }
