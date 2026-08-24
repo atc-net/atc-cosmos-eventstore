@@ -4,35 +4,36 @@ internal class CosmosMetadataReader : IStreamMetadataReader
 {
     private readonly IEventStoreContainerProvider containerProvider;
     private readonly IDateTimeProvider timeProvider;
+    private readonly CosmosEventSerializer serializer;
 
     public CosmosMetadataReader(
         IEventStoreContainerProvider containerProvider,
-        IDateTimeProvider timeProvider)
+        IDateTimeProvider timeProvider,
+        CosmosEventSerializer serializer)
     {
         this.containerProvider = containerProvider;
         this.timeProvider = timeProvider;
+        this.serializer = serializer;
     }
 
     public async Task<IStreamMetadata> GetAsync(
         StreamId streamId,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            var metadata = await containerProvider
-                .GetStreamContainer()
-                .ReadItemAsync<StreamMetadata>(
-                    StreamMetadata.StreamMetadataId,
-                    new PartitionKey(streamId.Value),
-                    cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+        var container = containerProvider.GetStreamContainer();
 
-            metadata.Resource.ETag = metadata.ETag;
+        // Read as a stream so a stream that does not exist yet is just a 404 response
+        // instead of a thrown exception. Throwing on the not-found path is expensive
+        // and fills the debug output with exceptions that were never actually a
+        // problem - and here it happens every single time a new stream is created.
+        using var response = await container
+            .ReadItemStreamAsync(
+                StreamMetadata.StreamMetadataId,
+                new PartitionKey(streamId.Value),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
-            return metadata.Resource;
-        }
-        catch (CosmosException ex)
-        when (ex.StatusCode == HttpStatusCode.NotFound)
+        if (response.StatusCode == HttpStatusCode.NotFound)
         {
             return new StreamMetadata(
                 StreamMetadata.StreamMetadataId,
@@ -42,5 +43,16 @@ internal class CosmosMetadataReader : IStreamMetadataReader
                 StreamState.New,
                 timeProvider.GetDateTime());
         }
+
+        response.EnsureSuccessStatusCode();
+
+        var metadata = serializer
+            .FromStream<StreamMetadata>(response.Content)
+            ?? throw new InvalidOperationException(
+                $"Unable to deserialize stream metadata for stream '{streamId.Value}'.");
+
+        metadata.ETag = response.Headers.ETag;
+
+        return metadata;
     }
 }

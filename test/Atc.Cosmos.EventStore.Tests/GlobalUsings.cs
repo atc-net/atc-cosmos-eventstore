@@ -17,5 +17,6 @@ global using Azure.Core;
 global using Microsoft.Azure.Cosmos;
 global using Microsoft.Extensions.Options;
 global using NSubstitute;
-global using NSubstitute.ExceptionExtensions;
 global using Xunit;
+global using MemoryStream = System.IO.MemoryStream;
+global using Stream = System.IO.Stream;
