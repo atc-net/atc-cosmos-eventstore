@@ -3,9 +3,7 @@ namespace Atc.Cosmos.EventStore;
 public struct StreamId : IEquatable<StreamId>
 {
     public StreamId(string streamId)
-    {
-        Value = streamId;
-    }
+        => Value = streamId;
 
     public string Value { get; }
 
