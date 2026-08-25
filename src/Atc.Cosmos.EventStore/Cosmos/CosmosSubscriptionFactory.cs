@@ -22,7 +22,7 @@ internal class CosmosSubscriptionFactory : IStreamSubscriptionFactory
             .GetStreamContainer()
             .GetChangeFeedProcessorBuilder<EventDocument>(
                 GetProcessorName(consumerGroup),
-                (ctx, c, ct) => eventsHandler(c.Where(ExcludeMetaDataChanges).ToArray(), ct))
+                (ctx, c, ct) => eventsHandler([.. c.Where(ExcludeMetaDataChanges)], ct))
             .WithErrorNotification(async (lt, ex) =>
             {
                 telemetry.ProcessExceptionHandlerFailed(ex, consumerGroup);
