@@ -20,8 +20,8 @@ public interface IEventStoreClient
     Task<StreamResponse> WriteToStreamAsync(
         StreamId streamId,
         IReadOnlyCollection<object> events,
-        StreamVersion? version = default,
-        StreamWriteOptions? options = default,
+        StreamVersion? version = null,
+        StreamWriteOptions? options = null,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -34,8 +34,8 @@ public interface IEventStoreClient
     /// <returns>List of events from stream.</returns>
     IAsyncEnumerable<IEvent> ReadFromStreamAsync(
         StreamId streamId,
-        StreamVersion? fromVersion = default,
-        StreamReadFilter? filter = default,
+        StreamVersion? fromVersion = null,
+        StreamReadFilter? filter = null,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -81,8 +81,8 @@ public interface IEventStoreClient
     /// <param name="cancellationToken">(Optional) <seealso cref="CancellationToken"/> representing request cancellation.</param>
     /// <returns>List of stream id found.</returns>
     IAsyncEnumerable<IStreamIndex> QueryStreamsAsync(
-        string? filter = default,
-        DateTimeOffset? createdAfter = default,
+        string? filter = null,
+        DateTimeOffset? createdAfter = null,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -102,7 +102,7 @@ public interface IEventStoreClient
         string name,
         StreamId streamId,
         StreamVersion version,
-        object? state = default,
+        object? state = null,
         CancellationToken cancellationToken = default);
 
     /// <summary>
