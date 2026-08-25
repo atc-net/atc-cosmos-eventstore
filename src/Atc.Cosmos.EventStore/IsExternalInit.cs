@@ -1,7 +1,7 @@
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Atc.Cosmos.EventStore.Tests")]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Atc.Cosmos.EventStore.Cqrs")]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Atc.Cosmos.EventStore.Cqrs.Tests")]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DynamicProxyGenAssembly2")]
+[assembly: InternalsVisibleTo("Atc.Cosmos.EventStore.Tests")]
+[assembly: InternalsVisibleTo("Atc.Cosmos.EventStore.Cqrs")]
+[assembly: InternalsVisibleTo("Atc.Cosmos.EventStore.Cqrs.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace System.Runtime.CompilerServices;
 
