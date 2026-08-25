@@ -11,17 +11,13 @@ public sealed class StreamClosedException : EventStoreException
 
     public StreamClosedException(StreamId streamId)
         : base(MessageText)
-    {
-        StreamId = streamId;
-    }
+        => StreamId = streamId;
 
     public StreamClosedException(
         StreamId streamId,
         Exception innerException)
         : base(MessageText, innerException)
-    {
-        StreamId = streamId;
-    }
+        => StreamId = streamId;
 
     public StreamId StreamId { get; }
 }
