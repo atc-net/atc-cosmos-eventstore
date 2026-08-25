@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1](https://github.com/atc-net/atc-cosmos-eventstore/compare/Atc.Cosmos.EventStore@v2.0.0...Atc.Cosmos.EventStore@v2.0.1) (2026-08-25)
+
+
+### Bug fixes
+
+* use null instead of default for optional parameters ([e69e13f](https://github.com/atc-net/atc-cosmos-eventstore/commit/e69e13f8ca76b57be9a39ef5ee18da8ce8155f44))
+
 ## [2.0.0](https://github.com/atc-net/atc-cosmos-eventstore/compare/Atc.Cosmos.EventStore@v1.18.0...Atc.Cosmos.EventStore@v2.0.0) (2026-08-25)
 
 

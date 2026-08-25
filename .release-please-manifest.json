@@ -1,4 +1,4 @@
 {
-  "src/Atc.Cosmos.EventStore": "2.0.0",
-  "src/Atc.Cosmos.EventStore.Cqrs": "2.0.0"
+  "src/Atc.Cosmos.EventStore": "2.0.1",
+  "src/Atc.Cosmos.EventStore.Cqrs": "2.0.1"
 }
