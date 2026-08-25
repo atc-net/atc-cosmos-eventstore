@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0](https://github.com/atc-net/atc-cosmos-eventstore/compare/Atc.Cosmos.EventStore.Cqrs@v1.18.0...Atc.Cosmos.EventStore.Cqrs@v2.0.0) (2026-08-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* The public members SubscriptionStartOptions.FromBegining and EventStreamId.PartSeperator have been renamed to FromBeginning and PartSeparator. Update references accordingly.
+
+### refactor
+
+* fix public API typos and modernize source ([f623c3a](https://github.com/atc-net/atc-cosmos-eventstore/commit/f623c3a59a4323d3ee28760396510ef7ecd89140))
+
 ## [1.18.0](https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.17.0...v1.18.0) (2025-04-08)
 
 -   Changed `ICommandProcessorFactory`, `ICommandHandlerFactory` and `CommandProcessor<>` to be

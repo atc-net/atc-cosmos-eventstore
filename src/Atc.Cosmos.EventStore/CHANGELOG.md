@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0](https://github.com/atc-net/atc-cosmos-eventstore/compare/Atc.Cosmos.EventStore@v1.18.0...Atc.Cosmos.EventStore@v2.0.0) (2026-08-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** bump NuGet packages across solution
+* The public members SubscriptionStartOptions.FromBegining and EventStreamId.PartSeperator have been renamed to FromBeginning and PartSeparator. Update references accordingly.
+* **deps:** upgrade Cosmos 3.46.0->3.61.0 and Newtonsoft.Json 13.0.3->13.0.4
+
+### chore
+
+* **deps:** bump NuGet packages across solution ([4083b92](https://github.com/atc-net/atc-cosmos-eventstore/commit/4083b92a59a452d8e58d04fdc94606fa1b5e85f3))
+
+
+### refactor
+
+* fix public API typos and modernize source ([f623c3a](https://github.com/atc-net/atc-cosmos-eventstore/commit/f623c3a59a4323d3ee28760396510ef7ecd89140))
+
+
+### New features
+
+* **deps:** upgrade Cosmos 3.46.0-&gt;3.61.0 and Newtonsoft.Json 13.0.3-&gt;13.0.4 ([e03a509](https://github.com/atc-net/atc-cosmos-eventstore/commit/e03a509e54d6d5bb05d882fc9ebce74402378ad6))
+
+
+### Performance improvements
+
+* **eventstore:** avoid throwing CosmosException for not-found reads ([4b7036f](https://github.com/atc-net/atc-cosmos-eventstore/commit/4b7036fe5bf5b382fea3ff8b31ab9c14c162e4dd))
+
 ## [1.18.0](https://github.com/atc-net/atc-cosmos-eventstore/compare/v1.17.0...v1.18.0) (2025-04-08)
 
 -   Released in lockstep with `Atc.Cosmos.EventStore.Cqrs` 1.18.0. No core-specific changes.
