@@ -2,9 +2,9 @@ namespace Atc.Cosmos.EventStore.Cqrs;
 
 public abstract record CommandBase<TStreamId>(
     TStreamId StreamId,
-    string? CommandId = default,
-    string? CorrelationId = default,
-    EventStreamVersion? RequiredVersion = default,
+    string? CommandId = null,
+    string? CorrelationId = null,
+    EventStreamVersion? RequiredVersion = null,
     OnConflict Behavior = OnConflict.Fail,
     int BehaviorCount = 3) : ICommand
     where TStreamId : EventStreamId

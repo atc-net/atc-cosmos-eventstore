@@ -51,8 +51,8 @@ internal class EventStoreClient : IEventStoreClient
                 cancellationToken);
 
     public IAsyncEnumerable<IStreamIndex> QueryStreamsAsync(
-        string? filter = default,
-        DateTimeOffset? createdAfter = default,
+        string? filter = null,
+        DateTimeOffset? createdAfter = null,
         CancellationToken cancellationToken = default)
         => indexReader
             .ReadAsync(
@@ -62,8 +62,8 @@ internal class EventStoreClient : IEventStoreClient
 
     public IAsyncEnumerable<IEvent> ReadFromStreamAsync(
         StreamId streamId,
-        StreamVersion? fromVersion = default,
-        StreamReadFilter? filter = default,
+        StreamVersion? fromVersion = null,
+        StreamReadFilter? filter = null,
         CancellationToken cancellationToken = default)
         => streamReader
             .ReadAsync(
@@ -85,8 +85,8 @@ internal class EventStoreClient : IEventStoreClient
     public Task<StreamResponse> WriteToStreamAsync(
         StreamId streamId,
         IReadOnlyCollection<object> events,
-        StreamVersion? version = default,
-        StreamWriteOptions? options = default,
+        StreamVersion? version = null,
+        StreamWriteOptions? options = null,
         CancellationToken cancellationToken = default)
         => streamWriter
             .WriteAsync(
