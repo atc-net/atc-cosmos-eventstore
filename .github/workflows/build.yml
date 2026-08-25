@@ -2,15 +2,6 @@ name: Build and test
 
 on:
   push:
-    branches:
-      - main
-      - 'feature/**'
-      - 'hotfix/**'
-    tags-ignore:
-      - '**'
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:
